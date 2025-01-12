@@ -19,7 +19,8 @@ public class Elevator extends SubsystemBase {
   // TODO add correct ids
   private SparkMax m_elevatorMotor = new SparkMax(0, SparkLowLevel.MotorType.kBrushless);
   private LaserCan m_elevatorLidar = new LaserCan(0);
-  private DigitalInput m_elevatorLimitSwitch = new DigitalInput(0);
+  private DigitalInput m_elevatorTopLimitSwitch = new DigitalInput(0);
+  private DigitalInput m_elevatorBottomLimitSwitch = new DigitalInput(0);
 
   
   /** Creates a new Elevator. */
@@ -59,6 +60,6 @@ public class Elevator extends SubsystemBase {
   // Check to see if the elevator is too high
   public boolean elevatorAtLimit()
   {
-    return m_elevatorLimitSwitch.get();
+    return m_elevatorTopLimitSwitch.get() || m_elevatorBottomLimitSwitch.get();
   }
 }
