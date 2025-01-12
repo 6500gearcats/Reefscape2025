@@ -28,7 +28,7 @@ public class SetElevatorHeight extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_elevator.setElevatorSpeed(-0.1 * (m_height - m_elevator.getElevatorHeight()));
+    m_elevator.setElevatorSpeed(0.1 * (m_height - m_elevator.getElevatorHeight()));
   }
 
   // Called once the command ends or is interrupted.

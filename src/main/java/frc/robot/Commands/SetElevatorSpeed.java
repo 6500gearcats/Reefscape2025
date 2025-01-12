@@ -12,14 +12,11 @@ import frc.robot.Subsystems.Elevator;
 public class SetElevatorSpeed extends Command {
   private Elevator m_elevator;
   private double m_speed;
-
   /** Creates a new SetElevatorSpeed. */
   public SetElevatorSpeed(Elevator elevator, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_elevator = elevator;
     m_speed = speed;
-
-    addRequirements(m_elevator);
   }
 
   // Called when the command is initially scheduled.
