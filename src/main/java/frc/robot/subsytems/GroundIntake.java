@@ -4,23 +4,61 @@
 
 package frc.robot.subsytems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class GroundIntake extends SubsystemBase {
-  
+
   /** Creates a new GroundIntake. */
-  private SparkMax m_groundIntakeMotor = new SparkMax(0);
-  private SparkMaxConfig m_groundConfig  = new SparkMaxConfig();
-  public GroundIntake() {}
+  private SparkMax m_flipMotor;
+  private DigitalInput m_flipSwitch;
+  private SparkMax m_spinMotor;
+  
+  //TODO: Get Real Values
+  private final double kIntakeSpeed = 0.4012923;
+
+  public GroundIntake(int flipMotorId, int spinMotorId) {
+    m_flipSwitch = new DigitalInput(0);
+
+    m_flipMotor = new SparkMax(flipMotorId, MotorType.kBrushless);
+    m_spinMotor = new SparkMax(spinMotorId, MotorType.kBrushless);
+
+    SparkMaxConfig m_spinConfig = new SparkMaxConfig();
+    m_spinMotor.configure(m_spinConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    SparkMaxConfig m_flipConfig = new SparkMaxConfig();
+    m_flipMotor.configure(m_flipConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("Flip Switch", getFlipSwitchValue());
   }
-  
-  public void setSpeed(double speed) {
-    m_groundIntakeMotor.set(speed);
+
+  public void flipIntake() {
+    if(!getFlipSwitchValue()) {
+      m_flipMotor.set(1);
+    } else {
+      m_flipMotor.set(-1);
+    }
+  }
+
+  public boolean getFlipSwitchValue() {
+    return m_flipSwitch.get();
+  }
+
+  public void spinIntake() {
+    m_spinMotor.set(kIntakeSpeed);
+  }
+
+  public void stopIntake() {
+    m_spinMotor.set(0);
   }
 }
