@@ -20,8 +20,6 @@ public class GroundIntake extends SubsystemBase {
   private DigitalInput m_flipSwitch;
   private SparkMax m_spinMotor;
   
-  //TODO: Get Real Values
-  private final double kIntakeSpeed = 0.4012923;
 
   public GroundIntake(int flipMotorId, int spinMotorId) {
     m_flipSwitch = new DigitalInput(0);
@@ -54,11 +52,7 @@ public class GroundIntake extends SubsystemBase {
     return m_flipSwitch.get();
   }
 
-  public void spinIntake() {
-    m_spinMotor.set(kIntakeSpeed);
-  }
-
-  public void stopIntake() {
-    m_spinMotor.set(0);
+  public void spinIntake(double speed) {
+    m_spinMotor.set(speed);
   }
 }
