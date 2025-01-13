@@ -40,12 +40,27 @@ public class GroundIntake extends SubsystemBase {
     SmartDashboard.putBoolean("Flip Switch", getFlipSwitchValue());
   }
 
-  public void flipIntake() {
+  //This assumes that the flip switch will the triggered when you flip the 
+  //intake to the outside of the robot
+
+  //TODO: Check if the logic is correct
+  public boolean flipIntake() {
     if(!getFlipSwitchValue()) {
       m_flipMotor.set(1);
+      //turns off motor when switch is triggered
+      if(getFlipSwitchValue()) {
+        m_flipMotor.set(0);
+        return true;
+      }
     } else {
       m_flipMotor.set(-1);
+      //turns off motor when switch is triggered
+      if(!getFlipSwitchValue()) {
+        m_flipMotor.set(0);
+        return true;
+      }
     }
+    return false;
   }
 
   public boolean getFlipSwitchValue() {
