@@ -1,4 +1,4 @@
-package frc.team6500;
+package frc.robot;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
