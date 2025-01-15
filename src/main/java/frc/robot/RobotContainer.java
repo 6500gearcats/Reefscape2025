@@ -4,15 +4,29 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
+
+  XboxController m_driver = new XboxController(0);
+  XboxController m_gunner = new XboxController(1);
+
   public RobotContainer() {
+    
     configureBindings();
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
+    // Configure your button bindings here
+
+    //TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
+    //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new FlipGroundIntake(m_groundIntake)).onFalse(new FlipGroundIntake(m_groundIntake));
+    
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
