@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsytems;
+package frc.robot.subsystems;
 
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -41,7 +41,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-//import frc.robot.Vision;
+import frc.robot.Vision;
 import frc.robot.DriveArgs;
 import frc.robot.SwerveArgs;
 
@@ -68,7 +68,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
-  //private AHRS m_gyro;
+  private AHRS m_gyro;
 
   private int m_gyroSim;
   private SimDouble m_simAngle;
@@ -84,7 +84,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   private final Field2d m_field = new Field2d();
 
-  //private Vision m_simVision;
+  private Vision m_simVision;
 
   private Pose2d m_simOdometryPose;
   private ShuffleboardTab m_driveTab = Shuffleboard.getTab("Drive");
@@ -93,7 +93,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final StructArrayPublisher<SwerveModuleState> publisher;  
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem( DriveArgs driveArgs) {
+  public DriveSubsystem(Vision vision,  DriveArgs driveArgs) {
     this.driveArgs = driveArgs;
 
     m_frontLeft = new MAXSwerveModule(
@@ -118,7 +118,7 @@ public class DriveSubsystem extends SubsystemBase {
 
 
 
-    //m_simVision = vision;
+    m_simVision = vision;
     try {
       /*
        * Communicate w/navX-MXP via theimport com.kauailabs.navx.frc.AHRS;A MXP SPI
@@ -130,7 +130,7 @@ public class DriveSubsystem extends SubsystemBase {
        * details.
        */
 
-      //m_gyro = new AHRS(NavXComType.kMXP_SPI);
+      m_gyro = new AHRS(NavXComType.kMXP_SPI);
       System.out.println("AHRS constructed");
     } catch (RuntimeException ex) {
       System.out.println("AHRS not constructed");
@@ -138,7 +138,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     // m_gyro.setAngleAdjustment(180.0);
-    //m_gyro.zeroYaw();
+    m_gyro.zeroYaw();
 
     if (RobotBase.isSimulation()) {
       m_gyroSim = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
@@ -229,7 +229,7 @@ publisher = NetworkTableInstance.getDefault()
       SmartDashboard.putNumber("Position: Y", yPos);
     }
 
-    //SmartDashboard.putNumber("NavX Pitch", m_gyro.getPitch());
+    SmartDashboard.putNumber("NavX Pitch", m_gyro.getPitch());
     SmartDashboard.putNumber("NavX Yaw angle", getAngle());
 
     SmartDashboard.putBoolean("Field Oriented", m_fieldOriented);
@@ -265,14 +265,14 @@ publisher = NetworkTableInstance.getDefault()
 
     if (driveArgs.simulation) { // Use the isSimulation flag from DriveArgs
       // Update camera simulation
-      //m_simVision.simulationPeriodic(this.getPose());
+      m_simVision.simulationPeriodic(this.getPose());
       
 
       // Update debug field with the robot's current pose
-      //Field2d debugField = m_simVision.getSimDebugField();
-      //if (debugField != null) {
-      //    debugField.getObject("EstimatedRobot").setPose(this.getPose());
-    }
+      Field2d debugField = m_simVision.getSimDebugField();
+      if (debugField != null) {
+          debugField.getObject("EstimatedRobot").setPose(this.getPose());
+      }
 
     
     // debugField.getObject("EstimatedRobotModules").setPoses(this.getModulePoses());
@@ -295,9 +295,9 @@ publisher = NetworkTableInstance.getDefault()
     m_simAngle.set(newangle);
 
     SmartDashboard.putNumber("SimAngle", m_simAngle.get());
-    //}
+    }
 
-}
+  }
 
   /**
    * Returns the currently-estimated pose of the robot.
@@ -467,7 +467,7 @@ publisher = NetworkTableInstance.getDefault()
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
-    //m_gyro.reset();
+    m_gyro.reset();
   }
 
   /**
@@ -485,19 +485,19 @@ publisher = NetworkTableInstance.getDefault()
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return 0.1;//m_gyro.getRate() * (driveArgs.kGyroReversed ? -1.0 : 1.0);
+    return m_gyro.getRate() * (driveArgs.kGyroReversed ? -1.0 : 1.0);
   }
 
   /* Return the NavX pitch angle */
   public double getPitch() {
-    return 0.1;//m_gyro.getPitch();
+    return m_gyro.getPitch();
   }
 
   /* Return the NavX yaw angle */
   public double getAngle() {
     // return -m_gyro.getYaw();
     if (!driveArgs.simulation) {
-      return 0.1;//-m_gyro.getAngle();
+      return -m_gyro.getAngle();
     } else {
       return m_simAngle.get();
     }

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import org.photonvision.PhotonCamera;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,8 +17,11 @@ public class RobotContainer {
   XboxController m_driver = new XboxController(0);
   XboxController m_gunner = new XboxController(1);
 
+  PhotonCamera temp_camera = new PhotonCamera("temp_camera");
+  
+
   public RobotContainer() {
-    
+
     configureBindings();
   }
 
