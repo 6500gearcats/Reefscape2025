@@ -253,7 +253,7 @@ publisher = NetworkTableInstance.getDefault()
     
   //OLD SIMULATION CODE
     // // Update camera simulation
-    // m_simVision.simulationPeriodic(this.getPose());
+     m_simVision.simulationPeriodic(this.getPose());
 
     
 
