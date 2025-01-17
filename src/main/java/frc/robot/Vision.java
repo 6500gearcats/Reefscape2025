@@ -20,7 +20,6 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import frc.robot.DriveArgs;
 
 public class Vision {
     private final PhotonCamera m_camera;
@@ -30,8 +29,6 @@ public class Vision {
     // Simulation
     private PhotonCameraSim cameraSim;
     private VisionSystemSim visionSim;
-
-    private DriveArgs driveArgs;
 
 
     public class VisionConstants {
@@ -63,8 +60,7 @@ public class Vision {
 
   }
 
-    public Vision(PhotonCamera camera, DriveArgs driveArgs) {
-        this.driveArgs = driveArgs;
+    public Vision(PhotonCamera camera) {
 
         m_camera = camera;
 
@@ -73,7 +69,8 @@ public class Vision {
         photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
         // ----- Simulation
-        if (driveArgs.simulation) {
+        boolean simulation = false;
+        if (simulation) {
             // Create the vision system simulation which handles cameras and targets on the
             // field.
             visionSim = new VisionSystemSim("main");
@@ -105,7 +102,7 @@ public class Vision {
     }
 
     public Field2d getSimDebugField() {
-        if (!driveArgs.simulation)
+        if (true)
             return null;
         return visionSim.getDebugField();
     }

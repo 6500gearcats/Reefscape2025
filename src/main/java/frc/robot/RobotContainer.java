@@ -17,8 +17,6 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.Vision;
 
 public class RobotContainer {
-  
-  DriveArgs driveArgs = new DriveArgs(false);
 
   
 
@@ -28,9 +26,9 @@ public class RobotContainer {
 
   PhotonCamera temp_camera = new PhotonCamera("temp_camera");
 
-  Vision vision = new Vision(temp_camera, driveArgs);
-  DriveSubsystem m_robotDrive = new DriveSubsystem(vision, driveArgs);
-  
+  Vision vision = new Vision(temp_camera);
+  //Temporarily adding this to
+  DriveSubsystem m_robotDrive = new DriveSubsystem(vision);
 
   public RobotContainer() {
 

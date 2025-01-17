@@ -12,6 +12,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.controllers.PathFollowingController;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
@@ -19,6 +20,7 @@ import com.studica.frc.AHRS.NavXComType;
 import edu.wpi.first.hal.SimBoolean;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,36 +36,46 @@ import edu.wpi.first.networktables.StructArrayPublisher;
 //import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Robot;
 import frc.robot.Vision;
-import frc.robot.DriveArgs;
-import frc.robot.SwerveArgs;
-
 import com.revrobotics.spark.SparkSim;
 import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.sim.SparkSimFaultManager;
 
 
-
 public class DriveSubsystem extends SubsystemBase {
   public boolean turboEnable = false;
-  private SwerveArgs swerveArgs = new SwerveArgs();
-  private DriveArgs driveArgs;
 
   // Create MAXSwerveModules 
-  private final MAXSwerveModule m_frontLeft;
+  private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
+      DriveConstants.kFrontLeftDrivingCanId,
+      DriveConstants.kFrontLeftTurningCanId,
+      DriveConstants.kFrontLeftChassisAngularOffset);
 
-  private final MAXSwerveModule m_frontRight;
+  private final MAXSwerveModule m_frontRight = new MAXSwerveModule(
+      DriveConstants.kFrontRightDrivingCanId,
+      DriveConstants.kFrontRightTurningCanId,
+      DriveConstants.kFrontRightChassisAngularOffset);
 
-  private final MAXSwerveModule m_rearLeft;
+  private final MAXSwerveModule m_rearLeft = new MAXSwerveModule(
+      DriveConstants.kRearLeftDrivingCanId,
+      DriveConstants.kRearLeftTurningCanId,
+      DriveConstants.kBackLeftChassisAngularOffset);
 
-  private final MAXSwerveModule m_rearRight;
+  private final MAXSwerveModule m_rearRight = new MAXSwerveModule(
+      DriveConstants.kRearRightDrivingCanId,
+      DriveConstants.kRearRightTurningCanId,
+      DriveConstants.kBackRightChassisAngularOffset);
 
 
   // The gyro sensor
@@ -93,31 +105,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final StructArrayPublisher<SwerveModuleState> publisher;  
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem(Vision vision,  DriveArgs driveArgs) {
-    this.driveArgs = driveArgs;
-
-    m_frontLeft = new MAXSwerveModule(
-      driveArgs.kFrontLeftDrivingCanId, 
-      driveArgs.kFrontLeftTurningCanId, 
-      driveArgs.kFrontLeftChassisAngularOffset, swerveArgs);
-
-    m_frontRight = new MAXSwerveModule(
-      driveArgs.kFrontRightDrivingCanId,
-      driveArgs.kFrontRightTurningCanId,
-      driveArgs.kFrontRightChassisAngularOffset, swerveArgs);
-
-    m_rearLeft = new MAXSwerveModule(
-      driveArgs.kRearLeftDrivingCanId, 
-      driveArgs.kRearLeftTurningCanId, 
-      driveArgs.kRearLeftChassisAngularOffset, swerveArgs);
-
-    m_rearRight = new MAXSwerveModule(
-      driveArgs.kRearRightDrivingCanId,
-      driveArgs.kRearRightTurningCanId,
-      driveArgs.kRearRightChassisAngularOffset, swerveArgs);
-
-
-
+  public DriveSubsystem(Vision vision) {
     m_simVision = vision;
     try {
       /*
@@ -151,7 +139,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     m_odometry = new SwerveDriveOdometry(
-        driveArgs.kDriveKinematics,
+        DriveConstants.kDriveKinematics,
         Rotation2d.fromDegrees(getAngle()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
@@ -165,34 +153,27 @@ public class DriveSubsystem extends SubsystemBase {
     m_simOdometryPose = m_odometry.getPoseMeters();
     SmartDashboard.putData("Field", m_field);
 
-    m_maxSpeed = m_driveTab.add("Max Speed", driveArgs.kTurboModeModifier)
+    m_maxSpeed = m_driveTab.add("Max Speed", DriveConstants.kTurboModeModifier)
       .withWidget(BuiltInWidgets.kNumberSlider) // specify the widget here
       .withProperties(Map.of(
-        "min", driveArgs.kTurboModeModifier, 
-        "max", driveArgs.kTurboModeModifier*2)) // specify widget properties here
+        "min", DriveConstants.kTurboModeModifier, 
+        "max", DriveConstants.kTurboModeModifier*2)) // specify widget properties here
       .getEntry();
 
     
     // Load the RobotConfig from the GUI settings. You should probably
     // store this in your Constants file
-    RobotConfig config = null;
-    try{
-      config = RobotConfig.fromGUISettings();
-    } catch (Exception e) {
-      // Handle exception as needed
-      e.printStackTrace();
-    }
 
       AutoBuilder.configure(
         this::getPose,
         this::resetOdometry,
         this::getChassisSpeed,
-    (BiConsumer<ChassisSpeeds, DriveFeedforwards>) null,
-    new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+        (speeds, feedforwards) -> drive(speeds),
+            new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
                     new PIDConstants(10.0, 0.0, 0.0), // Translation PID constants
                     new PIDConstants(10.0, 0.0, 0.0) // Rotation PID constants
             ), 
-            config,
+            AutoConstants.config,
     () -> {
       // Boolean supplier that controls when the path will be mirrored for the red
       // alliance
@@ -217,7 +198,7 @@ publisher = NetworkTableInstance.getDefault()
     // Update the odometry in the periodic block
     updateOdometry();
 
-    if (!driveArgs.simulation) {
+    if (Robot.isReal()) {
       m_field.setRobotPose(m_odometry.getPoseMeters());
     } else {
       m_field.setRobotPose(m_simOdometryPose);
@@ -251,30 +232,12 @@ publisher = NetworkTableInstance.getDefault()
     //SparkSim.iterate();
 
     
-  //OLD SIMULATION CODE
-    // // Update camera simulation
-     m_simVision.simulationPeriodic(this.getPose());
-
     
+    // Update camera simulation
+    m_simVision.simulationPeriodic(this.getPose());
 
-    // var debugField = m_simVision.getSimDebugField();
-    // debugField.getObject("EstimatedRobot").setPose(this.getPose());
-
-    //NEW SIMULATION CODE , 
-    //TODO: finish simulationPeriodic to the Vision class
-
-    if (driveArgs.simulation) { // Use the isSimulation flag from DriveArgs
-      // Update camera simulation
-      m_simVision.simulationPeriodic(this.getPose());
-      
-
-      // Update debug field with the robot's current pose
-      Field2d debugField = m_simVision.getSimDebugField();
-      if (debugField != null) {
-          debugField.getObject("EstimatedRobot").setPose(this.getPose());
-      }
-
-    
+    var debugField = m_simVision.getSimDebugField();
+    debugField.getObject("EstimatedRobot").setPose(this.getPose());
     // debugField.getObject("EstimatedRobotModules").setPoses(this.getModulePoses());
 
     // angle.set(5.0);
@@ -295,7 +258,6 @@ publisher = NetworkTableInstance.getDefault()
     m_simAngle.set(newangle);
 
     SmartDashboard.putNumber("SimAngle", m_simAngle.get());
-    }
 
   }
 
@@ -305,7 +267,7 @@ publisher = NetworkTableInstance.getDefault()
    * @return The pose.
    */
   public Pose2d getPose() {
-    if (!driveArgs.simulation) {
+    if (Robot.isReal()) {
       return m_odometry.getPoseMeters();
     } else {
       return m_simOdometryPose;
@@ -351,12 +313,12 @@ publisher = NetworkTableInstance.getDefault()
             m_rearRight.getPosition()
         });
 
-    if (driveArgs.simulation) {
+    if (Robot.isSimulation()) {
       SwerveModuleState[] measuredStates = new SwerveModuleState[] {
           m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()
       };
       // ChassisSpeeds speeds =
-      // driveArgs.kDriveKinematics.toChassisSpeeds(measuredStates);
+      // DriveConstants.kDriveKinematics.toChassisSpeeds(measuredStates);
       ChassisSpeeds speeds = m_lastSpeeds;
 
       Twist2d twist = new Twist2d(
@@ -387,31 +349,31 @@ publisher = NetworkTableInstance.getDefault()
 
     m_fieldOriented = fieldRelative;
     // Adjust input based on max speed
-    xSpeed *= driveArgs.kNormalSpeedMetersPerSecond;
-    ySpeed *= driveArgs.kNormalSpeedMetersPerSecond;
+    xSpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
+    ySpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
 
-    rot *= driveArgs.kMaxAngularSpeed;
+    rot *= DriveConstants.kMaxAngularSpeed;
     // Non linear speed set
     // xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
     // ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
 
-    double max = m_maxSpeed.getDouble(driveArgs.kTurboModeModifier);
+    double max = m_maxSpeed.getDouble(DriveConstants.kTurboModeModifier);
     
     if (turboEnable) {
       
       xSpeed *= max;
       ySpeed *= max;
-      rot *= driveArgs.kTurboAngularSpeed;
+      rot *= DriveConstants.kTurboAngularSpeed;
     }
 
     m_lastSpeeds = (fieldRelative)
         ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(getAngle()))
         : new ChassisSpeeds(xSpeed, ySpeed, rot);
 
-    var swerveModuleStates = driveArgs.kDriveKinematics.toSwerveModuleStates(m_lastSpeeds);
+    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(m_lastSpeeds);
 
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        swerveModuleStates, driveArgs.kMaxSpeedMetersPerSecond);
+        swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
@@ -420,10 +382,10 @@ publisher = NetworkTableInstance.getDefault()
   }
 
   public void drive(ChassisSpeeds speeds) {
-    var swerveModuleStates = driveArgs.kDriveKinematics.toSwerveModuleStates(speeds);
+    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
 
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        swerveModuleStates, driveArgs.kMaxSpeedMetersPerSecond);
+        swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
@@ -450,7 +412,7 @@ publisher = NetworkTableInstance.getDefault()
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        desiredStates, driveArgs.kMaxSpeedMetersPerSecond);
+        desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(desiredStates[0]);
     m_frontRight.setDesiredState(desiredStates[1]);
     m_rearLeft.setDesiredState(desiredStates[2]);
@@ -485,7 +447,7 @@ publisher = NetworkTableInstance.getDefault()
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return m_gyro.getRate() * (driveArgs.kGyroReversed ? -1.0 : 1.0);
+    return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
   /* Return the NavX pitch angle */
@@ -496,7 +458,7 @@ publisher = NetworkTableInstance.getDefault()
   /* Return the NavX yaw angle */
   public double getAngle() {
     // return -m_gyro.getYaw();
-    if (!driveArgs.simulation) {
+    if (Robot.isReal()) {
       return -m_gyro.getAngle();
     } else {
       return m_simAngle.get();
@@ -508,10 +470,8 @@ publisher = NetworkTableInstance.getDefault()
     return m_fieldOriented;
   }
 
-  public void toggleTurbo() {
-    turboEnable = !turboEnable;
-  }
- 
+  // PID Controllers
+  public static PIDController turnController = new PIDController(Constants.ANGULAR_P, 0, Constants.ANGULAR_D);
 
   public void setDriveCoast() {
     m_frontLeft.setCoast();
