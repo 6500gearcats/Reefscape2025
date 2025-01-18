@@ -7,13 +7,16 @@ package frc.robot.subsystems;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CoralHolder extends SubsystemBase {
   /** Creates a new CoralHolder. */
   SparkMax m_coralMotor;
+  DigitalInput m_flipSwitch;
   public CoralHolder() {
     m_coralMotor = new SparkMax(0, MotorType.kBrushless);
+    m_flipSwitch = new DigitalInput(0);
   }
 
   public void shootCoral(double speed) {
@@ -23,5 +26,10 @@ public class CoralHolder extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  //True when coral Present
+  public boolean getFlipSwitchValue() {
+    return m_flipSwitch.get();
   }
 }

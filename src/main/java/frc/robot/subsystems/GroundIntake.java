@@ -40,7 +40,7 @@ public class GroundIntake extends SubsystemBase {
     SmartDashboard.putBoolean("Flip Switch", getFlipSwitchValue());
   }
 
-  //This assumes that the flip switch will the true when you flip the 
+  //This assumes that the flip switch will the false when you have 
   //intake to the outside of the robot
 
   //TODO: Check if the logic is correct

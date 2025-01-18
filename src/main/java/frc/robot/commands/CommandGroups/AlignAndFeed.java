@@ -24,13 +24,11 @@ public class AlignAndFeed extends ParallelDeadlineGroup {
     // Add the deadline command in the super() call. Add other commands using
     // addCommands().
 
-  //This assumes that the flip switch will the true when you flip the 
-  //intake to the outside of the robot
-    super(new InstantCommand(() -> m_groundIntake.getFlipSwitchValue()));
+    super(new InstantCommand(() -> m_coralHolder.getFlipSwitchValue()));
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(new FlipGroundIntake(m_groundIntake)
         .andThen(new GrabCoral(m_groundIntake, -0.1).withTimeout(0.2)), 
       new AlignCoral(m_aligner, 1),
-      new ShootCoral(m_coralHolder, 0.1));
+      new ShootCoral(m_coralHolder, 0.01));
   }
 }
