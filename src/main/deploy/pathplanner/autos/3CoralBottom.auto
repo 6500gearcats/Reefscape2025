@@ -1,0 +1,73 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomToCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Place-Holder Coral Place"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomCoralToSource"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Place-Holder Coral Grab"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomSourceToCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Place-Holder Coral Place"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomCoralReturn"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Place-Holder Algae Grab"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomSourceToCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Place-Holder Coral Place"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "3 Note Auto",
+  "choreoAuto": false
+}

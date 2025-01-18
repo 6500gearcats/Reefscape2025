@@ -7,6 +7,7 @@ package frc.robot;
 import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Joystick;
@@ -36,7 +37,10 @@ public class RobotContainer {
   DriveSubsystem m_robotDrive = new DriveSubsystem(vision);
 
   public RobotContainer() {
-
+    NamedCommands.registerCommand("Place-Holder Coral Place", null);
+    NamedCommands.registerCommand("Place-Holder Coral Grab", null);
+    NamedCommands.registerCommand("Place-Holder Algae Grab", null);
+    NamedCommands.registerCommand("Place-Holder Algae Processor", null);
     // Build an auto chooser. This will use Commands.none() as the default option.
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);

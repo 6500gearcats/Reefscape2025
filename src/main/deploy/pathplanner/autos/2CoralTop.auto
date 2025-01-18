@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TopToCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Place-Holder Coral Place"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TopCoralToSource"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Place-Holder Coral Grab"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TopSourceToCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Place-Holder Coral Place"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "2 Note Auto",
+  "choreoAuto": false
+}
