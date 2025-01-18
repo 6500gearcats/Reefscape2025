@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Aligner;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class SetAlignerSpeed extends Command {
+public class AlignCoral extends Command {
   /** Creates a new SetAlignerSpeed. */
   private Aligner m_aligner;
   private double speed;
 
-  public SetAlignerSpeed(Aligner theAligner, double speed) {
+  public AlignCoral(Aligner theAligner, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_aligner = theAligner;
     this.speed = speed;

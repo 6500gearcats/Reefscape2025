@@ -4,18 +4,33 @@
 
 package frc.robot.commands.CommandGroups;
 
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import frc.robot.commands.Aligner.AlignCoral;
+import frc.robot.commands.GroundIntake.FlipGroundIntake;
+import frc.robot.commands.GroundIntake.GrabCoral;
+import frc.robot.commands.SourceIntake.ShootCoral;
+import frc.robot.subsystems.Aligner;
+import frc.robot.subsystems.CoralHolder;
+import frc.robot.subsystems.GroundIntake;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AlignAndFeed extends ParallelDeadlineGroup {
   /** Creates a new AlignAndFeed. */
-  public AlignAndFeed() {
+  public AlignAndFeed(GroundIntake m_groundIntake, Aligner m_aligner, CoralHolder m_coralHolder) {
     // Add the deadline command in the super() call. Add other commands using
     // addCommands().
-    super(new InstantCommand());
+
+  //This assumes that the flip switch will the true when you flip the 
+  //intake to the outside of the robot
+    super(new InstantCommand(() -> m_groundIntake.getFlipSwitchValue()));
     // addCommands(new FooCommand(), new BarCommand());
+    addCommands(new FlipGroundIntake(m_groundIntake)
+        .andThen(new GrabCoral(m_groundIntake, -0.1).withTimeout(0.2)), 
+      new AlignCoral(m_aligner, 1),
+      new ShootCoral(m_coralHolder, 0.1));
   }
 }
