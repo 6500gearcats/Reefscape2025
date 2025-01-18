@@ -80,7 +80,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
-  private AHRS m_gyro;
+  public static AHRS m_gyro;
 
   private int m_gyroSim;
   private SimDouble m_simAngle;

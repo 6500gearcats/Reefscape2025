@@ -1,17 +1,22 @@
 
 package frc.robot;
 
-import frc.robot.LimelightHelpers;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.PoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.LimelightHelpers.LimelightResults;
-import frc.robot.LimelightHelpers.LimelightTarget_Fiducial;
+import frc.robot.subsystems.DriveSubsystem;
 
 
 public class GCLimelight {
     // Limelight name
     private String name;
+    private PoseEstimator m_poseEstimator;
 
     public GCLimelight(String theName)
     {
+        m_poseEstimator = new PoseEstimator<>(null, null, null, null);
         name = theName;
     }
 
@@ -107,5 +112,33 @@ public class GCLimelight {
             }
         }
         return 0.0;        
+    }
+
+    // TODO: Fix this.
+    // WARNING: DON'T EVEN TRY TO USE THIS METHOD!!!
+    // YOU WILL REGRET BEING BORN!!!
+    public Pose2d estimateFeildPose()
+    {
+        boolean doRejectUpdate = false;
+
+        LimelightHelpers.SetRobotOrientation("limelight", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+        if(Math.abs(DriveSubsystem.m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
+        {
+            doRejectUpdate = true;
+        }
+        if(mt2.tagCount == 0)
+        {
+            doRejectUpdate = true;
+        }
+        if(!doRejectUpdate)
+        {
+            m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+            m_poseEstimator.addVisionMeasurement(
+            mt2.pose,
+            mt2.timestampSeconds);
+        }
+
+        return m_poseEstimator.getEstimatedPosition();
     }
 }
