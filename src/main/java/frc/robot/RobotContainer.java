@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.CommandGroups.IntakeFromGround;
 import frc.robot.commands.GroundIntake.FlipGroundIntake;
-import frc.robot.subsytems.GroundIntake;
+import frc.robot.subsystems.GroundIntake;
 
 public class RobotContainer {
   @SuppressWarnings("unused")

@@ -5,7 +5,7 @@
 package frc.robot.commands.Algae;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsytems.AlgaeIntake;
+import frc.robot.subsystems.AlgaeIntake;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class IntakeAlgae extends Command {

@@ -7,7 +7,7 @@ package frc.robot.commands.CommandGroups;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.GroundIntake.FlipGroundIntake;
 import frc.robot.commands.GroundIntake.GrabCoral;
-import frc.robot.subsytems.GroundIntake;
+import frc.robot.subsystems.GroundIntake;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
