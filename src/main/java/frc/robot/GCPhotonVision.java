@@ -273,7 +273,7 @@
             if (result.hasTargets()) {
                 if (target.getFiducialId() == targetID) {
                     // Use the value of target to find our rotation using the getYaw command
-                    return 0;
+                    return target.getSkew();
                 }
             } else {
                 rotation = 0;

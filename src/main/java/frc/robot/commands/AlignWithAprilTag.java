@@ -32,7 +32,7 @@ public class AlignWithAprilTag extends Command {
     double skew = m_camera.getChosenSkew(m_FiducialID);
     double rotation = m_camera.getChosenYaw(m_FiducialID);
 
-    m_drive.drive(0, -rotation * 0.05, -skew * 50, false);
+    m_drive.drive(0, -rotation * 0.05, -skew * 0.05, false);
   }
 
   // Called once the command ends or is interrupted.
