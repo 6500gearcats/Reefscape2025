@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.Vision;
 
@@ -56,11 +57,14 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // Configure your button bindings here
 
-    //TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
-    //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new FlipGroundIntake(m_groundIntake)).onFalse(new FlipGroundIntake(m_groundIntake));
-    
+    new POVButton(m_driver, 90)
+    .onTrue(
+      new RunCommand(() -> m_robotDrive.drive(0,-.25,0,false)).withTimeout(0.75));
+
+new POVButton(m_driver, 270)
+    .onTrue(
+      new RunCommand(() -> m_robotDrive.drive(0.0,.25,0,false)).withTimeout(0.75));
   }
 
   public Command getAutonomousCommand() {
