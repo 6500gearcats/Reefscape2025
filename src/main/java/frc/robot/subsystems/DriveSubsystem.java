@@ -47,7 +47,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Robot;
-import frc.robot.Vision;
+import frc.robot.GCPhotonVision;
 import com.revrobotics.spark.SparkSim;
 import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.sim.SparkSimFaultManager;
@@ -96,7 +96,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   private final Field2d m_field = new Field2d();
 
-  private Vision m_simVision;
+  private GCPhotonVision m_simVision;
 
   private Pose2d m_simOdometryPose;
   private ShuffleboardTab m_driveTab = Shuffleboard.getTab("Drive");
@@ -105,7 +105,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final StructArrayPublisher<SwerveModuleState> publisher;  
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem(Vision vision) {
+  public DriveSubsystem(GCPhotonVision vision) {
     m_simVision = vision;
     try {
       /*

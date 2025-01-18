@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.Vision;
+import frc.robot.GCPhotonVision;
 
 public class RobotContainer {
 
@@ -30,7 +30,7 @@ public class RobotContainer {
 
   PhotonCamera temp_camera = new PhotonCamera("temp_camera");
 
-  Vision vision = new Vision(temp_camera);
+  GCPhotonVision vision = new GCPhotonVision(temp_camera);
   //Temporarily adding this to
   DriveSubsystem m_robotDrive = new DriveSubsystem(vision);
 
