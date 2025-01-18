@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import javax.net.ssl.TrustManagerFactory;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.GCLimelight;
 import frc.robot.GCPhotonVision;
@@ -80,6 +81,7 @@ public class Vision extends SubsystemBase {
     }
   }
 
+  //TODO: Fix Skew
   public double getChosenSkew(int fiducialID)
   {
     if(isLimelight){
@@ -101,5 +103,7 @@ public class Vision extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Target 17 Skew", getChosenSkew(17));
+    SmartDashboard.putNumber("Target 17 Yaw", getChosenYaw(17));
   }
 }

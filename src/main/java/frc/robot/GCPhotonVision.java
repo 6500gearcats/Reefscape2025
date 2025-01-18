@@ -273,7 +273,7 @@
             if (result.hasTargets()) {
                 if (target.getFiducialId() == targetID) {
                     // Use the value of target to find our rotation using the getYaw command
-                    return target.getSkew();
+                    return 0;
                 }
             } else {
                 rotation = 0;
@@ -282,7 +282,23 @@
 
         return rotation;
     }
- 
+
+    public boolean hasChosenTarget(int targetID) {
+        var result = getLatestCameraResult();
+        // Get a list of all of the targets that have been detected.
+        List<PhotonTrackedTarget> targets = result.getTargets();
+
+        // For each target we have check if it matches the id you want.
+        for (PhotonTrackedTarget target : targets) {
+            if (target.getFiducialId() == targetID) {
+                // Use the value of target to find our rotation using the getYaw command
+                return true;
+            }
+        }
+
+        return false;
+    }
+
      public double getChosenTargetRange(int targetID) {
          var result = getLatestCameraResult();
          List<PhotonTrackedTarget> targets = result.getTargets();
