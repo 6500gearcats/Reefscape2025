@@ -11,9 +11,11 @@ import frc.robot.subsytems.GroundIntake;
 public class GrabCoral extends Command {
   /** Creates a new GrabCoral. */
   GroundIntake m_groundIntake;
-  public GrabCoral() {
+  double speed;
+  public GrabCoral(GroundIntake groundIntake, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_groundIntake = new GroundIntake(0, 1);
+    m_groundIntake = groundIntake;
+    this.speed = speed;
     addRequirements(m_groundIntake);
   }
 
@@ -25,7 +27,7 @@ public class GrabCoral extends Command {
   @Override
   public void execute() {
     //TODO: Add real speed
-    m_groundIntake.spinIntake(0.5);
+    m_groundIntake.spinIntake(speed);
   }
 
   // Called once the command ends or is interrupted.

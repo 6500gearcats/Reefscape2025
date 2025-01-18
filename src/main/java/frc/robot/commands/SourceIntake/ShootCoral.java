@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Arm;
+package frc.robot.commands.SourceIntake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsytems.CoralHolder;
@@ -11,9 +11,11 @@ import frc.robot.subsytems.CoralHolder;
 public class ShootCoral extends Command {
   /** Creates a new CoralHolder. */
   CoralHolder m_CoralHolder;
-  public ShootCoral(CoralHolder coralHolder) {
+  Double speed;
+  public ShootCoral(CoralHolder coralHolder, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_CoralHolder = coralHolder;
+    this.speed = speed;
     addRequirements(m_CoralHolder);
   }
 
@@ -25,7 +27,7 @@ public class ShootCoral extends Command {
   @Override
   public void execute() {
     //TODO: Add real speed
-    m_CoralHolder.shootCoral(0.5);
+    m_CoralHolder.shootCoral(speed);
   }
 
   // Called once the command ends or is interrupted.

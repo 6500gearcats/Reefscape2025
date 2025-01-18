@@ -2,40 +2,44 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.GroundIntake;
+package frc.robot.commands.Arm;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsytems.GroundIntake;
+import frc.robot.subsytems.Arm;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class FlipGroundIntake extends Command {
-  GroundIntake m_groundIntake;
-  boolean m_finished = false;
-  
-  /** Creates a new FlipGroundIntake. */
-  public FlipGroundIntake(GroundIntake groundIntake) {
+public class SetArmPosition extends Command {
+  /** Creates a new SetArmPOsition. */
+  Arm m_arm;
+  double position;
+  public SetArmPosition(Arm m_arm, double position) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_groundIntake = groundIntake;
-    addRequirements(m_groundIntake);
+    this.m_arm = m_arm;
+    this.position = position;
+    addRequirements(m_arm);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_finished = m_groundIntake.flipIntake();
+    m_arm.spinArm((position - m_arm.getArmPosition()) * 0.005);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_arm.spinArm(0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_finished;
+    return false;
   }
 }

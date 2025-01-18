@@ -21,11 +21,11 @@ public class GroundIntake extends SubsystemBase {
   private SparkMax m_spinMotor;
   
 
-  public GroundIntake(int flipMotorId, int spinMotorId) {
+  public GroundIntake() {
     m_flipSwitch = new DigitalInput(0);
 
-    m_flipMotor = new SparkMax(flipMotorId, MotorType.kBrushless);
-    m_spinMotor = new SparkMax(spinMotorId, MotorType.kBrushless);
+    m_flipMotor = new SparkMax(1, MotorType.kBrushless);
+    m_spinMotor = new SparkMax(2, MotorType.kBrushless);
 
     SparkMaxConfig m_spinConfig = new SparkMaxConfig();
     m_spinMotor.configure(m_spinConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
