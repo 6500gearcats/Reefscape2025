@@ -100,6 +100,15 @@ public class Vision extends SubsystemBase {
     }
   }
 
+  public double getZAxisRotation(int fiducialID) {
+    if (isLimelight) {
+      return limelight.getChosenTargetSkewDegrees(fiducialID);
+    }
+    else {
+      return photonCam.getAprilTag3dData(fiducialID).getRotation().getZ();
+    }
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

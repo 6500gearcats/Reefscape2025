@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Vision;
@@ -15,11 +16,15 @@ public class AlignWithAprilTag extends Command {
   private Vision m_camera;
   private DriveSubsystem m_drive;
 
+  private PIDController skewController;
+  private PIDController yawController;
+
   public AlignWithAprilTag(int fiducialID, Vision camera, DriveSubsystem drive) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_FiducialID = fiducialID;
     m_camera = camera;
     m_drive = drive;
+
   }
 
   // Called when the command is initially scheduled.
@@ -29,7 +34,7 @@ public class AlignWithAprilTag extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double skew = m_camera.getChosenSkew(m_FiducialID);
+    double skew = m_camera.getZAxisRotation(m_FiducialID);
     double rotation = m_camera.getChosenYaw(m_FiducialID);
 
     m_drive.drive(0, -rotation * 0.05, -skew * 0.05, false);
@@ -44,6 +49,6 @@ public class AlignWithAprilTag extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(m_camera.getChosenSkew(m_FiducialID)) <= 1 && Math.abs(m_camera.getChosenYaw(m_FiducialID)) <= 1;
+    return Math.abs(m_camera.getZAxisRotation(m_FiducialID)) <= 3 && Math.abs(m_camera.getChosenYaw(m_FiducialID)) <= 1;
   }
 }

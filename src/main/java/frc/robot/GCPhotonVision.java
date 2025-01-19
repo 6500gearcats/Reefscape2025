@@ -30,7 +30,8 @@
  import edu.wpi.first.math.VecBuilder;
  import edu.wpi.first.math.geometry.Pose2d;
  import edu.wpi.first.math.geometry.Rotation2d;
- import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.numbers.N1;
  import edu.wpi.first.math.numbers.N3;
  import edu.wpi.first.math.util.Units;
  import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -358,6 +359,19 @@
          }
  
          return pitch;
+     }
+
+     public Transform3d getAprilTag3dData(int targetID) {
+        var result = getLatestCameraResult();
+         List<PhotonTrackedTarget> targets = result.getTargets();
+         if (result.hasTargets()) {
+             for (PhotonTrackedTarget target : targets) {
+                 if (target.getFiducialId() == targetID) {
+                     return target.getBestCameraToTarget();
+                 }
+             }
+         }
+         return new Transform3d();
      }
  
  }
