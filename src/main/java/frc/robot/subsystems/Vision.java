@@ -112,7 +112,8 @@ public class Vision extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Target 17 Skew", getChosenSkew(17));
+    SmartDashboard.putNumber("Target 17 Z-Axis Rotation", getZAxisRotation(17));
     SmartDashboard.putNumber("Target 17 Yaw", getChosenYaw(17));
+
   }
 }

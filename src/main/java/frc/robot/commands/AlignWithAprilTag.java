@@ -49,6 +49,6 @@ public class AlignWithAprilTag extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(m_camera.getZAxisRotation(m_FiducialID)) <= 3 && Math.abs(m_camera.getChosenYaw(m_FiducialID)) <= 1;
+    return (Math.abs(m_camera.getZAxisRotation(m_FiducialID)) >= 3.05 && Math.abs(m_camera.getChosenYaw(m_FiducialID)) <= 1) || m_camera.getZAxisRotation(m_FiducialID)==0;
   }
 }
