@@ -15,8 +15,9 @@ public class AlignWithReef extends SequentialCommandGroup {
   /** Creates a new AlignWithReef. */
   public AlignWithReef(int fiducialID, Vision camera, DriveSubsystem drive) {
     addCommands(
-      new AlignWithAprilTag(fiducialID, camera, drive)
-      
+      new AlignWithAprilTag(fiducialID, camera, drive),
+      new SetAprilTagHorizontalOffset(fiducialID, camera, drive, .5),
+      new SetAprilTagVerticalOffset(fiducialID, camera, drive, 0)
     );
   }
 }
