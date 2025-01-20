@@ -105,13 +105,17 @@ public class DriveSubsystem extends SubsystemBase {
   private Pose2d m_simOdometryPose;
   private ShuffleboardTab m_driveTab = Shuffleboard.getTab("Drive");
   private GenericEntry m_maxSpeed;
-  
-  public SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, m_gyro.getRotation2d(), new SwerveModulePosition[] {
+  //TODO: Remove this after finishing the pose estimator
+  public SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
+    DriveConstants.kDriveKinematics, 
+    m_gyro.getRotation2d(), 
+    new SwerveModulePosition[] {
     m_frontLeft.getPosition(),
     m_frontRight.getPosition(),
     m_rearLeft.getPosition(),
-    m_rearRight.getPosition()
-}, new Pose2d(0.0, 0.0, new Rotation2d()));
+    m_rearRight.getPosition()},
+    new Pose2d(0.0, 0.0, new Rotation2d())
+  );
 
   private final StructArrayPublisher<SwerveModuleState> publisher;  
 
@@ -489,5 +493,10 @@ publisher = NetworkTableInstance.getDefault()
     m_rearLeft.setCoast();
     m_frontRight.setCoast();
     m_rearRight.setCoast();
+  }
+
+  //Code Added for pose estimator- Pranav
+  public Rotation2d getRotation2d(){
+    return m_gyro.getRotation2d();
   }
 }
