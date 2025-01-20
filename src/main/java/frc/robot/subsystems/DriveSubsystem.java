@@ -500,4 +500,13 @@ publisher = NetworkTableInstance.getDefault()
   public Rotation2d getRotation2d(){
     return m_gyro.getRotation2d();
   }
+
+  public SwerveModulePosition[] getWheelPositions(){
+    return new SwerveModulePosition[] {
+      m_frontLeft.getPosition(),
+      m_frontRight.getPosition(),
+      m_rearLeft.getPosition(),
+      m_rearRight.getPosition()
+    };
+  }
 }

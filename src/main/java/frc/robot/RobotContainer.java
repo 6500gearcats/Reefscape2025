@@ -9,6 +9,8 @@ import org.photonvision.PhotonCamera;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.estimator.PoseEstimator;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -19,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.GCPoseEstimator;
 import frc.robot.subsystems.Vision;
 import frc.robot.GCPhotonVision;
 import frc.robot.commands.AlignWithAprilTag;
@@ -41,6 +44,8 @@ public class RobotContainer {
   Vision m_vision = new Vision(vision);
   //Temporarily adding this to
   DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera);
+
+  GCPoseEstimator m_poseEstimator = new GCPoseEstimator(() -> m_robotDrive.getRotation2d(),() -> m_robotDrive.getWheelPositions());
 
   public RobotContainer() {
 
