@@ -40,7 +40,7 @@ public class RobotContainer {
   GCPhotonVision vision = new GCPhotonVision(temp_camera);
   Vision m_vision = new Vision(vision);
   //Temporarily adding this to
-  DriveSubsystem m_robotDrive = new DriveSubsystem(vision);
+  DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera);
 
   public RobotContainer() {
 
