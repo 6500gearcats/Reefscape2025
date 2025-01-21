@@ -42,10 +42,9 @@ public class RobotContainer {
   PhotonCamera temp_camera = new PhotonCamera("ArducamTwo");
   GCPhotonVision vision = new GCPhotonVision(temp_camera);
   Vision m_vision = new Vision(vision);
+  
   //Temporarily adding this to
   DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera);
-
-  GCPoseEstimator m_poseEstimator = new GCPoseEstimator(() -> m_robotDrive.getRotation2d(),() -> m_robotDrive.getWheelPositions());
 
   public RobotContainer() {
 

@@ -58,6 +58,8 @@ import com.revrobotics.sim.SparkSimFaultManager;
 
 
 public class DriveSubsystem extends SubsystemBase {
+  // ! Update this to use the pose estimator instead of normal odametry
+
   public boolean turboEnable = false;
 
   // Create MAXSwerveModules 
@@ -98,6 +100,9 @@ public class DriveSubsystem extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
 
+  //The new Pose Estimator
+  private GCPoseEstimator m_poseEstimator;
+
   private final Field2d m_field = new Field2d();
 
   private GCPhotonVision m_simVision;
@@ -105,6 +110,7 @@ public class DriveSubsystem extends SubsystemBase {
   private Pose2d m_simOdometryPose;
   private ShuffleboardTab m_driveTab = Shuffleboard.getTab("Drive");
   private GenericEntry m_maxSpeed;
+
   //TODO: Remove this after finishing the pose estimator
   /** 
   public SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
@@ -153,6 +159,10 @@ public class DriveSubsystem extends SubsystemBase {
       m_calibrating.set(false);
       SmartDashboard.putNumber(getName(), getPitch());
     }
+
+    //
+    m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions);
+
 
     m_odometry = new SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
@@ -284,7 +294,7 @@ publisher = NetworkTableInstance.getDefault()
    */
   public Pose2d getPose() {
     if (Robot.isReal()) {
-      return m_odometry.getPoseMeters();
+      return m_poseEstimator.getEstimatedPosition();
     } else {
       return m_simOdometryPose;
     }

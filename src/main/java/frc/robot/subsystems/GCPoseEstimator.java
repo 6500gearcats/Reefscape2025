@@ -27,14 +27,18 @@ public class GCPoseEstimator extends SubsystemBase {
 
   //TODO: Add appropriate the standard deviation for the model's states and the vision measurements.
 
-  // This uses the Kulman Filter to estimate the pose of the robot. 
-  // HIGHLY RECOMMENDED to research the Kalman Filter to properly understand this.
+  /* 
+  * This uses the Kulman Filter to estimate the pose of the robot. 
+  * HIGHLY RECOMMENDED to research the Kalman Filter to properly understand this.
+  */
 
-  // You can tune Standard deviation of repective estimation/measurement to configure how much you trust them.
-  // Smaller numbers will cause the filter to
-  // "trust" the estimate from that particular component more than the others. 
-  // This in turn means the particualr component will have a stronger influence
-  // on the final pose estimate.
+  /*
+  * You can tune Standard deviation of repective estimation/measurement to configure how much you trust them.
+  * Smaller numbers will cause the filter to
+  * "trust" the estimate from that particular component more than the others. 
+  * This in turn means the particualr component will have a stronger influence
+  * on the final pose estimate.
+  */
 
   /*
   * The Standard Deviation for the Model's States.
@@ -77,23 +81,23 @@ public class GCPoseEstimator extends SubsystemBase {
     useLimeLight();
   }
 
-  public void setVisionMeasurement(Pose2d pose, double timestamp) {
-    m_poseEstimator.addVisionMeasurement(pose, timestamp);
-  }
-  public void setVisionStndDeviation(Vector<N3> visionStndDev) {
-    m_poseEstimator.setVisionMeasurementStdDevs(visionStndDev);
-  }
-
   public Pose2d getEstimatedPosition() {
     return m_poseEstimator.getEstimatedPosition();
   }
 
+  //The following method is limelight integration from LimeLight themselves.
   public void useLimeLight() {
     //TODO: add logic to update useMegaTag2 dynamically based on what limelight sees
     boolean useMegaTag2 = true; //set to false to use MegaTag1
     boolean doRejectUpdate = false;
     if(useMegaTag2 == false)
     {
+      /*
+      * In 2024, most of the WPILib Ecosystem transitioned to a single-origin coordinate system. 
+      * For 2024 and beyond, the origin of your coordinate system should always be the "blue" origin.
+      * FRC teams should always use botpose_wpiblue for pose-related functionality
+      */
+
       LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
       
       if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
@@ -122,6 +126,11 @@ public class GCPoseEstimator extends SubsystemBase {
     }
     else if (useMegaTag2 == true)
     {
+      /*
+      * In 2024, most of the WPILib Ecosystem transitioned to a single-origin coordinate system. 
+      * For 2024 and beyond, the origin of your coordinate system should always be the "blue" origin.
+      * FRC teams should always use botpose_wpiblue for pose-related functionality
+      */
       LimelightHelpers.SetRobotOrientation("limelight", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
       LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
       if(Math.abs(DriveSubsystem.m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
