@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.function.IntSupplier;
+
 import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -46,8 +48,6 @@ public class RobotContainer {
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
-
 
     configureBindings();
 
@@ -68,10 +68,9 @@ public class RobotContainer {
 
     //TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
     //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new FlipGroundIntake(m_groundIntake)).onFalse(new FlipGroundIntake(m_groundIntake));
-    new JoystickButton(m_driver, Button.kA.value).onTrue(new AlignWithAprilTag(17, m_vision, m_robotDrive));
+    new JoystickButton(m_driver, Button.kA.value).onTrue(new AlignWithAprilTag(() -> Vision.chosenTag, m_vision, m_robotDrive));
     new JoystickButton(m_driver, Button.kB.value).onTrue(new SetAprilTagHorizontalOffset(17, m_vision, m_robotDrive, .5));
     new JoystickButton(m_driver, Button.kY.value).onTrue(new SetAprilTagVerticalOffset(17, m_vision, m_robotDrive, 0));
-
   }
 
   public Command getAutonomousCommand() {

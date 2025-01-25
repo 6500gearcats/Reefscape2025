@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.function.IntSupplier;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
@@ -19,9 +21,9 @@ public class AlignWithAprilTag extends Command {
   private PIDController skewController;
   private PIDController yawController;
 
-  public AlignWithAprilTag(int fiducialID, Vision camera, DriveSubsystem drive) {
+  public AlignWithAprilTag(IntSupplier fiducialID, Vision camera, DriveSubsystem drive) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_FiducialID = fiducialID;
+    m_FiducialID = fiducialID.getAsInt();
     m_camera = camera;
     m_drive = drive;
 
@@ -49,6 +51,6 @@ public class AlignWithAprilTag extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(m_camera.getZAxisRotation(m_FiducialID)) >= 3.05 && Math.abs(m_camera.getChosenYaw(m_FiducialID)) <= 1) || m_camera.getZAxisRotation(m_FiducialID)==0;
+    return (Math.abs(m_camera.getZAxisRotation(m_FiducialID)) >= 1 && Math.abs(m_camera.getChosenYaw(m_FiducialID)) <= .2) || m_camera.getZAxisRotation(m_FiducialID)==0;
   }
 }

@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import javax.net.ssl.TrustManagerFactory;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.GCLimelight;
@@ -15,6 +17,8 @@ public class Vision extends SubsystemBase {
   private boolean isLimelight;
   private GCLimelight limelight;
   private GCPhotonVision photonCam;
+  private static SendableChooser<Integer> tagChooser = new SendableChooser<Integer>();
+  public static int chosenTag = 1;
   /** Creates a new Vision. */
 
   // IMPORTANT: The following code uses an overflow constructor
@@ -25,6 +29,14 @@ public class Vision extends SubsystemBase {
     isLimelight = false;
     limelight = null;
     photonCam = photonvision;
+
+    // Fiducial id chooser stuff
+    tagChooser.setDefaultOption("Tag 17", 17);
+    tagChooser.addOption("Tag 1", 1);
+    tagChooser.addOption("Tag 16", 16);
+    tagChooser.addOption("Tag 14", 14);
+
+    SmartDashboard.putData("Tag Chooser", tagChooser);
   }
 
   // Limelight camera code
@@ -114,6 +126,8 @@ public class Vision extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Target 17 Z-Axis Rotation", getZAxisRotation(17));
     SmartDashboard.putNumber("Target 17 Yaw", getChosenYaw(17));
+    SmartDashboard.putNumber("Tag Chosen", tagChooser.getSelected());
 
+    chosenTag = tagChooser.getSelected();
   }
 }
