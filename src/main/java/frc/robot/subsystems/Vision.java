@@ -4,12 +4,20 @@
 
 package frc.robot.subsystems;
 
+import java.util.Optional;
+
 import javax.net.ssl.TrustManagerFactory;
 
+import org.photonvision.EstimatedRobotPose;
+
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.numbers.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.GCLimelight;
 import frc.robot.GCPhotonVision;
+import frc.robot.LimelightHelpers;
 
 public class Vision extends SubsystemBase {
   private boolean isLimelight;
@@ -107,6 +115,19 @@ public class Vision extends SubsystemBase {
     else {
       return photonCam.getAprilTag3dData(fiducialID).getRotation().getZ();
     }
+  }
+
+  public boolean usingLimelight() {
+    return isLimelight;
+  }
+
+  //TODO: Only adding PhotonVision for now to work on pose estimation, but need to add Limelight (if needed)
+  public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
+      return photonCam.getEstimatedGlobalPose();
+  }
+
+  public Matrix<N3, N1> getEstimationStdDevs (Pose2d currentPose) {
+    return photonCam.getEstimationStdDevs(currentPose);
   }
 
   @Override

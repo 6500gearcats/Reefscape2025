@@ -106,29 +106,20 @@ public class DriveSubsystem extends SubsystemBase {
   private final Field2d m_field = new Field2d();
 
   private GCPhotonVision m_simVision;
+  // ! Temporarily added this to make the pose estimator
+  private Vision m_vision;
 
   private Pose2d m_simOdometryPose;
   private ShuffleboardTab m_driveTab = Shuffleboard.getTab("Drive");
   private GenericEntry m_maxSpeed;
 
-  //TODO: Remove this after finishing the pose estimator
-  /** 
-  public SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
-    DriveConstants.kDriveKinematics, 
-    m_gyro.getRotation2d(), 
-    new SwerveModulePosition[] {
-    m_frontLeft.getPosition(),
-    m_frontRight.getPosition(),
-    m_rearLeft.getPosition(),
-    m_rearRight.getPosition()},
-    new Pose2d(0.0, 0.0, new Rotation2d())
-  );
-*/
   private final StructArrayPublisher<SwerveModuleState> publisher;  
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem(GCPhotonVision vision) {
-    m_simVision = vision;
+  public DriveSubsystem(GCPhotonVision simVision, Vision vision) {
+    m_simVision = simVision;
+    // ! Temporarily added this to make the pose estimator
+    m_vision = vision;
     try {
       /*
        * Communicate w/navX-MXP via theimport com.kauailabs.navx.frc.AHRS;A MXP SPI
@@ -160,8 +151,13 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber(getName(), getPitch());
     }
 
-    //
-    m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions);
+    // * Create a new PoseEstimator
+    if(m_vision.usingLimelight()){
+      m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions);
+    }
+    else{
+      m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions, m_vision);
+    }
 
 
     m_odometry = new SwerveDriveOdometry(

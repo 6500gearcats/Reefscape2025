@@ -58,12 +58,33 @@ public class GCPoseEstimator extends SubsystemBase {
   private SwerveDrivePoseEstimator m_poseEstimator;
   private Supplier<Rotation2d> m_rotationSupplier;
   private Supplier<SwerveModulePosition[]> m_swerveModulePositionSupplier;
+  private boolean m_useLimeLight;
+
+  private Vision m_vision;
 
 
   /** Creates a new PoseEstimator. */
+  // * Uses Limelight
   public GCPoseEstimator(Supplier<Rotation2d> rotationSupplier, Supplier<SwerveModulePosition[]> swerveModulePositionSupplier) {
     m_rotationSupplier = rotationSupplier;
     m_swerveModulePositionSupplier = swerveModulePositionSupplier;
+    m_useLimeLight = true;
+
+    m_poseEstimator = new SwerveDrivePoseEstimator(
+      DriveConstants.kDriveKinematics,
+      m_rotationSupplier.get(),
+      m_swerveModulePositionSupplier.get(),
+      new Pose2d(),
+      m_stateStndDev,
+      m_visionStndDev);
+  }
+
+  // * Uses PhotonVision
+  public GCPoseEstimator(Supplier<Rotation2d> rotationSupplier, Supplier<SwerveModulePosition[]> swerveModulePositionSupplier, Vision vision) {
+    m_rotationSupplier = rotationSupplier;
+    m_swerveModulePositionSupplier = swerveModulePositionSupplier;
+    m_useLimeLight = false;
+    m_vision = vision;
 
     m_poseEstimator = new SwerveDrivePoseEstimator(
       DriveConstants.kDriveKinematics,
@@ -78,7 +99,12 @@ public class GCPoseEstimator extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     m_poseEstimator.update(m_rotationSupplier.get(), m_swerveModulePositionSupplier.get());
-    useLimeLight();
+    if(m_useLimeLight) {
+      useLimeLight();
+    }
+    else {
+      usePhotonVision();
+    }
   }
 
   public Pose2d getEstimatedPosition() {
@@ -149,5 +175,15 @@ public class GCPoseEstimator extends SubsystemBase {
             mt2.timestampSeconds);
       }
     }
+  }
+
+// * The following method is PhotonVision integration
+// TODO: added simualtion support for PhotonVision
+  public void usePhotonVision() {
+    var visionEst = m_vision.getEstimatedGlobalPose();
+    visionEst.ifPresent(est -> {
+      var estStdDevs = m_vision.getEstimationStdDevs(est.estimatedPose.toPose2d());
+      m_poseEstimator.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+    });
   }
 }

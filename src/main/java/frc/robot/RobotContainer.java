@@ -44,7 +44,7 @@ public class RobotContainer {
   Vision m_vision = new Vision(vision);
   
   //Temporarily adding this to
-  DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera);
+  DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera, m_vision);
 
   public RobotContainer() {
 
