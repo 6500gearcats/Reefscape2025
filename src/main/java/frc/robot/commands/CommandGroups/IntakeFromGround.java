@@ -2,12 +2,12 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.CommandGroups;
+package frc.robot.Commands.CommandGroups;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.commands.GroundIntake.FlipGroundIntake;
-import frc.robot.commands.GroundIntake.GrabCoral;
-import frc.robot.subsystems.GroundIntake;
+import frc.robot.Commands.GroundIntake.FlipGroundIntake;
+import frc.robot.Commands.GroundIntake.GrabCoral;
+import frc.robot.Subsystems.GroundIntake;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
