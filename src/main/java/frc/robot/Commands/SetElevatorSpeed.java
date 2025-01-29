@@ -38,6 +38,10 @@ public class SetElevatorSpeed extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_elevator.elevatorAtLimit();
+    if(m_speed > 0){
+      return m_elevator.elevatorAtTop();
+    } else {
+      return m_elevator.elevatorAtBottom();
+    }
   }
 }

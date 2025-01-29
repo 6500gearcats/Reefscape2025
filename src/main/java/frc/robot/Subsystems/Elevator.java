@@ -68,4 +68,12 @@ public class Elevator extends SubsystemBase {
   {
     return m_elevatorTopLimitSwitch.get() || m_elevatorBottomLimitSwitch.get();
   }
+
+  public boolean elevatorAtTop(){
+    return m_elevatorTopLimitSwitch.get();
+  }
+
+  public boolean elevatorAtBottom(){
+    return m_elevatorBottomLimitSwitch.get();
+  }
 }
