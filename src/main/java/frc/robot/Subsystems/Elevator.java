@@ -43,6 +43,7 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putBoolean("Elevator Limit Reached", elevatorAtLimit());
     //TODO Add real values
     elevatorTooHigh = getElevatorHeight() > 1.0;
+    Arm.correctingPositionElevator = getElevatorHeight() <1.0;
   }
 
   // Return the height of the elevator in meters
@@ -57,7 +58,9 @@ public class Elevator extends SubsystemBase {
 
   // Set the elevator speed
   public void setElevatorSpeed(double speed){
-    m_elevatorMotor.set(speed);
+    if(!(Arm.correctingPositionArm && Arm.correctingPositionElevator)){
+      m_elevatorMotor.set(speed);
+    }
   }
 
   // Check to see if the elevator is too high
