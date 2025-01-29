@@ -14,13 +14,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Commands.Arm.MoveArm;
 import frc.robot.Commands.CommandGroups.AlignAndFeed;
 import frc.robot.Commands.CommandGroups.IntakeFromGround;
 import frc.robot.Commands.GroundIntake.FlipGroundIntake;
-import frc.robot.Subsystems.Aligner;
-import frc.robot.Subsystems.CoralHolder;
-import frc.robot.Subsystems.GroundIntake;
-import frc.robot.Subsystems.DriveSubsystem;
+import frc.robot.Subsystems.*;
 import org.photonvision.PhotonCamera;
 
 public class RobotContainer {
@@ -31,6 +30,7 @@ public class RobotContainer {
   private final GroundIntake m_groundIntake = new GroundIntake();
   private final Aligner m_aligner = new Aligner();
   private final CoralHolder m_coralHolder = new CoralHolder();
+  private final Arm m_arm = new Arm();
 
   //TODO: Fix the Photon Camera, This is temp declaration
   private PhotonCamera m_camera = new PhotonCamera("photonvision");
@@ -54,6 +54,8 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
+    new Trigger(() -> m_gunner.getLeftY()>.1 || m_gunner.getLeftY()<-.1)
+        .whileTrue(new MoveArm(m_arm, m_gunner.getLeftY()));
     new JoystickButton(m_gunner, Button.kA.value).whileTrue(new IntakeFromGround(m_groundIntake))
       .onFalse(new AlignAndFeed(m_groundIntake, m_aligner, m_coralHolder));
   }
