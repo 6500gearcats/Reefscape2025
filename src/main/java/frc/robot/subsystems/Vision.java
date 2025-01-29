@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.Subsystems;
 
 import javax.net.ssl.TrustManagerFactory;
 
@@ -106,6 +106,15 @@ public class Vision extends SubsystemBase {
     }
     else {
       return photonCam.getAprilTag3dData(fiducialID).getRotation().getZ();
+    }
+  }
+
+  public double getBestZAxisRotation() {
+    if (isLimelight) {
+      return 0;
+    }
+    else {
+      return photonCam.getBestAprilTag3dData().getRotation().getZ();
     }
   }
 
