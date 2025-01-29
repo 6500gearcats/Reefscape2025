@@ -19,12 +19,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.GCPhotonVision;
-import frc.robot.Subsystems.DriveSubsystem;
-import frc.robot.Subsystems.Vision;
 import frc.robot.commands.AlignWithAprilTag;
 import frc.robot.commands.AlignWithNearestAprilTag;
 import frc.robot.commands.SetAprilTagHorizontalOffset;
 import frc.robot.commands.SetAprilTagVerticalOffset;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
 
