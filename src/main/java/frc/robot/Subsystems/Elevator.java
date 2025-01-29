@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
   // TODO add correct ids
+  public static boolean elevatorTooHigh = false;
   private SparkMax m_elevatorMotor = new SparkMax(0, SparkLowLevel.MotorType.kBrushless);
   private LaserCan m_elevatorLidar = new LaserCan(0);
   private DigitalInput m_elevatorTopLimitSwitch = new DigitalInput(0);
@@ -40,6 +41,8 @@ public class Elevator extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Elevator Height (m)", this.getElevatorHeight());
     SmartDashboard.putBoolean("Elevator Limit Reached", elevatorAtLimit());
+    //TODO Add real values
+    elevatorTooHigh = getElevatorHeight() > 1.0;
   }
 
   // Return the height of the elevator in meters
