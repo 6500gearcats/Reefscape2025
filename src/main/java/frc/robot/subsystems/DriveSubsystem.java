@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 // Path Planner Imports
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
@@ -128,7 +129,8 @@ public class DriveSubsystem extends SubsystemBase {
        * See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for
        * details.
        */
-
+      
+      Pigeon2 pigeonGyro = new Pigeon2(0, "rio");
       m_gyro = new AHRS(NavXComType.kMXP_SPI);
       System.out.println("AHRS constructed");
     } catch (RuntimeException ex) {
