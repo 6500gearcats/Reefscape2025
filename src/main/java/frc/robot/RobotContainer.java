@@ -14,13 +14,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Commands.CommandGroups.AlignAndFeed;
-import frc.robot.Commands.CommandGroups.IntakeFromGround;
-import frc.robot.Commands.GroundIntake.FlipGroundIntake;
-import frc.robot.Subsystems.Aligner;
-import frc.robot.Subsystems.CoralHolder;
-import frc.robot.Subsystems.GroundIntake;
-import frc.robot.Subsystems.DriveSubsystem;
+import frc.robot.commands.CommandGroups.AlignAndFeed;
+import frc.robot.commands.CommandGroups.IntakeFromGround;
+import frc.robot.commands.GroundIntake.FlipGroundIntake;
+import frc.robot.subsystems.Aligner;
+import frc.robot.subsystems.CoralHolder;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.GroundIntake;
+
 import org.photonvision.PhotonCamera;
 
 public class RobotContainer {
