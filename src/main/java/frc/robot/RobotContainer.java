@@ -16,6 +16,7 @@ import frc.robot.commands.Arm.SetArmPosition;
 import frc.robot.commands.CommandGroups.AlignAndFeed;
 import frc.robot.commands.CommandGroups.IntakeFromGround;
 import frc.robot.commands.GroundIntake.FlipGroundIntake;
+import frc.robot.commands.SourceIntake.ShootCoral;
 import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.Aligner;
 import frc.robot.subsystems.Arm;
@@ -44,6 +45,7 @@ public class RobotContainer {
     new JoystickButton(m_gunner, Button.kB.value).whileTrue(new IntakeAlgae(m_algaeIntake, .05));
     new JoystickButton(m_gunner, Button.kY.value).whileTrue(new AlignCoral(m_aligner, .5));
     new JoystickButton(m_gunner, Button.kX.value).whileTrue(new SetArmPosition(m_arm, 30));
+    new JoystickButton(m_gunner, Button.kA.value).whileTrue(new ShootCoral(m_coralHolder, 0.8));
   }
 
   public Command getAutonomousCommand() {
