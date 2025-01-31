@@ -11,6 +11,7 @@ import com.revrobotics.spark.config.*;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
@@ -18,6 +19,8 @@ public class Arm extends SubsystemBase {
   SparkMaxConfig m_config = new SparkMaxConfig();
   SparkAbsoluteEncoder m_armMotorEncoder = m_armMotor.getAbsoluteEncoder();
   double armPosition;
+  double fakeArmPosition = 0;
+  double fakeArmSpeed = 0;
 
   /** Creates a new Arm. */
   public Arm() {}
@@ -27,16 +30,29 @@ public class Arm extends SubsystemBase {
     // This method will be called once per scheduler run
     //It's progamming's fault (:
     armPosition = getArmPosition();
+    if(Robot.isSimulation()){
+      fakeArmPosition += fakeArmSpeed;
+      SmartDashboard.putNumber("Fake arm speed", fakeArmSpeed);
+      SmartDashboard.putNumber("Fake arm position", fakeArmPosition);
+    }
     SmartDashboard.putNumber("Arm Position", armPosition);
+    
   }
 
   public void spinArm(double speed) {
     m_armMotor.set(speed);
+
+    if(Robot.isSimulation()){
+      fakeArmSpeed = speed;
+    }
   }
 
   public double getArmPosition() {
     //Rotations to degrees
     //return (int) (m_armMotorEncoder.getPosition() % 10) % 360;
-    return m_armMotorEncoder.getPosition();
+    if(Robot.isReal()){
+      return m_armMotorEncoder.getPosition();
+    }
+    return fakeArmPosition;
   }
 }

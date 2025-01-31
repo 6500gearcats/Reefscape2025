@@ -12,11 +12,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.Algae.IntakeAlgae;
 import frc.robot.commands.Aligner.AlignCoral;
+import frc.robot.commands.Arm.SetArmPosition;
 import frc.robot.commands.CommandGroups.AlignAndFeed;
 import frc.robot.commands.CommandGroups.IntakeFromGround;
 import frc.robot.commands.GroundIntake.FlipGroundIntake;
 import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.Aligner;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.CoralHolder;
 import frc.robot.subsystems.GroundIntake;
 
@@ -30,6 +32,7 @@ public class RobotContainer {
   private final GroundIntake m_groundIntake = new GroundIntake();
   private final Aligner m_aligner = new Aligner();
   private final CoralHolder m_coralHolder = new CoralHolder();
+  private final Arm m_arm = new Arm();
   
   public RobotContainer() {
     configureBindings();
@@ -40,6 +43,7 @@ public class RobotContainer {
       .onFalse(new AlignAndFeed(m_groundIntake, m_aligner, m_coralHolder));
     new JoystickButton(m_gunner, Button.kB.value).whileTrue(new IntakeAlgae(m_algaeIntake, .05));
     new JoystickButton(m_gunner, Button.kY.value).whileTrue(new AlignCoral(m_aligner, .5));
+    new JoystickButton(m_gunner, Button.kX.value).whileTrue(new SetArmPosition(m_arm, 30));
   }
 
   public Command getAutonomousCommand() {
