@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.Algae.IntakeAlgae;
+import frc.robot.commands.Aligner.AlignCoral;
 import frc.robot.commands.CommandGroups.AlignAndFeed;
 import frc.robot.commands.CommandGroups.IntakeFromGround;
 import frc.robot.commands.GroundIntake.FlipGroundIntake;
@@ -38,6 +39,7 @@ public class RobotContainer {
     new JoystickButton(m_gunner, Button.kA.value).whileTrue(new IntakeFromGround(m_groundIntake))
       .onFalse(new AlignAndFeed(m_groundIntake, m_aligner, m_coralHolder));
     new JoystickButton(m_gunner, Button.kB.value).whileTrue(new IntakeAlgae(m_algaeIntake, .05));
+    new JoystickButton(m_gunner, Button.kY.value).whileTrue(new AlignCoral(m_aligner, .5));
   }
 
   public Command getAutonomousCommand() {
