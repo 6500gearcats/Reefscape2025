@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.GroundIntakeConstants;
+
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -22,10 +24,10 @@ public class GroundIntake extends SubsystemBase {
   
 
   public GroundIntake() {
-    m_flipSwitch = new DigitalInput(0);
+    m_flipSwitch = new DigitalInput(GroundIntakeConstants.kGroundIntakeSwitchPort);
 
-    m_flipMotor = new SparkMax(1, MotorType.kBrushless);
-    m_spinMotor = new SparkMax(2, MotorType.kBrushless);
+    m_flipMotor = new SparkMax(GroundIntakeConstants.kGroundIntakeFlipperMotorPort, MotorType.kBrushless);
+    m_spinMotor = new SparkMax(GroundIntakeConstants.kGroundIntakeMotorPort, MotorType.kBrushless);
 
     SparkMaxConfig m_spinConfig = new SparkMaxConfig();
     m_spinMotor.configure(m_spinConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

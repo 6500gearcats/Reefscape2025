@@ -11,9 +11,10 @@ import com.revrobotics.spark.config.*;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ArmConstants;
 
 public class Arm extends SubsystemBase {
-  SparkMax m_armMotor = new SparkMax(0, MotorType.kBrushless);
+  SparkMax m_armMotor = new SparkMax(ArmConstants.kArmMotorPort, MotorType.kBrushless);
   SparkMaxConfig m_config = new SparkMaxConfig();
   SparkAbsoluteEncoder m_armMotorEncoder = m_armMotor.getAbsoluteEncoder();
   double armPosition;

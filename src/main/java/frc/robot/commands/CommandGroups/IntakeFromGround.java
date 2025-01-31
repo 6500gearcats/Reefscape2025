@@ -4,7 +4,7 @@
 
 package frc.robot.commands.CommandGroups;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.GroundIntake.FlipGroundIntake;
 import frc.robot.commands.GroundIntake.GrabCoral;
 import frc.robot.subsystems.GroundIntake;
@@ -12,7 +12,7 @@ import frc.robot.subsystems.GroundIntake;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class IntakeFromGround extends ParallelCommandGroup {
+public class IntakeFromGround extends SequentialCommandGroup {
   /** Creates a new IntakeFromGround. */
   public IntakeFromGround(GroundIntake m_groundIntake) {
     // Add your commands in the addCommands() call, e.g.

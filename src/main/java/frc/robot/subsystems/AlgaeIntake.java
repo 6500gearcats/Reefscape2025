@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.Constants.AlgaeIntakeConstants;
 
 public class AlgaeIntake extends SubsystemBase {
   /** Creates a new AlgaeIntake. */
@@ -21,8 +22,8 @@ public class AlgaeIntake extends SubsystemBase {
   double m_fakeAlgaePosition = 0;
 
   public AlgaeIntake() {
-    m_intakeMotor = new SparkMax(0, MotorType.kBrushless);
-    m_intakeSwitch = new DigitalInput(1);
+    m_intakeMotor = new SparkMax(AlgaeIntakeConstants.kAlgaeMotorPort, MotorType.kBrushless);
+    m_intakeSwitch = new DigitalInput(AlgaeIntakeConstants.kAlgaeSwitchPort);
   }
 
   @Override
@@ -30,7 +31,8 @@ public class AlgaeIntake extends SubsystemBase {
     // This method will be called once per scheduler run
     if(Robot.isSimulation()){
       SmartDashboard.putNumber("Algae Intake Speed", m_fakeSpeed);
-      SmartDashboard.putBoolean("Algae Intak Switch", m_fakeSwitch);
+      SmartDashboard.putBoolean("Algae Intake Switch", m_fakeSwitch);
+      SmartDashboard.putNumber("Algae Position", m_fakeAlgaePosition);
       m_fakeAlgaePosition += m_fakeSpeed;
     }
   }
@@ -39,7 +41,7 @@ public class AlgaeIntake extends SubsystemBase {
     m_intakeMotor.set(speed);
 
     if(Robot.isSimulation()){
-      m_fakeSpeed = speed/10;
+      m_fakeSpeed = speed/100;
     }
   }
 

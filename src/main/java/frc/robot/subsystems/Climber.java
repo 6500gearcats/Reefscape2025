@@ -8,14 +8,15 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ClimberConstants;
 
 public class Climber extends SubsystemBase {
   private SparkMax m_armMotor;
   private SparkMax m_grabberMotor;
   /** Creates a new Climber. */
   public Climber() {
-    m_armMotor = new SparkMax(0, MotorType.kBrushless);
-    m_grabberMotor = new SparkMax(1, MotorType.kBrushless);
+    m_armMotor = new SparkMax(ClimberConstants.kClimberMotorPort, MotorType.kBrushless);
+    m_grabberMotor = new SparkMax(ClimberConstants.kClimberSwitchPort, MotorType.kBrushless);
   }
 
   @Override

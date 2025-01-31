@@ -9,13 +9,14 @@ import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CoralHolderConstants;
 
 public class CoralHolder extends SubsystemBase {
   /** Creates a new CoralHolder. */
   SparkMax m_coralMotor;
   DigitalInput m_flipSwitch;
   public CoralHolder() {
-    m_coralMotor = new SparkMax(0, MotorType.kBrushless);
+    m_coralMotor = new SparkMax(CoralHolderConstants.kCoralHolderMotorPort, MotorType.kBrushless);
     m_flipSwitch = new DigitalInput(0);
   }
 
