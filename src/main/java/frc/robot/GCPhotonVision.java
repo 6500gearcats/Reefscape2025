@@ -375,6 +375,15 @@ import edu.wpi.first.math.numbers.N1;
          }
          return new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0));
      }
+
+     public Transform3d getMultiTagResult() {
+        var result = m_camera.getLatestResult();
+        Transform3d fieldToCamera = null;
+        if (result.getMultiTagResult().isPresent()) {
+        fieldToCamera = result.getMultiTagResult().get().estimatedPose.best;
+        }
+        return fieldToCamera;
+     }
  
  }
  

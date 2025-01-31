@@ -178,7 +178,7 @@ public class GCPoseEstimator extends SubsystemBase {
   }
 
 // * The following method is PhotonVision integration
-// TODO: added simualtion support for PhotonVision
+// TODO: add simualtion support for PhotonVision
   public void usePhotonVision() {
     var visionEst = m_vision.getEstimatedGlobalPose();
     visionEst.ifPresent(est -> {
