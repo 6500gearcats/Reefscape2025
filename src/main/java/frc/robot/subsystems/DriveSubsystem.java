@@ -15,8 +15,6 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.controllers.PathFollowingController;
 import com.pathplanner.lib.util.DriveFeedforwards;
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.hal.SimBoolean;
 import edu.wpi.first.hal.SimDouble;
@@ -85,7 +83,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
-  public static AHRS m_gyro;
+  public static Pigeon2 m_gyro;
 
   private int m_gyroSim;
   private SimDouble m_simAngle;
@@ -119,30 +117,19 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(GCPhotonVision vision) {
     m_simVision = vision;
-    try {
-      /*
-       * Communicate w/navX-MXP via theimport com.kauailabs.navx.frc.AHRS;A MXP SPI
-       * Bus.
-       */
-      /* Alternatively: I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB */
-      /*
-       * See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for
-       * details.
-       */
-      
-      Pigeon2 pigeonGyro = new Pigeon2(0, "rio");
-      m_gyro = new AHRS(NavXComType.kMXP_SPI);
-      System.out.println("AHRS constructed");
+    try {      
+      m_gyro = new Pigeon2(0, "rio");
+      System.out.println("Pigeon2 constructed");
     } catch (RuntimeException ex) {
-      System.out.println("AHRS not constructed");
-      DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
+      System.out.println("Pigeon2 not constructed");
+      DriverStation.reportError("Error instantiating Pigeon2:  " + ex.getMessage(), true);
     }
 
     // m_gyro.setAngleAdjustment(180.0);
-    m_gyro.zeroYaw();
+    m_gyro.setYaw(0);
 
     if (RobotBase.isSimulation()) {
-      m_gyroSim = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
+      m_gyroSim = SimDeviceDataJNI.getSimDeviceHandle("navx-Sensor[0]");
       m_simAngle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(m_gyroSim, "Yaw"));
       m_connected = new SimBoolean(SimDeviceDataJNI.getSimValueHandle(m_gyroSim, "Connected"));
       m_calibrating = new SimBoolean(SimDeviceDataJNI.getSimValueHandle(m_gyroSim, "Calibrating"));
@@ -223,8 +210,8 @@ publisher = NetworkTableInstance.getDefault()
       SmartDashboard.putNumber("Position: Y", yPos);
     }
 
-    SmartDashboard.putNumber("NavX Pitch", m_gyro.getPitch());
-    SmartDashboard.putNumber("NavX Yaw angle", getAngle());
+    SmartDashboard.putNumber("Pigeon2 Pitch", m_gyro.getPitch().getValueAsDouble());
+    SmartDashboard.putNumber("Pigeon2 Yaw angle", getAngle());
 
     SmartDashboard.putBoolean("Field Oriented", m_fieldOriented);
 
@@ -254,13 +241,13 @@ publisher = NetworkTableInstance.getDefault()
     // debugField.getObject("EstimatedRobotModules").setPoses(this.getModulePoses());
 
     // angle.set(5.0);
-    // From NavX example
-    // int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
+    // From Pigeon2 example
+    // int dev = SimDeviceDataJNI.getSimDeviceHandle("Pigeon2-Sensor[0]");
     // SimDouble angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev,
     // "Yaw"));
-    // NavX expects clockwise positive, but sim outputs clockwise negative
+    // Pigeon2 expects clockwise positive, but sim outputs clockwise negative
 
-    // navxSimAngle = -drivetrainSim.getHeading().getDegrees();
+    // Pigeon2SimAngle = -drivetrainSim.getHeading().getDegrees();
     // double angle = getPose().getRotation().getDegrees();
 
     // double angle = m_gyro.getAngle() -
@@ -460,19 +447,19 @@ publisher = NetworkTableInstance.getDefault()
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return m_gyro.getAngularVelocityZWorld().getValueAsDouble() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
-  /* Return the NavX pitch angle */
+  /* Return the Pigeon2 pitch angle */
   public double getPitch() {
-    return m_gyro.getPitch();
+    return m_gyro.getPitch().getValueAsDouble();
   }
 
-  /* Return the NavX yaw angle */
+  /* Return the Pigeon2 yaw angle */
   public double getAngle() {
     // return -m_gyro.getYaw();
     if (Robot.isReal()) {
-      return -m_gyro.getAngle();
+      return m_gyro.getYaw().getValueAsDouble();
     } else {
       return m_simAngle.get();
     }
