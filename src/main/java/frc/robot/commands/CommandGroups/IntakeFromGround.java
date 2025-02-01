@@ -5,7 +5,7 @@
 package frc.robot.commands.CommandGroups;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.GroundIntake.FlipGroundIntake;
+import frc.robot.commands.GroundIntake.FlipGroundIntakeOut;
 import frc.robot.commands.GroundIntake.GrabCoral;
 import frc.robot.subsystems.GroundIntake;
 
@@ -17,7 +17,7 @@ public class IntakeFromGround extends SequentialCommandGroup {
   public IntakeFromGround(GroundIntake m_groundIntake) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new FlipGroundIntake(m_groundIntake),
+    addCommands(new FlipGroundIntakeOut(m_groundIntake, -0.2),
       new GrabCoral(m_groundIntake, 0.5));
   }
 }

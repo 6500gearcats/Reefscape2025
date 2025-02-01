@@ -17,7 +17,8 @@ import frc.robot.commands.Aligner.AlignCoral;
 import frc.robot.commands.Arm.SetArmPosition;
 import frc.robot.commands.CommandGroups.AlignAndFeed;
 import frc.robot.commands.CommandGroups.IntakeFromGround;
-import frc.robot.commands.GroundIntake.FlipGroundIntake;
+import frc.robot.commands.GroundIntake.FlipGroundIntakeIn;
+import frc.robot.commands.GroundIntake.FlipGroundIntakeOut;
 import frc.robot.commands.SourceIntake.ShootCoral;
 import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.Aligner;
@@ -48,8 +49,10 @@ public class RobotContainer {
     new JoystickButton(m_gunner, Button.kB.value).whileTrue(new IntakeAlgae(m_algaeIntake, .05));
     new JoystickButton(m_gunner, Button.kY.value).whileTrue(new AlignCoral(m_aligner, .5));
     new JoystickButton(m_gunner, Button.kX.value).whileTrue(new SetArmPosition(m_arm, 30));
-    new JoystickButton(m_driver, Button.kA.value).whileTrue(new ShootCoral(m_coralHolder, 0.8));
-    new JoystickButton(m_driver, Button.kB.value).whileTrue(new MoveClimberArm(m_climber,0.9));
+    new JoystickButton(m_driver, Button.kA.value).whileTrue(new ShootCoral(m_coralHolder, 0.8)); // Simulation Reasons
+    new JoystickButton(m_driver, Button.kB.value).whileTrue(new MoveClimberArm(m_climber,0.9)); // Simulation Reasons
+    new JoystickButton(m_driver, Button.kX.value).whileTrue(new FlipGroundIntakeIn(m_groundIntake,0.2)); // Simulation Reasons
+    new JoystickButton(m_driver, Button.kY.value).whileTrue(new FlipGroundIntakeOut(m_groundIntake, -0.2));
   }
 
   public Command getAutonomousCommand() {

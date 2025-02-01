@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Constants.GroundIntakeConstants;
 
 import com.revrobotics.spark.SparkMax;
@@ -21,6 +22,10 @@ public class GroundIntake extends SubsystemBase {
   private SparkMax m_flipMotor;
   private DigitalInput m_flipSwitch;
   private SparkMax m_spinMotor;
+  private double fake_flipMotor_posititon = 0;
+  private double fake_flipMotor_speed = 0;
+  private boolean fake_flip_Intake_flipSwitch = false;
+
   
 
   public GroundIntake() {
@@ -39,33 +44,33 @@ public class GroundIntake extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    fake_flipMotor_posititon += fake_flipMotor_speed;
+    if(fake_flipMotor_posititon >= 100){ // 100 is fake switch position
+      fake_flip_Intake_flipSwitch = true;
+    }else{
+      fake_flip_Intake_flipSwitch = false;
+    }
+    SmartDashboard.putNumber("Fake flip In Speed", fake_flipMotor_speed);
     SmartDashboard.putBoolean("Flip Switch", getFlipSwitchValue());
+    SmartDashboard.putNumber("Fake Flip In Position",fake_flipMotor_posititon);
+    SmartDashboard.putBoolean("Fake_In_FlipSwitch",fake_flip_Intake_flipSwitch);
   }
 
   //This assumes that the flip switch will the false when you have 
   //intake to the outside of the robot
 
   //TODO: Check if the logic is correct
-  public boolean flipIntake() {
-    if(!getFlipSwitchValue()) {
-      m_flipMotor.set(1);
-      //turns off motor when switch is triggered
-      if(getFlipSwitchValue()) {
-        m_flipMotor.set(0);
-        return true;
-      }
-    } else {
-      m_flipMotor.set(-1);
-      //turns off motor when switch is triggered
-      if(!getFlipSwitchValue()) {
-        m_flipMotor.set(0);
-        return true;
-      }
+  public void flipIntake(double speed) {
+    if(Robot.isSimulation()){
+      fake_flipMotor_speed = speed;
     }
-    return false;
+    m_flipMotor.set(speed);
   }
 
   public boolean getFlipSwitchValue() {
+    if(Robot.isSimulation()){
+      return fake_flip_Intake_flipSwitch;
+    }
     return m_flipSwitch.get();
   }
 
