@@ -20,8 +20,9 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
-    PortForwarder.add(5801, "limelight.local", 5801);
-    PortForwarder.add(5800, "limelight.local", 5800);
+    for (int port = 5800; port<=5809; port++) {
+      PortForwarder.add(port, "limelight.local", port);
+    }
     
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     NetworkTableEntry tx = table.getEntry("tx");
