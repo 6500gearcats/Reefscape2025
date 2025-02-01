@@ -26,16 +26,18 @@ public class CoralHolder extends SubsystemBase {
   }
 
   public void shootCoral(double speed) {
-    fake_coral_speed = speed; // Dont blame me this is josephs code I dont understand why we set the speed when we shoot a coral
+    if(Robot.isSimulation()){
+      fake_coral_speed = speed; 
+    }
     m_coralMotor.set(speed);
   }
   
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if(Robot.isSimulation() == true){
+    if(Robot.isSimulation()){
     fake_coral += fake_coral_speed;
-    if(Robot.isSimulation() && fake_coral >= 100){ // 100 is fake switch position (:
+    if(fake_coral >= 100){ // 100 is fake switch position (:
       fake_flipSwitch = true;
     }
     SmartDashboard.putNumber("Fake Coral Position", fake_coral);
