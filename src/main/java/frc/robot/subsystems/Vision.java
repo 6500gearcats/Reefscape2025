@@ -111,18 +111,22 @@ public class Vision extends SubsystemBase {
 
   public double getBestZAxisRotation() {
     if (isLimelight) {
-      return 0;
+      return limelight.getBestSkewDegrees();
     }
     else {
       return photonCam.getBestAprilTag3dData().getRotation().getZ();
     }
   }
 
+  public boolean isLimelight() {
+    return isLimelight;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Target 17 Z-Axis Rotation", getZAxisRotation(17));
-    SmartDashboard.putNumber("Target 17 Yaw", getChosenYaw(17));
-
+    SmartDashboard.putNumber("Target Z-Axis Rotation", getBestZAxisRotation());
+    SmartDashboard.putNumber("Target Yaw", getBestYaw());
+    SmartDashboard.putNumber("Target Distance", getBestRange());
   }
 }

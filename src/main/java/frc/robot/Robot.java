@@ -18,41 +18,53 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
 
+  NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+  NetworkTableEntry tx = table.getEntry("tx");
+  NetworkTableEntry ty = table.getEntry("ty");
+  NetworkTableEntry ta = table.getEntry("ta");
+  NetworkTableEntry tskew = table.getEntry("ts");
+
+  double x = 0;
+  double y = 0;
+  double area = 0;
+
   public Robot() {
     m_robotContainer = new RobotContainer();
-    for (int port = 5800; port<=5809; port++) {
+    for (int port = 5800; port <= 5809; port++) {
       PortForwarder.add(port, "limelight.local", port);
     }
-    
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-    NetworkTableEntry tx = table.getEntry("tx");
-NetworkTableEntry ty = table.getEntry("ty");
-NetworkTableEntry ta = table.getEntry("ta");
 
-//read values periodically
-double x = tx.getDouble(0.0);
-double y = ty.getDouble(0.0);
-double area = ta.getDouble(0.0);
-
-//post to smart dashboard periodically
-SmartDashboard.putNumber("LimelightX", x);
-SmartDashboard.putNumber("LimelightY", y);
-SmartDashboard.putNumber("LimelightArea", area);
+  
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+
+    // read values periodically
+    x = tx.getDouble(0.0);
+    y = ty.getDouble(0.0);
+    area = ta.getDouble(0.0);
+    double skew = tskew.getDouble(0.0);
+
+    // post to smart dashboard periodically
+    SmartDashboard.putNumber("LimelightX", x);
+    SmartDashboard.putNumber("LimelightY", y);
+    SmartDashboard.putNumber("LimelightArea", area);
+    SmartDashboard.putNumber("Limelight Skew", skew);
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+  }
 
   @Override
-  public void disabledExit() {}
+  public void disabledExit() {
+  }
 
   @Override
   public void autonomousInit() {
@@ -64,10 +76,12 @@ SmartDashboard.putNumber("LimelightArea", area);
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+  }
 
   @Override
-  public void autonomousExit() {}
+  public void autonomousExit() {
+  }
 
   @Override
   public void teleopInit() {
@@ -77,10 +91,12 @@ SmartDashboard.putNumber("LimelightArea", area);
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
-  public void teleopExit() {}
+  public void teleopExit() {
+  }
 
   @Override
   public void testInit() {
@@ -88,8 +104,10 @@ SmartDashboard.putNumber("LimelightArea", area);
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   @Override
-  public void testExit() {}
+  public void testExit() {
+  }
 }

@@ -47,6 +47,11 @@ public class AlignWithNearestAprilTag extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(m_camera.getBestZAxisRotation()) >= 3.05 && Math.abs(m_camera.getBestYaw()) <= 1) || m_camera.getBestZAxisRotation()==0;
+    if(m_camera.isLimelight()) {
+      return (Math.abs(m_camera.getBestZAxisRotation()) <= 0.015 && Math.abs(m_camera.getBestYaw()) <= 1) || m_camera.getBestZAxisRotation()==0;
+    }
+    else {
+      return (Math.abs(m_camera.getBestZAxisRotation()) >= 3.05 && Math.abs(m_camera.getBestYaw()) <= 1) || m_camera.getBestZAxisRotation()==0;
+    }
   }
 }

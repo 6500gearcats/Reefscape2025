@@ -34,7 +34,7 @@ public class RobotContainer {
   XboxController m_gunner = new XboxController(1);
 
   GCPhotonVision m_PhotonCamera = new GCPhotonVision(new PhotonCamera("ArducamTwo"));
-  GCLimelight m_Limelight = new GCLimelight("limeLight");
+  GCLimelight m_Limelight = new GCLimelight("");
 
 
   PhotonCamera temp_camera = new PhotonCamera("ArducamTwo");
@@ -69,9 +69,9 @@ public class RobotContainer {
 
     //TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
     //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new FlipGroundIntake(m_groundIntake)).onFalse(new FlipGroundIntake(m_groundIntake));
-    new JoystickButton(m_driver, Button.kA.value).onTrue(new AlignWithNearestAprilTag(m_vision, m_robotDrive));
-    new JoystickButton(m_driver, Button.kB.value).onTrue(new SetAprilTagHorizontalOffset(14, m_vision, m_robotDrive, .5));
-    new JoystickButton(m_driver, Button.kY.value).onTrue(new SetAprilTagVerticalOffset(14, m_vision, m_robotDrive, 0));
+    new JoystickButton(m_driver, Button.kA.value).whileTrue(new AlignWithNearestAprilTag(m_vision, m_robotDrive));
+    new JoystickButton(m_driver, Button.kB.value).whileTrue(new SetAprilTagHorizontalOffset(14, m_vision, m_robotDrive, .5));
+    new JoystickButton(m_driver, Button.kY.value).whileTrue(new SetAprilTagVerticalOffset(14, m_vision, m_robotDrive, 0));
 
   }
 
