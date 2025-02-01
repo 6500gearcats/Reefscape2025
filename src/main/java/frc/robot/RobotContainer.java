@@ -5,11 +5,13 @@
 package frc.robot;
 
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.MoveClimberArm;
 import frc.robot.commands.Algae.IntakeAlgae;
 import frc.robot.commands.Aligner.AlignCoral;
 import frc.robot.commands.Arm.SetArmPosition;
@@ -20,11 +22,12 @@ import frc.robot.commands.SourceIntake.ShootCoral;
 import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.Aligner;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CoralHolder;
 import frc.robot.subsystems.GroundIntake;
 
 public class RobotContainer {
-
+  private final Climber m_climber = new Climber();
   private final XboxController m_driver = new XboxController(0);
   private final XboxController m_gunner = new XboxController(1);
 
@@ -45,7 +48,8 @@ public class RobotContainer {
     new JoystickButton(m_gunner, Button.kB.value).whileTrue(new IntakeAlgae(m_algaeIntake, .05));
     new JoystickButton(m_gunner, Button.kY.value).whileTrue(new AlignCoral(m_aligner, .5));
     new JoystickButton(m_gunner, Button.kX.value).whileTrue(new SetArmPosition(m_arm, 30));
-    new JoystickButton(m_gunner, Button.kA.value).whileTrue(new ShootCoral(m_coralHolder, 0.8));
+    new JoystickButton(m_driver, Button.kA.value).whileTrue(new ShootCoral(m_coralHolder, 0.8));
+    new JoystickButton(m_driver, Button.kB.value).whileTrue(new MoveClimberArm(m_climber,0.9));
   }
 
   public Command getAutonomousCommand() {
