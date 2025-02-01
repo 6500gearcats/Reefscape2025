@@ -109,6 +109,15 @@ public class Vision extends SubsystemBase {
     }
   }
 
+  public double getBestZAxisRotation() {
+    if (isLimelight) {
+      return 0;
+    }
+    else {
+      return photonCam.getBestAprilTag3dData().getRotation().getZ();
+    }
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

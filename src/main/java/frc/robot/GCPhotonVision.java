@@ -375,6 +375,14 @@ import edu.wpi.first.math.numbers.N1;
          }
          return new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0));
      }
+
+     public Transform3d getBestAprilTag3dData() {
+        var result = getLatestCameraResult();
+         if (result.hasTargets()) {
+            return result.getBestTarget().getBestCameraToTarget();
+         }
+         return new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0));
+     }
  
  }
  

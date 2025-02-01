@@ -105,19 +105,14 @@ public class DriveSubsystem extends SubsystemBase {
   private Pose2d m_simOdometryPose;
   private ShuffleboardTab m_driveTab = Shuffleboard.getTab("Drive");
   private GenericEntry m_maxSpeed;
-  //TODO: Remove this after finishing the pose estimator
-  /** 
-  public SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(
-    DriveConstants.kDriveKinematics, 
-    m_gyro.getRotation2d(), 
-    new SwerveModulePosition[] {
+  
+  /*public SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, m_gyro.getRotation2d(), new SwerveModulePosition[] {
     m_frontLeft.getPosition(),
     m_frontRight.getPosition(),
     m_rearLeft.getPosition(),
-    m_rearRight.getPosition()},
-    new Pose2d(0.0, 0.0, new Rotation2d())
-  );
-*/
+    m_rearRight.getPosition()
+}, new Pose2d(0.0, 0.0, new Rotation2d()));*/
+
   private final StructArrayPublisher<SwerveModuleState> publisher;  
 
   /** Creates a new DriveSubsystem. */
