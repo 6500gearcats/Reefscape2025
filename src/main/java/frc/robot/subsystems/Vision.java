@@ -52,6 +52,10 @@ public class Vision extends SubsystemBase {
     currentLimelight = limelight2;
   }
 
+  public String getName() {
+    return limelight.getName();
+  }
+
   // Side to side, left to right
   public double getBestYaw(){
     if(isLimelight){

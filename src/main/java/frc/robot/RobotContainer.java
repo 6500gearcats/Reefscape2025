@@ -45,7 +45,7 @@ public class RobotContainer {
 
   PhotonCamera temp_camera = new PhotonCamera("ArducamTwo");
   GCPhotonVision vision = new GCPhotonVision(temp_camera);
-  Vision m_vision = new Vision(m_LimelightA, m_LimelightB);
+  Vision m_vision = new Vision( m_LimelightB, m_LimelightA);
   //Temporarily adding this to
   DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera, m_vision);
 

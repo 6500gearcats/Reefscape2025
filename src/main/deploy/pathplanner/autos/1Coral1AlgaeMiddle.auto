@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleToCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Place-Holder Coral Place"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleTurnAround"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Place-Holder Algae Grab"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleAlgaeToProcessor"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Place-Holder Algae Processor"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "2 Note Auto",
+  "choreoAuto": false
+}

@@ -17,6 +17,10 @@ public class GCLimelight {
         name = theName;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public double getYawDegrees() {
         if (LimelightHelpers.getTV(name)) {
             return LimelightHelpers.getTX(name);

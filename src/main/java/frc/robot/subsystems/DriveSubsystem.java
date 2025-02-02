@@ -62,6 +62,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public boolean turboEnable = false;
 
+
   // Create MAXSwerveModules 
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
       DriveConstants.kFrontLeftDrivingCanId,
@@ -160,7 +161,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     // * Create a new PoseEstimator
     if(m_vision.isLimelight()){
-      m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions);
+      m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions, m_vision);
     }
     else{
       m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions, m_vision);
@@ -194,7 +195,7 @@ public class DriveSubsystem extends SubsystemBase {
     // store this in your Constants file
 
       AutoBuilder.configure(
-        this::getPose,
+        this::getPoseVision,
         this::resetOdometry,
         this::getChassisSpeed,
         (speeds, feedforwards) -> drive(speeds),
@@ -295,9 +296,17 @@ publisher = NetworkTableInstance.getDefault()
    *
    * @return The pose.
    */
-  public Pose2d getPose() {
+  public Pose2d getPoseVision() {
     if (Robot.isReal()) {
       return m_poseEstimator.getEstimatedPosition();
+    } else {
+      return m_simOdometryPose;
+    }
+  }
+
+  public Pose2d getPose() {
+    if (Robot.isReal()) {
+      return m_odometry.getPoseMeters();
     } else {
       return m_simOdometryPose;
     }

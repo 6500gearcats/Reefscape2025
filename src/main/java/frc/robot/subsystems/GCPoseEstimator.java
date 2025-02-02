@@ -61,14 +61,17 @@ public class GCPoseEstimator extends SubsystemBase {
   private boolean m_useLimeLight;
 
   private Vision m_vision;
+  private String m_limelightName;
 
 
   /** Creates a new PoseEstimator. */
   // * Uses Limelight
-  public GCPoseEstimator(Supplier<Rotation2d> rotationSupplier, Supplier<SwerveModulePosition[]> swerveModulePositionSupplier) {
+  public GCPoseEstimator(Supplier<Rotation2d> rotationSupplier, Supplier<SwerveModulePosition[]> swerveModulePositionSupplier, Vision m_vision) {
     m_rotationSupplier = rotationSupplier;
     m_swerveModulePositionSupplier = swerveModulePositionSupplier;
     m_useLimeLight = true;
+    this.m_vision = m_vision;
+    m_limelightName = m_vision.getName();
 
     m_poseEstimator = new SwerveDrivePoseEstimator(
       DriveConstants.kDriveKinematics,
@@ -80,6 +83,7 @@ public class GCPoseEstimator extends SubsystemBase {
   }
 
   // * Uses PhotonVision
+  /**
   public GCPoseEstimator(Supplier<Rotation2d> rotationSupplier, Supplier<SwerveModulePosition[]> swerveModulePositionSupplier, Vision vision) {
     m_rotationSupplier = rotationSupplier;
     m_swerveModulePositionSupplier = swerveModulePositionSupplier;
@@ -94,6 +98,7 @@ public class GCPoseEstimator extends SubsystemBase {
       m_stateStndDev,
       m_visionStndDev);
   }
+  */
 
   @Override
   public void periodic() {
@@ -124,7 +129,7 @@ public class GCPoseEstimator extends SubsystemBase {
       * FRC teams should always use botpose_wpiblue for pose-related functionality
       */
 
-      LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+      LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(m_limelightName);
       
       if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
       {
@@ -157,8 +162,8 @@ public class GCPoseEstimator extends SubsystemBase {
       * For 2024 and beyond, the origin of your coordinate system should always be the "blue" origin.
       * FRC teams should always use botpose_wpiblue for pose-related functionality
       */
-      LimelightHelpers.SetRobotOrientation("limelight", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+      LimelightHelpers.SetRobotOrientation(m_limelightName, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(m_limelightName);
       if(Math.abs(DriveSubsystem.m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {
         doRejectUpdate = true;
