@@ -58,6 +58,8 @@ import com.revrobotics.sim.SparkSimFaultManager;
 
 
 public class DriveSubsystem extends SubsystemBase {
+  // ! Update this to use the pose estimator instead of normal odametry
+
   public boolean turboEnable = false;
 
   // Create MAXSwerveModules 
@@ -98,9 +100,14 @@ public class DriveSubsystem extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
 
+  //The new Pose Estimator
+  private GCPoseEstimator m_poseEstimator;
+
   private final Field2d m_field = new Field2d();
 
   private GCPhotonVision m_simVision;
+  // ! Temporarily added this to make the pose estimator
+  private Vision m_vision;
 
   private Pose2d m_simOdometryPose;
   private ShuffleboardTab m_driveTab = Shuffleboard.getTab("Drive");
@@ -116,8 +123,10 @@ public class DriveSubsystem extends SubsystemBase {
   private final StructArrayPublisher<SwerveModuleState> publisher;  
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem(GCPhotonVision vision) {
-    m_simVision = vision;
+  public DriveSubsystem(GCPhotonVision simVision, Vision vision) {
+    m_simVision = simVision;
+    // ! Temporarily added this to make the pose estimator
+    m_vision = vision;
     try {
       /*
        * Communicate w/navX-MXP via theimport com.kauailabs.navx.frc.AHRS;A MXP SPI
@@ -148,6 +157,15 @@ public class DriveSubsystem extends SubsystemBase {
       m_calibrating.set(false);
       SmartDashboard.putNumber(getName(), getPitch());
     }
+
+    // * Create a new PoseEstimator
+    if(m_vision.isLimelight()){
+      m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions);
+    }
+    else{
+      m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions, m_vision);
+    }
+
 
     m_odometry = new SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
@@ -279,7 +297,7 @@ publisher = NetworkTableInstance.getDefault()
    */
   public Pose2d getPose() {
     if (Robot.isReal()) {
-      return m_odometry.getPoseMeters();
+      return m_poseEstimator.getEstimatedPosition();
     } else {
       return m_simOdometryPose;
     }
@@ -494,5 +512,14 @@ publisher = NetworkTableInstance.getDefault()
   //Code Added for pose estimator- Pranav
   public Rotation2d getRotation2d(){
     return m_gyro.getRotation2d();
+  }
+
+  public SwerveModulePosition[] getWheelPositions(){
+    return new SwerveModulePosition[] {
+      m_frontLeft.getPosition(),
+      m_frontRight.getPosition(),
+      m_rearLeft.getPosition(),
+      m_rearRight.getPosition()
+    };
   }
 }

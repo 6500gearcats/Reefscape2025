@@ -9,6 +9,8 @@ import org.photonvision.PhotonCamera;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.estimator.PoseEstimator;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -18,6 +20,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.GCPoseEstimator;
+import frc.robot.subsystems.Vision;
 import frc.robot.GCPhotonVision;
 import frc.robot.commands.AlignWithAprilTag;
 import frc.robot.commands.AlignWithNearestAprilTag;
@@ -42,7 +47,7 @@ public class RobotContainer {
   GCPhotonVision vision = new GCPhotonVision(temp_camera);
   Vision m_vision = new Vision(m_LimelightA, m_LimelightB);
   //Temporarily adding this to
-  DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera);
+  DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera, m_vision);
 
   public RobotContainer() {
 
