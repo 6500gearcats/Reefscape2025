@@ -26,6 +26,7 @@ import frc.robot.subsystems.Vision;
 import frc.robot.GCPhotonVision;
 import frc.robot.commands.AlignWithAprilTag;
 import frc.robot.commands.AlignWithNearestAprilTag;
+import frc.robot.commands.ChaseAprilTag;
 import frc.robot.commands.SetAprilTagHorizontalOffset;
 import frc.robot.commands.SetAprilTagVerticalOffset;
 import frc.robot.subsystems.DriveSubsystem;
@@ -78,7 +79,7 @@ public class RobotContainer {
     new JoystickButton(m_driver, Button.kA.value).whileTrue(new AlignWithNearestAprilTag(m_vision, m_robotDrive));
     new JoystickButton(m_driver, Button.kB.value).whileTrue(new SetAprilTagHorizontalOffset(14, m_vision, m_robotDrive, .5));
     new JoystickButton(m_driver, Button.kY.value).whileTrue(new SetAprilTagVerticalOffset(14, m_vision, m_robotDrive, 0));
-
+    new JoystickButton(m_driver, Button.kX.value).whileTrue(new ChaseAprilTag(m_vision, m_robotDrive));
   }
 
   public Command getAutonomousCommand() {

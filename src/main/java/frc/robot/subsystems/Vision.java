@@ -140,6 +140,15 @@ public class Vision extends SubsystemBase {
     }
   }
 
+  public double getTargetDistance() {
+    if (isLimelight) {
+      return limelight.getTargetDistanceX();
+    }
+    else {
+      return photonCam.getBestTargetRange();
+    }
+  }
+
   public boolean isLimelight() {
     return isLimelight;
   }

@@ -5,6 +5,8 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Distance;
 import frc.robot.LimelightHelpers.LimelightResults;
 import frc.robot.LimelightHelpers.RawFiducial;
 import frc.robot.subsystems.DriveSubsystem;
@@ -49,10 +51,16 @@ public class GCLimelight {
         } else {
             return 0;
         }
+    }
 
-        // Pose3d pose = LimelightHelpers.getTargetPose3d_CameraSpace(name);
-        // double verticalOffset = LimelightHelpers.getTY(name);
-        // double height = pose.getZ() - verticalOffset;
+    public double betterDistance() {
+        double ty = LimelightHelpers.getTY(name);
+        double targetPitchRadians = Math.toRadians(ty);
+        double cameraHeightMeters = 0.2159;
+        Distance targetHeightMeters = LimelightHelpers.getTargetPose3d_RobotSpace(name).getMeasureZ();
+        double newTargetHeightMeters = targetHeightMeters.in(Units.Meters);
+        double cameraPitchRadians = 0;
+        return Math.abs((newTargetHeightMeters - cameraHeightMeters) / Math.tan(cameraPitchRadians + targetPitchRadians));
     }
 
     public double getChosenTargetYawDegrees(int fiducialID) {
