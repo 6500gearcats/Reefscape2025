@@ -36,7 +36,7 @@ public class RobotContainer {
   XboxController m_gunner = new XboxController(1);
 
   GCPhotonVision m_PhotonCamera = new GCPhotonVision(new PhotonCamera("ArducamTwo"));
-  GCLimelight m_Limelight = new GCLimelight("temp");
+  GCLimelight m_Limelight = new GCLimelight("limelight-gcb");
 
 
   PhotonCamera temp_camera = new PhotonCamera("ArducamTwo");
