@@ -13,7 +13,9 @@ import frc.robot.GCPhotonVision;
 
 public class Vision extends SubsystemBase {
   private boolean isLimelight;
+  GCLimelight currentLimelight;
   private GCLimelight limelight;
+  private GCLimelight limelight2;
   private GCPhotonVision photonCam;
   /** Creates a new Vision. */
 
@@ -28,10 +30,18 @@ public class Vision extends SubsystemBase {
   }
 
   // Limelight camera code
-  public Vision(GCLimelight theLimelight) {
+  public Vision(GCLimelight theLimelight, GCLimelight ll2) {
     isLimelight = true;
     photonCam = null;
     limelight = theLimelight;
+    limelight2 = ll2;
+  }
+
+  public void useLL1() {
+    currentLimelight = limelight;
+  }
+  public void useLL2() {
+    currentLimelight = limelight2;
   }
 
   // Side to side, left to right
