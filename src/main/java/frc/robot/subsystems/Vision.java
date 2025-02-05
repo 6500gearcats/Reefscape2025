@@ -133,7 +133,7 @@ public class Vision extends SubsystemBase {
 
   public double getBestZAxisRotation() {
     if (isLimelight) {
-      return limelight.getBestSkewDegrees();
+      return limelight2.getBestSkewDegrees();
     }
     else {
       return photonCam.getBestAprilTag3dData().getRotation().getZ();

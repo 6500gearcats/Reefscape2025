@@ -31,11 +31,13 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
     
-    PortForwarder.add(5801, "limelight-gcb.local", 5801);
-    //PortForwarder.add(5801, "limelight-gcb.local", 5801);
-    
+    for (int port = 5800; port <= 5809; port++) {
+      PortForwarder.add(port, "limelight-gca.local", port);
+    }
 
-  
+    for (int port = 5800; port <= 5809; port++) {
+      PortForwarder.add(port + 10, "limelight-gcb.local", port);
+    }
   }
 
   @Override
