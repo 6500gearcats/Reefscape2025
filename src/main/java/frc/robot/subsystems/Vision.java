@@ -10,6 +10,8 @@ import javax.net.ssl.TrustManagerFactory;
 
 import org.photonvision.EstimatedRobotPose;
 
+import com.revrobotics.servohub.config.ServoChannelConfig.PulseRange;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.*;
@@ -108,6 +110,14 @@ public class Vision extends SubsystemBase {
       return currentLimelight.getChosenTargetPitchDegrees(fiducialID);
     } else {
       return photonCam.getChosenTargetPitch(fiducialID);
+    }
+  }
+
+  public int getBestFiducialID(){
+    if(isLimelight){
+      return currentLimelight.getBestFiducialID();
+    } else {
+      return photonCam.getBestFiducialID();
     }
   }
 

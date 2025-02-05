@@ -53,6 +53,14 @@ public class GCLimelight {
         }
     }
 
+    public int getBestFiducialID(){
+        if(LimelightHelpers.getTV(name)){
+            return (int)LimelightHelpers.getFiducialID(name);
+        } else {
+            return 0;
+        }
+    }
+
     public double betterDistance() {
         double ty = LimelightHelpers.getTY(name);
         double targetPitchRadians = Math.toRadians(ty);

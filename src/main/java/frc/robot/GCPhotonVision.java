@@ -212,6 +212,15 @@ import edu.wpi.first.math.numbers.N1;
         return 0;
      }
 
+     public int getBestFiducialID(){
+        var result = getLatestCameraResult();
+        if(result.hasTargets()){
+            return result.getBestTarget().getFiducialId();
+        } else {
+            return 0;
+        }
+     }
+
      public double getBestTargetPitch()
      {
         var result = getLatestCameraResult();
