@@ -96,7 +96,7 @@ public class Vision extends SubsystemBase {
   public double getChosenYaw(int fiducialID)
   {
     if(isLimelight){
-      return limelight.getChosenTargetYawDegrees(fiducialID);
+      return currentLimelight.getChosenTargetYawDegrees(fiducialID);
     } else {
       return photonCam.getChosenTargetRotation(fiducialID);
     }
@@ -105,7 +105,7 @@ public class Vision extends SubsystemBase {
   public double getChosenPitch(int fiducialID)
   {
     if(isLimelight){
-      return limelight.getChosenTargetPitchDegrees(fiducialID);
+      return currentLimelight.getChosenTargetPitchDegrees(fiducialID);
     } else {
       return photonCam.getChosenTargetPitch(fiducialID);
     }
@@ -115,7 +115,7 @@ public class Vision extends SubsystemBase {
   public double getChosenSkew(int fiducialID)
   {
     if(isLimelight){
-      return limelight.getChosenTargetSkewDegrees(fiducialID);
+      return currentLimelight.getChosenTargetSkewDegrees(fiducialID);
     } else {
       return photonCam.getChosenTargetSkew(fiducialID);
     }
@@ -124,7 +124,7 @@ public class Vision extends SubsystemBase {
   public double getChosenRange (int fiducialID)
   {
     if(isLimelight){
-      return limelight.getChosenTargetDistanceX(fiducialID);
+      return currentLimelight.getChosenTargetDistanceX(fiducialID);
     } else {
       return photonCam.getChosenTargetRange(fiducialID);
     }
@@ -132,7 +132,7 @@ public class Vision extends SubsystemBase {
 
   public double getZAxisRotation(int fiducialID) {
     if (isLimelight) {
-      return limelight.getChosenTargetSkewDegrees(fiducialID);
+      return currentLimelight.getChosenTargetSkewDegrees(fiducialID);
     }
     else {
       return photonCam.getAprilTag3dData(fiducialID).getRotation().getZ();
@@ -141,7 +141,7 @@ public class Vision extends SubsystemBase {
 
   public double getBestZAxisRotation() {
     if (isLimelight) {
-      return limelight2.getBestSkewDegrees();
+      return currentLimelight.getBestSkewDegrees();
     }
     else {
       return photonCam.getBestAprilTag3dData().getRotation().getZ();
@@ -150,7 +150,7 @@ public class Vision extends SubsystemBase {
 
   public double getTargetDistance() {
     if (isLimelight) {
-      return limelight.getTargetDistanceX();
+      return currentLimelight.getTargetDistanceX();
     }
     else {
       return photonCam.getBestTargetRange();
