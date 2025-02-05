@@ -43,23 +43,31 @@ public class Vision extends SubsystemBase {
     photonCam = null;
     limelight = theLimelight;
     limelight2 = ll2;
+    currentLimelight = limelight;
   }
 
   public void useLL1() {
-    currentLimelight = limelight;
+    if(isLimelight){
+      currentLimelight = limelight;
+    }
   }
   public void useLL2() {
+    if(isLimelight){
     currentLimelight = limelight2;
+    }
   }
 
   public String getName() {
-    return limelight.getName();
+    if(isLimelight){
+      return currentLimelight.getName();
+    }
+    return "";
   }
 
   // Side to side, left to right
   public double getBestYaw(){
     if(isLimelight){
-      return limelight.getYawDegrees();
+      return currentLimelight.getYawDegrees();
     }
     else{
       return photonCam.getBestTargetRotation();
@@ -69,7 +77,7 @@ public class Vision extends SubsystemBase {
   // Up and down, top to bottom
   public double getBestPitch(){
     if(isLimelight){
-      return limelight.getPitchDegrees();
+      return currentLimelight.getPitchDegrees();
     } else {
       return photonCam.getBestTargetPitch();
     }
@@ -79,7 +87,7 @@ public class Vision extends SubsystemBase {
   // Returns your distsance from a target
   public double getBestRange(){
     if(isLimelight){
-      return limelight.getTargetDistanceX();
+      return currentLimelight.getTargetDistanceX();
     } else {
       return photonCam.getBestTargetRange();
     }
