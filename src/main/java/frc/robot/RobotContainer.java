@@ -20,13 +20,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Vision;
 import frc.robot.GCPhotonVision;
 import frc.robot.commands.AlignWithAprilTag;
 import frc.robot.commands.AlignWithSelectedAprilTag;
+import frc.robot.commands.dpadAlign;
 import frc.robot.commands.SetAprilTagHorizontalOffset;
 import frc.robot.commands.SetAprilTagVerticalOffset;
+import frc.robot.commands.dpadAlign;
 
 public class RobotContainer {
 
@@ -72,6 +75,9 @@ public class RobotContainer {
     new JoystickButton(m_driver, Button.kA.value).onTrue(new AlignWithSelectedAprilTag(m_vision, m_robotDrive));
     new JoystickButton(m_driver, Button.kB.value).onTrue(new SetAprilTagHorizontalOffset(17, m_vision, m_robotDrive, .5));
     new JoystickButton(m_driver, Button.kY.value).onTrue(new SetAprilTagVerticalOffset(17, m_vision, m_robotDrive, 0));
+    new JoystickButton(m_driver, Button.kX.value).onTrue(new dpadAlign(m_robotDrive, 0));
+    new POVButton(m_driver, 90).onTrue(new dpadAlign(m_robotDrive, 1));
+    new POVButton(m_driver, 270).onTrue(new dpadAlign(m_robotDrive, 0));
   }
 
   public Command getAutonomousCommand() {
