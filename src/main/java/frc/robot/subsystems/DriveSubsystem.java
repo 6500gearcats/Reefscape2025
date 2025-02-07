@@ -5,26 +5,17 @@
 package frc.robot.subsystems;
 
 import java.util.Map;
-import java.util.function.BiConsumer;
 
-// Path Planner Imports
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.controllers.PathFollowingController;
-import com.pathplanner.lib.util.DriveFeedforwards;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.hal.SimBoolean;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
@@ -33,14 +24,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
-//import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -48,13 +36,10 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Robot;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.GCPhotonVision;
-import com.revrobotics.spark.SparkSim;
-import com.revrobotics.sim.SparkMaxSim;
-import com.revrobotics.sim.SparkSimFaultManager;
+import frc.robot.Robot;
 
 
 public class DriveSubsystem extends SubsystemBase {
@@ -107,8 +92,10 @@ public class DriveSubsystem extends SubsystemBase {
   private final Field2d m_field = new Field2d();
 
   private GCPhotonVision m_simVision;
-  // ! Temporarily added this to make the pose estimator
-  private Vision m_vision;
+  
+  private Vision m_visionLL1;
+  private Vision m_visionLL2;
+
 
   private Pose2d m_simOdometryPose;
   private ShuffleboardTab m_driveTab = Shuffleboard.getTab("Drive");
@@ -124,10 +111,11 @@ public class DriveSubsystem extends SubsystemBase {
   private final StructArrayPublisher<SwerveModuleState> publisher;  
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem(GCPhotonVision simVision, Vision vision) {
+  public DriveSubsystem(GCPhotonVision simVision, Vision vision, Vision vision2) {
     m_simVision = simVision;
     // ! Temporarily added this to make the pose estimator
-    m_vision = vision;
+    m_visionLL1 = vision;
+    m_visionLL2 = vision2;
     try {
       /*
        * Communicate w/navX-MXP via theimport com.kauailabs.navx.frc.AHRS;A MXP SPI
@@ -160,12 +148,13 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     // * Create a new PoseEstimator
-    if(m_vision.isLimelight()){
-      m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions, m_vision);
+    if(m_visionLL1.isLimelight() && m_visionLL2.isLimelight()){
+      m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions, m_visionLL1, m_visionLL2);
     }
-    else{
-      m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions, m_vision);
-    }
+    // else{
+    // ! Temporarily removed photon integration this to make the pose estimator
+    //   m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions, m_visionLL1);
+    // }
 
 
     m_odometry = new SwerveDriveOdometry(

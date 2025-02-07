@@ -12,11 +12,9 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.LimelightHelpers;
 
@@ -60,18 +58,24 @@ public class GCPoseEstimator extends SubsystemBase {
   private Supplier<SwerveModulePosition[]> m_swerveModulePositionSupplier;
   private boolean m_useLimeLight;
 
-  private Vision m_vision;
-  private String m_limelightName;
+  private Vision m_visionLL1;
+  private Vision m_visionLL2;
+  private String m_limelight1;
+  private String m_limelight2;
 
 
   /** Creates a new PoseEstimator. */
   // * Uses Limelight
-  public GCPoseEstimator(Supplier<Rotation2d> rotationSupplier, Supplier<SwerveModulePosition[]> swerveModulePositionSupplier, Vision m_vision) {
+  public GCPoseEstimator(Supplier<Rotation2d> rotationSupplier, Supplier<SwerveModulePosition[]> swerveModulePositionSupplier, Vision visionLL1, Vision visionLL2) {
     m_rotationSupplier = rotationSupplier;
     m_swerveModulePositionSupplier = swerveModulePositionSupplier;
     m_useLimeLight = true;
-    this.m_vision = m_vision;
-    m_limelightName = m_vision.getName();
+
+    this.m_visionLL1 = visionLL1;
+    this.m_visionLL2 = visionLL2;
+    
+    m_limelight1 = m_visionLL1.getName();
+    m_limelight2 = m_visionLL2.getName();
 
     m_poseEstimator = new SwerveDrivePoseEstimator(
       DriveConstants.kDriveKinematics,
@@ -129,7 +133,7 @@ public class GCPoseEstimator extends SubsystemBase {
       * FRC teams should always use botpose_wpiblue for pose-related functionality
       */
 
-      LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(m_limelightName);
+      LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(m_limelight1);
       
       if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
       {
@@ -162,13 +166,20 @@ public class GCPoseEstimator extends SubsystemBase {
       * For 2024 and beyond, the origin of your coordinate system should always be the "blue" origin.
       * FRC teams should always use botpose_wpiblue for pose-related functionality
       */
-      LimelightHelpers.SetRobotOrientation(m_limelightName, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(m_limelightName);
+
+      // ! attempting to avg the two limelights measurements
+      LimelightHelpers.SetRobotOrientation(m_limelight1, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+      LimelightHelpers.PoseEstimate mt2_1 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(m_limelight1);
+
+      LimelightHelpers.SetRobotOrientation(m_limelight2, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+      LimelightHelpers.PoseEstimate mt2_2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(m_limelight2);
+      
       if(Math.abs(DriveSubsystem.m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {
         doRejectUpdate = true;
       }
-      if(mt2.tagCount == 0)
+      // * Check if we want to reject the update if either of the limelights sees nothing
+      if(mt2_1.tagCount == 0 || mt2_2.tagCount == 0)
       {
         doRejectUpdate = true;
       }
@@ -176,8 +187,14 @@ public class GCPoseEstimator extends SubsystemBase {
       {
         m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
         m_poseEstimator.addVisionMeasurement(
-            mt2.pose,
-            mt2.timestampSeconds);
+            mt2_1.pose,
+            mt2_1.timestampSeconds);
+        
+        // * Added a small time offset to the second limelight to prevent the two measurements from overwriting each other. 
+        // * Since this is using Kalman Filters it avgerages the two measurements automatically
+        m_poseEstimator.addVisionMeasurement(
+            mt2_2.pose,
+            mt2_2.timestampSeconds + 0.000000001);
       }
     }
   }
