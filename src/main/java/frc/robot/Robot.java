@@ -17,7 +17,7 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
 
-    PortForwarder.add(5801, "limelight-gcb.local", 5801);
+    PortForwarder.add(5801, "limelight-gca.local", 5801);
   }
 
   @Override
