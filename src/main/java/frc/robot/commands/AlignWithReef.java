@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.function.IntSupplier;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Vision;
@@ -13,11 +15,11 @@ import frc.robot.subsystems.Vision;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AlignWithReef extends SequentialCommandGroup {
   /** Creates a new AlignWithReef. */
-  public AlignWithReef(int fiducialID, Vision camera, DriveSubsystem drive) {
+  public AlignWithReef(IntSupplier fiducialID, Vision camera, DriveSubsystem drive) {
     addCommands(
       new AlignWithAprilTag(fiducialID, camera, drive),
-      new SetAprilTagHorizontalOffset(fiducialID, camera, drive, .5),
-      new SetAprilTagVerticalOffset(fiducialID, camera, drive, 0)
+      new SetAprilTagHorizontalOffset(fiducialID.getAsInt(), camera, drive, .5),
+      new SetAprilTagVerticalOffset(fiducialID.getAsInt(), camera, drive, 0)
     );
   }
 }

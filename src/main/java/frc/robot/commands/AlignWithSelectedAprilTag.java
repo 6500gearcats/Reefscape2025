@@ -12,18 +12,13 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Vision;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class AlignWithAprilTag extends Command {
+public class AlignWithSelectedAprilTag extends Command {
   /** Creates a new AlignWithAprilTag. */
-  private int m_FiducialID;
   private Vision m_camera;
   private DriveSubsystem m_drive;
 
-  private PIDController skewController;
-  private PIDController yawController;
-
-  public AlignWithAprilTag(IntSupplier fiducialID, Vision camera, DriveSubsystem drive) {
+  public AlignWithSelectedAprilTag(Vision camera, DriveSubsystem drive) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_FiducialID = fiducialID.getAsInt();
     m_camera = camera;
     m_drive = drive;
 
@@ -36,8 +31,8 @@ public class AlignWithAprilTag extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double skew = m_camera.getZAxisRotation(m_FiducialID);
-    double rotation = m_camera.getChosenYaw(m_FiducialID);
+    double skew = m_camera.getZAxisRotation(Vision.chosenTag);
+    double rotation = m_camera.getChosenYaw(Vision.chosenTag);
 
     m_drive.drive(0, -rotation * 0.05, -skew * 0.05, false);
   }
@@ -51,6 +46,6 @@ public class AlignWithAprilTag extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(m_camera.getZAxisRotation(m_FiducialID)) >= 1 && Math.abs(m_camera.getChosenYaw(m_FiducialID)) <= .2) || m_camera.getZAxisRotation(m_FiducialID)==0;
+    return (Math.abs(m_camera.getZAxisRotation(Vision.chosenTag)) >= 1 && Math.abs(m_camera.getChosenYaw(Vision.chosenTag)) <= .2) || m_camera.getZAxisRotation(Vision.chosenTag)==0;
   }
 }

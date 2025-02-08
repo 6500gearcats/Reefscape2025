@@ -54,8 +54,8 @@ public class SetAprilTagVerticalOffset extends Command {
       // All of this is relative to the target april tag
       yaw = camera.getChosenYaw(fiducialID); // Yaw angle from april tag
       distance = camera.getChosenRange(fiducialID); // Distance from april tag
-      ydistance = distance * Math.cos(yaw*Math.PI/180); // X distance only from april tag
-      distanceFromTarget = yOffset - ydistance; // X distance from our target x position
+      ydistance = distance * Math.cos(yaw*Math.PI/180); // Y distance only from april tag
+      distanceFromTarget = yOffset - ydistance; // Y distance from our target y position
       lastTime = System.currentTimeMillis();
     } else {
       MoveToAprilTag();
