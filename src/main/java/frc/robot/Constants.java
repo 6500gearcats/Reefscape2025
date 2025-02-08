@@ -152,7 +152,7 @@ public static class AlgaeIntakeConstants {
 }
 
 public static class ClimberConstants {
-    public static final int kClimberMotorPort = 11;
+    public static final int kClimberMotorPort = 15;
     public static final int kClimberGrabberMotorPort = 7;
     public static final int kClimberSwitchPort = 1;
 }

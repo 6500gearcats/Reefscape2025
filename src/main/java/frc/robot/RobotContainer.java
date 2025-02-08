@@ -19,15 +19,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.AlgaeIntake;
-import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.CoralHolder;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.Vision;
-import frc.robot.commands.IntakeAlgae;
-import frc.robot.commands.MoveCoral;
-import frc.robot.commands.SetArmSpeed;
 import frc.robot.commands.SetClimberSpeed;
 
 public class RobotContainer {
@@ -37,10 +31,7 @@ public class RobotContainer {
   XboxController m_driver = new XboxController(0);
   XboxController m_gunner = new XboxController(1);
 
-  AlgaeIntake m_AlgaeIntake = new AlgaeIntake();
-  Arm m_arm = new Arm();
   Climber m_climber = new Climber();
-  CoralHolder m_CoralHolder = new CoralHolder();
 
   PhotonCamera temp_camera = new PhotonCamera("temp_camera");
 
@@ -74,16 +65,17 @@ public class RobotContainer {
 
     //TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
     //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new FlipGroundIntake(m_groundIntake)).onFalse(new FlipGroundIntake(m_groundIntake));
-    new JoystickButton(m_driver, XboxController.Button.kA.value).whileTrue(new IntakeAlgae(m_AlgaeIntake, 0.2));
-    new JoystickButton(m_driver, XboxController.Button.kB.value).whileTrue(new IntakeAlgae(m_AlgaeIntake, -0.2));
+    //new JoystickButton(m_driver, XboxController.Button.kA.value).whileTrue(new IntakeAlgae(m_AlgaeIntake, 0.2));
+    //new JoystickButton(m_driver, XboxController.Button.kB.value).whileTrue(new IntakeAlgae(m_AlgaeIntake, -0.2));
 
-    new Trigger(() -> m_gunner.getLeftY() > 0.2).whileTrue(new SetArmSpeed(m_arm, -.05));
-    new Trigger(() -> m_gunner.getLeftY() < -0.2).whileTrue(new SetArmSpeed(m_arm, .05));
+    //new Trigger(() -> m_gunner.getLeftY() > 0.2).whileTrue(new SetArmSpeed(m_arm, -.05));
+    //new Trigger(() -> m_gunner.getLeftY() < -0.2).whileTrue(new SetArmSpeed(m_arm, .05));
 
     new JoystickButton(m_driver, XboxController.Button.kY.value).whileTrue(new SetClimberSpeed(m_climber, 0.1));
+    new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new SetClimberSpeed(m_climber, -0.1));
 
-    new JoystickButton(m_gunner, XboxController.Button.kA.value).whileTrue(new MoveCoral(m_CoralHolder, -0.1));
-    new JoystickButton(m_gunner, XboxController.Button.kB.value).whileTrue(new MoveCoral(m_CoralHolder, 0.1));
+    //new JoystickButton(m_gunner, XboxController.Button.kA.value).whileTrue(new MoveCoral(m_CoralHolder, -0.1));
+    //new JoystickButton(m_gunner, XboxController.Button.kB.value).whileTrue(new MoveCoral(m_CoralHolder, 0.1));
   }
 
   public Command getAutonomousCommand() {
