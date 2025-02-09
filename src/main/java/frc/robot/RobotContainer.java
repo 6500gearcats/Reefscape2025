@@ -13,22 +13,24 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Elevator;
 import frc.robot.Vision;
+import frc.robot.Commands.SetElevatorSpeed;
 
 public class RobotContainer {
 
-  
-
   XboxController m_driver = new XboxController(0);
   XboxController m_gunner = new XboxController(1);
-
 
   PhotonCamera temp_camera = new PhotonCamera("temp_camera");
 
   Vision vision = new Vision(temp_camera);
   //Temporarily adding this to
   DriveSubsystem m_robotDrive = new DriveSubsystem(vision);
+
+  Elevator m_elevator = new Elevator();
 
   public RobotContainer() {
 
@@ -51,7 +53,8 @@ public class RobotContainer {
 
     //TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
     //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new FlipGroundIntake(m_groundIntake)).onFalse(new FlipGroundIntake(m_groundIntake));
-    
+    new Trigger(() -> m_gunner.getLeftY() > 0.2).whileTrue(new SetElevatorSpeed(m_elevator, 0.05));
+    new Trigger(() -> m_gunner.getLeftY() < -0.2).whileTrue(new SetElevatorSpeed(m_elevator, -0.05));
   }
 
   public Command getAutonomousCommand() {

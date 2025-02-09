@@ -40,6 +40,6 @@ public class SetElevatorHeight extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_elevator.elevatorAtLimit();
+    return m_elevator.ElevatorAtBottom() && 0.1 * (m_height - m_elevator.getElevatorHeight()) < 0;//m_elevator.elevatorAtLimit();
   }
 }

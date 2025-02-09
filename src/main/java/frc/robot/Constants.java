@@ -278,6 +278,13 @@ public final class Constants {
     public static final double kClimberSpeedDown = -0.6;
   }
 
+  public static class ElevatorConstants {
+    public static final int kElevatorMotorPort = 16;
+    public static final int kElevatorTopSwitchPort = 0;
+    public static final int kElevatordBottomSwitchPort = 0;
+    public static final int kLidarChannel = 0;
+  }
+
   public static class IntakeConstants {
     public static final int kIntakeMotorPort = 9;
     public static final double kFeedSpeed = 0.50;

@@ -14,13 +14,14 @@ import com.revrobotics.spark.SparkLowLevel;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
   // TODO add correct ids
-  private SparkMax m_elevatorMotor = new SparkMax(0, SparkLowLevel.MotorType.kBrushless);
-  private LaserCan m_elevatorLidar = new LaserCan(0);
-  private DigitalInput m_elevatorTopLimitSwitch = new DigitalInput(0);
-  private DigitalInput m_elevatorBottomLimitSwitch = new DigitalInput(0);
+  private SparkMax m_elevatorMotor = new SparkMax(ElevatorConstants.kElevatorMotorPort, SparkLowLevel.MotorType.kBrushless);
+  private LaserCan m_elevatorLidar = new LaserCan(ElevatorConstants.kLidarChannel);
+  //private DigitalInput m_elevatorTopLimitSwitch = new DigitalInput(ElevatorConstants.kElevatorTopSwitchPort);
+  private DigitalInput m_elevatorBottomLimitSwitch = new DigitalInput(ElevatorConstants.kElevatordBottomSwitchPort);
 
   
   /** Creates a new Elevator. */
@@ -39,7 +40,7 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Elevator Height (m)", this.getElevatorHeight());
-    SmartDashboard.putBoolean("Elevator Limit Reached", elevatorAtLimit());
+    //SmartDashboard.putBoolean("Elevator Limit Reached", elevatorAtLimit());
   }
 
   // Return the height of the elevator in meters
@@ -57,9 +58,13 @@ public class Elevator extends SubsystemBase {
     m_elevatorMotor.set(speed);
   }
 
+  public boolean ElevatorAtBottom(){
+    return m_elevatorBottomLimitSwitch.get();
+  }
+
   // Check to see if the elevator is too high
-  public boolean elevatorAtLimit()
+  /*public boolean elevatorAtLimit()
   {
     return m_elevatorTopLimitSwitch.get() || m_elevatorBottomLimitSwitch.get();
-  }
+  }*/
 }
