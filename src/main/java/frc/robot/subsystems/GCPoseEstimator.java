@@ -162,7 +162,7 @@ public class GCPoseEstimator extends SubsystemBase {
       LimelightHelpers.PoseEstimate mt2;
       mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
       if (mt2 != null) {
-        if (Math.abs(DriveSubsystem.m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per
+        if (Math.abs(DriveSubsystem.m_gyro.getAngularVelocityZWorld().getValueAsDouble()) > 720) // if our angular velocity is greater than 720 degrees per
                                                              // second, ignore vision updates
         {
           doRejectUpdate = true;
