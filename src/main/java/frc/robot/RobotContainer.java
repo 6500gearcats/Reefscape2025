@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Elevator;
 import frc.robot.Vision;
+import frc.robot.Commands.SetElevatorHeight;
 import frc.robot.Commands.SetElevatorSpeed;
 
 public class RobotContainer {
@@ -53,8 +54,10 @@ public class RobotContainer {
 
     //TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
     //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new FlipGroundIntake(m_groundIntake)).onFalse(new FlipGroundIntake(m_groundIntake));
-    new Trigger(() -> m_gunner.getLeftY() > 0.2).whileTrue(new SetElevatorSpeed(m_elevator, 0.05));
-    new Trigger(() -> m_gunner.getLeftY() < -0.2).whileTrue(new SetElevatorSpeed(m_elevator, -0.05));
+    new Trigger(() -> m_gunner.getLeftY() > 0.5).whileTrue(new SetElevatorSpeed(m_elevator, 0.15));
+    new Trigger(() -> m_gunner.getLeftY() < -0.5).whileTrue(new SetElevatorSpeed(m_elevator, -0.2));
+    
+    new JoystickButton(m_gunner, XboxController.Button.kX.value).whileTrue(new SetElevatorHeight(m_elevator, 0.15));
   }
 
   public Command getAutonomousCommand() {

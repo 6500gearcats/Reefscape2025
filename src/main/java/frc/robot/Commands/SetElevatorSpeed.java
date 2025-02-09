@@ -33,11 +33,12 @@ public class SetElevatorSpeed extends Command {
   @Override
   public void end(boolean interrupted) {
     // TODO: Set the height to the current height
+    m_elevator.setElevatorSpeed(-0.04);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_elevator.ElevatorAtBottom() && m_speed < 0;//m_elevator.elevatorAtLimit();
+    return m_elevator.ElevatorAtBottom() && m_speed > 0;//m_elevator.elevatorAtLimit();
   }
 }
