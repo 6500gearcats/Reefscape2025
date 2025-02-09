@@ -129,7 +129,7 @@ public class GCPoseEstimator extends SubsystemBase {
        * FRC teams should always use botpose_wpiblue for pose-related functionality
        */
 
-      LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+      LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-gcc");
 
       if (mt1.tagCount == 1 && mt1.rawFiducials.length == 1) {
         if (mt1.rawFiducials[0].ambiguity > .7) {
@@ -157,10 +157,10 @@ public class GCPoseEstimator extends SubsystemBase {
        * the "blue" origin.
        * FRC teams should always use botpose_wpiblue for pose-related functionality
        */
-      LimelightHelpers.SetRobotOrientation("limelight",
+      LimelightHelpers.SetRobotOrientation("limelight-gcc",
           m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
       LimelightHelpers.PoseEstimate mt2;
-      mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+      mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-gcc");
       if (mt2 != null) {
         if (Math.abs(DriveSubsystem.m_gyro.getAngularVelocityZWorld().getValueAsDouble()) > 720) // if our angular velocity is greater than 720 degrees per
                                                              // second, ignore vision updates

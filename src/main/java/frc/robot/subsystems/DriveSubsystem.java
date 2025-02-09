@@ -9,6 +9,8 @@ import java.util.Map;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.hal.SimBoolean;
@@ -71,6 +73,7 @@ public class DriveSubsystem extends SubsystemBase {
   // The gyro sensor
   // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
   public static Pigeon2 m_gyro;
+  public static AHRS m_gyro2;
 
   private int m_gyroSim;
   private SimDouble m_simAngle;
@@ -114,7 +117,7 @@ public class DriveSubsystem extends SubsystemBase {
        * See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for
        * details.
        */
-
+      m_gyro2 = new AHRS(NavXComType.kMXP_SPI);
       m_gyro = new Pigeon2(0, "rio");
       System.out.println("Pigeon2 constructed");
     } catch (RuntimeException ex) {
@@ -465,7 +468,7 @@ publisher = NetworkTableInstance.getDefault()
   public double getAngle() {
     // return -m_gyro.getYaw();
     if (Robot.isReal()) {
-      return -m_gyro.getYaw().getValueAsDouble();
+      return m_gyro.getYaw().getValueAsDouble();
     } else {
       return m_simAngle.get();
     }

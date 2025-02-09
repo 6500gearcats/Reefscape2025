@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -42,7 +43,7 @@ public class RobotContainer {
   XboxController m_gunner = new XboxController(1);
 
   GCPhotonVision m_PhotonCamera = new GCPhotonVision(new PhotonCamera("ArducamTwo"));
-  GCLimelight m_Limelight = new GCLimelight("limelight");
+  GCLimelight m_Limelight = new GCLimelight("limelight-gcc");
 
 
   PhotonCamera temp_camera = new PhotonCamera("ArducamTwo");
@@ -82,6 +83,7 @@ public class RobotContainer {
     new JoystickButton(m_driver, Button.kX.value).onTrue(new dpadAlign(m_robotDrive, 0));
     new POVButton(m_driver, 90).onTrue(new dpadAlign(m_robotDrive, 1));
     new POVButton(m_driver, 270).onTrue(new dpadAlign(m_robotDrive, 0));
+    new JoystickButton(m_driver, Button.kStart.value).onTrue(new InstantCommand(() -> m_robotDrive.zeroHeading()));
   }
 
   public Command getAutonomousCommand() {

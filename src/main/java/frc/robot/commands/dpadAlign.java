@@ -34,7 +34,7 @@ public class dpadAlign extends Command {
   int choice;
   public dpadAlign(DriveSubsystem newM_Drive, int choice) {
     m_drive = newM_Drive;
-    constraints = new PathConstraints(3.0, 3.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
+    constraints = new PathConstraints(1.0, 1.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
     this.choice = choice;
 
     addRequirements(m_drive);
@@ -109,6 +109,7 @@ public class dpadAlign extends Command {
     System.out.println("Min value: " + minValue);
     integer = poses.indexOf(minValue);
     System.out.println("Integer of least distance: " + integer);
+    System.out.println("Tag of least Distance: " + list.get(integer));
     return list.get(integer);
   }
 }
