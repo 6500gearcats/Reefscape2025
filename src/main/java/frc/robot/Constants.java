@@ -30,7 +30,7 @@ public class Constants {
     }
 
     public static class ArmConstants{
-        public static final int kArmMotorPort = 6;
+        public static final int kArmMotorPort = 9;
     }
 
 }

@@ -35,8 +35,8 @@ public class RobotContainer {
   //  new JoystickButton(m_gunner, Button.kA.value).whileTrue(new IntakeFromGround(m_groundIntake))
   //  new JoystickButton(m_gunner, Button.kY.value).whileTrue(new AlignCoral(m_aligner, .5));
     //new JoystickButton(m_driver, Button.kX.value).whileTrue(new SetArmSpeed(m_arm, 0.2));
-    new Trigger(() -> m_gunner.getRightY() > 0.2).whileTrue(new SetArmSpeed(m_arm, 0.2));
-    new Trigger(() -> m_gunner.getRightY() > 0.2).whileTrue(new SetArmSpeed(m_arm, -0.2));
+    new Trigger(() -> m_gunner.getRightY() > 0.2).whileTrue(new SetArmSpeed(m_arm, 0.05));
+    new Trigger(() -> m_gunner.getRightY() < -0.2).whileTrue(new SetArmSpeed(m_arm, -0.05));
   }
 
   public Command getAutonomousCommand() {
