@@ -26,7 +26,7 @@ public class Constants {
     }
 
     public static class CoralHolderConstants {
-        public static final int kCoralHolderMotorPort = 5;
+        public static final int kCoralHolderMotorPort = 10;
     }
 
     public static class ArmConstants{
