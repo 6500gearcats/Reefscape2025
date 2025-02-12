@@ -54,8 +54,8 @@ public class RobotContainer {
 
     //TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
     //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new FlipGroundIntake(m_groundIntake)).onFalse(new FlipGroundIntake(m_groundIntake));
-    new Trigger(() -> m_gunner.getLeftY() > 0.5).whileTrue(new SetElevatorSpeed(m_elevator, 0.15));
-    new Trigger(() -> m_gunner.getLeftY() < -0.5).whileTrue(new SetElevatorSpeed(m_elevator, -0.2));
+    new Trigger(() -> m_gunner.getLeftY() > 0.5).whileTrue(new SetElevatorSpeed(m_elevator, 0.3));
+    new Trigger(() -> m_gunner.getLeftY() < -0.5).whileTrue(new SetElevatorSpeed(m_elevator, -0.4));
     
     new JoystickButton(m_gunner, XboxController.Button.kX.value).whileTrue(new SetElevatorHeight(m_elevator, 0.15));
   }
