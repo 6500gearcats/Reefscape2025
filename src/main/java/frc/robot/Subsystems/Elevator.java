@@ -9,9 +9,11 @@ import com.revrobotics.spark.SparkMax;
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
 
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
@@ -22,6 +24,7 @@ public class Elevator extends SubsystemBase {
   private LaserCan m_elevatorLidar = new LaserCan(ElevatorConstants.kLidarChannel);
   //private DigitalInput m_elevatorTopLimitSwitch = new DigitalInput(ElevatorConstants.kElevatorTopSwitchPort);
   private DigitalInput m_elevatorBottomLimitSwitch = new DigitalInput(ElevatorConstants.kElevatordBottomSwitchPort);
+  private RelativeEncoder m_encoder = m_elevatorMotor.getAlternateEncoder();
 
   
   /** Creates a new Elevator. */
@@ -47,11 +50,13 @@ public class Elevator extends SubsystemBase {
   // Return the height of the elevator in meters
   public double getElevatorHeight(){
     LaserCan.Measurement measurement = m_elevatorLidar.getMeasurement();
-    if(measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT)
+    if(measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && !(measurement.distance_mm == 0 && !ElevatorAtBottom()))
     {
       return (double)measurement.distance_mm/1000.0;
+    } else {
+      return m_encoder.getPosition() * ElevatorConstants.kRotationsToMeters;
     }
-    return 0;
+    //return 0;
   }
 
   // Set the elevator speed
