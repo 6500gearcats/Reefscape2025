@@ -25,11 +25,12 @@ import frc.robot.subsystems.GCPoseEstimator;
 import frc.robot.subsystems.Vision;
 import frc.robot.GCPhotonVision;
 import frc.robot.commands.AlignWithAprilTag;
+
 import frc.robot.commands.SetAprilTagHorizontalOffset;
 import frc.robot.commands.SetAprilTagVerticalOffset;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Vision;
-
+@SuppressWarnings("unused")
 public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser;
@@ -38,13 +39,18 @@ public class RobotContainer {
   XboxController m_gunner = new XboxController(1);
 
   GCPhotonVision m_PhotonCamera = new GCPhotonVision(new PhotonCamera("ArducamTwo"));
-  GCLimelight m_LimelightB = new GCLimelight("limelight-gcb");
-  GCLimelight m_LimelightA= new GCLimelight("limelight-gca");
+  GCLimelight m_LimelightA = new GCLimelight("limelight-gcc");
+  GCLimelight m_LimelightB= new GCLimelight("limelight-gca");
 
 
-  Vision m_vision = new Vision( m_LimelightB, m_LimelightA);
+  PhotonCamera temp_camera = new PhotonCamera("ArducamTwo");
+  GCPhotonVision photonVision = new GCPhotonVision(temp_camera);
+
+  Vision m_visionLL1 = new Vision(m_LimelightA, m_LimelightB);
+  Vision m_visionLL2 = new Vision(m_LimelightA, m_LimelightB);
+
   //Temporarily adding this to
-  DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera, m_vision);
+  DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera, m_visionLL1);
 
   public RobotContainer() {
 
@@ -71,9 +77,12 @@ public class RobotContainer {
     // Configure your button bindings here
 
     //TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
+    // * Only sending in one limelight to the folloeing april tag commands
     //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new FlipGroundIntake(m_groundIntake)).onFalse(new FlipGroundIntake(m_groundIntake));
-    new JoystickButton(m_driver, Button.kB.value).whileTrue(new SetAprilTagHorizontalOffset(14, m_vision, m_robotDrive, .5));
-    new JoystickButton(m_driver, Button.kY.value).whileTrue(new SetAprilTagVerticalOffset(14, m_vision, m_robotDrive, 0));
+    
+    new JoystickButton(m_driver, Button.kB.value).whileTrue(new SetAprilTagHorizontalOffset(14, m_visionLL1, m_robotDrive, .5));
+    new JoystickButton(m_driver, Button.kY.value).whileTrue(new SetAprilTagVerticalOffset(14, m_visionLL1, m_robotDrive, 0));
+    
   }
 
   public Command getAutonomousCommand() {

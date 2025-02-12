@@ -123,46 +123,46 @@ public class GCPoseEstimator extends SubsystemBase {
   public void useLimeLight() {
     boolean useMegaTag2 = true; //set to false to use MegaTag1
     boolean doRejectUpdate = false;
-    if(useMegaTag2 == false)
-    {
-      /*
-      * In 2024, most of the WPILib Ecosystem transitioned to a single-origin coordinate system. 
-      * For 2024 and beyond, the origin of your coordinate system should always be the "blue" origin.
-      * FRC teams should always use botpose_wpiblue for pose-related functionality
-      */
+    // if(useMegaTag2 == false)
+    // {
+    //   /*
+    //   * In 2024, most of the WPILib Ecosystem transitioned to a single-origin coordinate system. 
+    //   * For 2024 and beyond, the origin of your coordinate system should always be the "blue" origin.
+    //   * FRC teams should always use botpose_wpiblue for pose-related functionality
+    //   */
 
-      LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(m_limelightName1);
-      LimelightHelpers.PoseEstimate mt1_2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(m_limelightName2);
+    //   LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(m_limelightName1);
+    //   LimelightHelpers.PoseEstimate mt1_2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(m_limelightName2);
       
-      if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
-      {
-        if(mt1.rawFiducials[0].ambiguity > .7)
-        {
-          doRejectUpdate = true;
-        }
-        if(mt1.rawFiducials[0].distToCamera > 3)
-        {
-          doRejectUpdate = true;
-        }
-      }
-      if(mt1.tagCount == 0)
-      {
-        doRejectUpdate = true;
-      }
+    //   if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
+    //   {
+    //     if(mt1.rawFiducials[0].ambiguity > .7)
+    //     {
+    //       doRejectUpdate = true;
+    //     }
+    //     if(mt1.rawFiducials[0].distToCamera > 3)
+    //     {
+    //       doRejectUpdate = true;
+    //     }
+    //   }
+    //   if(mt1.tagCount == 0)
+    //   {
+    //     doRejectUpdate = true;
+    //   }
 
-      if(!doRejectUpdate)
-      {
-        m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));
-        m_poseEstimator.addVisionMeasurement(
-            mt1.pose,
-            mt1.timestampSeconds);
+    //   if(!doRejectUpdate)
+    //   {
+    //     m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));
+    //     m_poseEstimator.addVisionMeasurement(
+    //         mt1.pose,
+    //         mt1.timestampSeconds);
 
-        m_poseEstimator.addVisionMeasurement(
-            mt1_2.pose,
-            mt1_2.timestampSeconds + 0.001);
-      }
-    }
-    else if (useMegaTag2 == true)
+    //     m_poseEstimator.addVisionMeasurement(
+    //         mt1_2.pose,
+    //         mt1_2.timestampSeconds + 0.001);
+    //   }
+    // }
+    if (useMegaTag2 == true)
     {
       /*
       * In 2024, most of the WPILib Ecosystem transitioned to a single-origin coordinate system. 
@@ -171,29 +171,38 @@ public class GCPoseEstimator extends SubsystemBase {
       */
       LimelightHelpers.SetRobotOrientation(m_limelightName1, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
       LimelightHelpers.SetRobotOrientation(m_limelightName2, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+      LimelightHelpers.PoseEstimate currentMt2;
 
       LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(m_limelightName1);
+      currentMt2 = mt2;
 
       LimelightHelpers.PoseEstimate mt2_2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(m_limelightName2);
-
-      if(Math.abs(DriveSubsystem.m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
-      {
-        doRejectUpdate = true;
-      }
-      if(mt2.tagCount == 0)
-      {
-        doRejectUpdate = true;
-      }
-      if(!doRejectUpdate)
-      {
-        m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-        m_poseEstimator.addVisionMeasurement(
-            mt2.pose,
-            mt2.timestampSeconds);
-        
-        m_poseEstimator.addVisionMeasurement(
-            mt2_2.pose,
-            mt2_2.timestampSeconds + 0.001);
+      
+      if(mt2 != null && mt2_2 != null) {
+        if(Math.abs(DriveSubsystem.m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
+        {
+          doRejectUpdate = true;
+        }
+        if(mt2.tagCount == 0)
+        {
+          doRejectUpdate = true;
+        }
+        if(!doRejectUpdate)
+        {
+          if(mt2.tagCount > mt2_2.tagCount) {
+            currentMt2 = mt2;
+          }
+          else if(mt2.tagCount > mt2_2.tagCount) {
+            currentMt2 = mt2_2;
+          }
+          // else {
+          //   currentMt2 = mt2;
+          // }
+          m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+          m_poseEstimator.addVisionMeasurement(
+              currentMt2.pose,
+              currentMt2.timestampSeconds);
+        }
       }
     }
   }
