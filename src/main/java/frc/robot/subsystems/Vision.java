@@ -6,22 +6,21 @@ package frc.robot.subsystems;
 
 import java.util.Optional;
 
-import javax.net.ssl.TrustManagerFactory;
-
 import org.photonvision.EstimatedRobotPose;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.numbers.*;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.GCLimelight;
 import frc.robot.GCPhotonVision;
-import frc.robot.LimelightHelpers;
 
 public class Vision extends SubsystemBase {
   private boolean isLimelight;
   private GCLimelight limelight;
+  private GCLimelight limelight2;
   private GCPhotonVision photonCam;
   /** Creates a new Vision. */
 
@@ -36,10 +35,19 @@ public class Vision extends SubsystemBase {
   }
 
   // Limelight camera code
-  public Vision(GCLimelight theLimelight) {
+  public Vision(GCLimelight theLimelight, GCLimelight theLimelight2) {
     isLimelight = true;
     photonCam = null;
     limelight = theLimelight;
+    limelight2 = theLimelight2;
+  }
+
+  public String getNameLL1() {
+    return limelight.getName();
+  }
+
+  public String getNameLL2() {
+    return limelight2.getName();
   }
 
   // Side to side, left to right

@@ -138,7 +138,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     // * Create a new PoseEstimator
     if(m_vision.usingLimelight()){
-      m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions);
+      m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions, m_vision);
     }
     else{
       m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions, m_vision);

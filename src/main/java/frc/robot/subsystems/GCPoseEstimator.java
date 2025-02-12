@@ -1,4 +1,4 @@
-// Copyright (c) FIRST and other WPILib contributors.
+ // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
@@ -61,14 +61,20 @@ public class GCPoseEstimator extends SubsystemBase {
   private boolean m_useLimeLight;
 
   private Vision m_vision;
+  private String m_limelightName1;
+  private String m_limelightName2;
 
 
   /** Creates a new PoseEstimator. */
   // * Uses Limelight
-  public GCPoseEstimator(Supplier<Rotation2d> rotationSupplier, Supplier<SwerveModulePosition[]> swerveModulePositionSupplier) {
+  public GCPoseEstimator(Supplier<Rotation2d> rotationSupplier, Supplier<SwerveModulePosition[]> swerveModulePositionSupplier, Vision m_vision) {
     m_rotationSupplier = rotationSupplier;
     m_swerveModulePositionSupplier = swerveModulePositionSupplier;
     m_useLimeLight = true;
+    this.m_vision = m_vision;
+
+    m_limelightName1 = m_vision.getNameLL1();
+    m_limelightName2 = m_vision.getNameLL2();
 
     m_poseEstimator = new SwerveDrivePoseEstimator(
       DriveConstants.kDriveKinematics,
@@ -80,6 +86,7 @@ public class GCPoseEstimator extends SubsystemBase {
   }
 
   // * Uses PhotonVision
+  /**
   public GCPoseEstimator(Supplier<Rotation2d> rotationSupplier, Supplier<SwerveModulePosition[]> swerveModulePositionSupplier, Vision vision) {
     m_rotationSupplier = rotationSupplier;
     m_swerveModulePositionSupplier = swerveModulePositionSupplier;
@@ -94,6 +101,7 @@ public class GCPoseEstimator extends SubsystemBase {
       m_stateStndDev,
       m_visionStndDev);
   }
+  */
 
   @Override
   public void periodic() {
@@ -113,7 +121,6 @@ public class GCPoseEstimator extends SubsystemBase {
 
   //The following method is limelight integration from LimeLight themselves.
   public void useLimeLight() {
-    //TODO: add logic to update useMegaTag2 dynamically based on what limelight sees
     boolean useMegaTag2 = true; //set to false to use MegaTag1
     boolean doRejectUpdate = false;
     if(useMegaTag2 == false)
@@ -124,7 +131,8 @@ public class GCPoseEstimator extends SubsystemBase {
       * FRC teams should always use botpose_wpiblue for pose-related functionality
       */
 
-      LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-gca");
+      LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(m_limelightName1);
+      LimelightHelpers.PoseEstimate mt1_2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(m_limelightName2);
       
       if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
       {
@@ -148,6 +156,10 @@ public class GCPoseEstimator extends SubsystemBase {
         m_poseEstimator.addVisionMeasurement(
             mt1.pose,
             mt1.timestampSeconds);
+
+        m_poseEstimator.addVisionMeasurement(
+            mt1_2.pose,
+            mt1_2.timestampSeconds + 0.001);
       }
     }
     else if (useMegaTag2 == true)
@@ -157,8 +169,13 @@ public class GCPoseEstimator extends SubsystemBase {
       * For 2024 and beyond, the origin of your coordinate system should always be the "blue" origin.
       * FRC teams should always use botpose_wpiblue for pose-related functionality
       */
-      LimelightHelpers.SetRobotOrientation("limelight-gca", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-gca");
+      LimelightHelpers.SetRobotOrientation(m_limelightName1, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+      LimelightHelpers.SetRobotOrientation(m_limelightName2, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+
+      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(m_limelightName1);
+
+      LimelightHelpers.PoseEstimate mt2_2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(m_limelightName2);
+
       if(Math.abs(DriveSubsystem.m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {
         doRejectUpdate = true;
@@ -173,6 +190,10 @@ public class GCPoseEstimator extends SubsystemBase {
         m_poseEstimator.addVisionMeasurement(
             mt2.pose,
             mt2.timestampSeconds);
+        
+        m_poseEstimator.addVisionMeasurement(
+            mt2_2.pose,
+            mt2_2.timestampSeconds + 0.001);
       }
     }
   }
@@ -180,10 +201,11 @@ public class GCPoseEstimator extends SubsystemBase {
 // * The following method is PhotonVision integration
 // TODO: add simualtion support for PhotonVision
   public void usePhotonVision() {
-    var visionEst = m_vision.getEstimatedGlobalPose();
+    /**var visionEst = m_vision.getEstimatedGlobalPose();
     visionEst.ifPresent(est -> {
       var estStdDevs = m_vision.getEstimationStdDevs(est.estimatedPose.toPose2d());
       m_poseEstimator.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
     });
+  } */
   }
 }

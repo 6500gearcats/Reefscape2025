@@ -27,6 +27,8 @@ import frc.robot.GCPhotonVision;
 import frc.robot.commands.AlignWithAprilTag;
 import frc.robot.commands.SetAprilTagHorizontalOffset;
 import frc.robot.commands.SetAprilTagVerticalOffset;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
 
@@ -36,13 +38,11 @@ public class RobotContainer {
   XboxController m_gunner = new XboxController(1);
 
   GCPhotonVision m_PhotonCamera = new GCPhotonVision(new PhotonCamera("ArducamTwo"));
-  GCLimelight m_Limelight = new GCLimelight("limelight-gca");
+  GCLimelight m_LimelightB = new GCLimelight("limelight-gcb");
+  GCLimelight m_LimelightA= new GCLimelight("limelight-gca");
 
 
-  PhotonCamera temp_camera = new PhotonCamera("ArducamTwo");
-  GCPhotonVision vision = new GCPhotonVision(temp_camera);
-  Vision m_vision = new Vision(m_Limelight);
-  
+  Vision m_vision = new Vision( m_LimelightB, m_LimelightA);
   //Temporarily adding this to
   DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera, m_vision);
 
@@ -72,10 +72,8 @@ public class RobotContainer {
 
     //TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
     //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new FlipGroundIntake(m_groundIntake)).onFalse(new FlipGroundIntake(m_groundIntake));
-    new JoystickButton(m_driver, Button.kA.value).onTrue(new AlignWithAprilTag(17, m_vision, m_robotDrive));
-    new JoystickButton(m_driver, Button.kB.value).onTrue(new SetAprilTagHorizontalOffset(17, m_vision, m_robotDrive, .5));
-    new JoystickButton(m_driver, Button.kY.value).onTrue(new SetAprilTagVerticalOffset(17, m_vision, m_robotDrive, 0));
-
+    new JoystickButton(m_driver, Button.kB.value).whileTrue(new SetAprilTagHorizontalOffset(14, m_vision, m_robotDrive, .5));
+    new JoystickButton(m_driver, Button.kY.value).whileTrue(new SetAprilTagVerticalOffset(14, m_vision, m_robotDrive, 0));
   }
 
   public Command getAutonomousCommand() {
