@@ -283,7 +283,7 @@ public final class Constants {
     public static final int kElevatorTopSwitchPort = 0;
     public static final int kElevatordBottomSwitchPort = 0;
     public static final int kLidarChannel = 0;
-    public static final double kRotationsToMeters = 1;
+    public static final double kRotationsToMeters = Units.inchesToMeters(0.55);
   }
 
   public static class IntakeConstants {
