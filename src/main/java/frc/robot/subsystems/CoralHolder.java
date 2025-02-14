@@ -24,7 +24,8 @@ public class CoralHolder extends SubsystemBase {
   RelativeEncoder m_RelativeEncoder;
   public CoralHolder() {
     m_coralMotor = new SparkMax(CoralHolderConstants.kCoralHolderMotorPort, MotorType.kBrushless);
-    m_flipSwitch = new DigitalInput(0);
+    // TODO: change this DigitalInput channel
+    m_flipSwitch = new DigitalInput(1);
     m_RelativeEncoder  = m_coralMotor.getEncoder();
   }
 

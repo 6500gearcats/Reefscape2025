@@ -147,28 +147,22 @@ public final class Constants {
 }
 
 public static class AlgaeIntakeConstants {
-    public static final int kAlgaeMotorPort = 9;
+    public static final int kAlgaeMotorPort = 11;
     public static final int kAlgaeSwitchPort = 3;
 }
 
 public static class ClimberConstants {
-    public static final int kClimberMotorPort = 11;
+    public static final int kClimberMotorPort = 15;
     public static final int kClimberGrabberMotorPort = 7;
     public static final int kClimberSwitchPort = 1;
 }
 
-public static class GroundIntakeConstants {
-    public static final int kGroundIntakeMotorPort = 3;
-    public static final int kGroundIntakeFlipperMotorPort = 4;
-    public static final int kGroundIntakeSwitchPort = 2;
-}
-
 public static class CoralHolderConstants {
-    public static final int kCoralHolderMotorPort = 12;
+    public static final int kCoralHolderMotorPort = 10;
 }
 
 public static class ArmConstants{
-    public static final int kArmMotorPort = 10;
+    public static final int kArmMotorPort = 9;
 }
 
   public static final class AutoConstants {
@@ -205,9 +199,6 @@ public static class ArmConstants{
   }
 
   public static class VisionConstants {
-    public static final String kCameraNameTag = "Microsoft_LifeCam_HD-3000";
-    public static final String kCameraNameNote = "Microsoft_LifeCam_VX-5000";
-    public static final String kCameraNameGlobal = "Global_Shutter_Camera";
     // Cam mounted facing forward, half a meter forward of center, half a meter up
     // from center.
     public static final Transform3d kRobotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5),
@@ -231,6 +222,24 @@ public static class ArmConstants{
     public static final double GOAL_RANGE_METERS = Units.feetToMeters(3);
 
   }
+
+  public static class ElevatorConstants {
+    public static final int kElevatorMotorPort = 16;
+    public static final int kElevatorTopSwitchPort = 0;
+    public static final int kElevatordBottomSwitchPort = 0;
+    public static final int kLidarChannel = 0;
+    public static final double kRotationsToMeters = Units.inchesToMeters(0.55);
+  }
+
+  public static class IntakeConstants {
+    public static final int kIntakeMotorPort = 9;
+    public static final double kFeedSpeed = 0.50;
+    public static final double kReverseFeedSpeed = -0.1;
+    public static final double kPickUpSpeed = 0.6;
+    public static final double kPickUpSpeedSlow = 0.2;
+  }
+
+  // values
 
   public static final double kRangeSpeedOffset = 0.6;
   public static final double ANGULAR_P = 0.1;

@@ -5,22 +5,17 @@
 package frc.robot.subsystems;
 
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 // Path Planner Imports
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.controllers.PathFollowingController;
-import com.pathplanner.lib.util.DriveFeedforwards;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.hal.SimBoolean;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
-import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -36,7 +31,6 @@ import edu.wpi.first.networktables.StructArrayPublisher;
 //import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -48,10 +42,6 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Robot;
 import frc.robot.Vision;
-import com.revrobotics.spark.SparkSim;
-import com.revrobotics.sim.SparkMaxSim;
-import com.revrobotics.sim.SparkSimFaultManager;
-
 
 public class DriveSubsystem extends SubsystemBase {
   public boolean turboEnable = false;
@@ -87,7 +77,6 @@ public class DriveSubsystem extends SubsystemBase {
   private SimBoolean m_connected;
   private SimBoolean m_calibrating;
   private boolean m_fieldOriented;
-  private Rotation2d simRotation = new Rotation2d();
 
   private ChassisSpeeds m_lastSpeeds;
 
@@ -314,9 +303,9 @@ publisher = NetworkTableInstance.getDefault()
         });
 
     if (Robot.isSimulation()) {
-      SwerveModuleState[] measuredStates = new SwerveModuleState[] {
-          m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()
-      };
+      // SwerveModuleState[] measuredStates = new SwerveModuleState[] {
+      //     m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()
+      // };
       // ChassisSpeeds speeds =
       // DriveConstants.kDriveKinematics.toChassisSpeeds(measuredStates);
       ChassisSpeeds speeds = m_lastSpeeds;
