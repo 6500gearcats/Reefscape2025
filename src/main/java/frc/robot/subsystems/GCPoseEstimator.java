@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.LimelightHelpers;
@@ -43,14 +44,14 @@ public class GCPoseEstimator extends SubsystemBase {
   * Increase numbers to trust the model's state estimates less
   * This matrix is in the form [x, y, theta]ᵀ, with units in meters and radians, then meters.
   */
-  private static final Vector<N3> m_stateStndDev =  VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(0.1));
+  private static final Vector<N3> m_stateStndDev =  VecBuilder.fill(0.3, 0.3, Units.degreesToRadians(10));
 
   /* 
   * The Standard Deviation for the Vsion Measurements (i,e. NOSIE);
   * Increase numbers to trust mesurements from Vision less.
   * This matrix is in the form [x, y, theta]ᵀ, with units in meters and radians.
   */
-  private static final Vector<N3> m_visionStndDev = VecBuilder.fill(0.1,0.1,Units.degreesToRadians(0.1));
+  private static final Vector<N3> m_visionStndDev = VecBuilder.fill(0.7,0.7,Units.degreesToRadians(9999));
 
   
   private SwerveDrivePoseEstimator m_poseEstimator;
@@ -61,6 +62,8 @@ public class GCPoseEstimator extends SubsystemBase {
   private Vision m_vision;
   private String m_limelightName1;
   private String m_limelightName2;
+
+  private String CLL = "";
 
 
   /** Creates a new PoseEstimator. */
@@ -111,6 +114,7 @@ public class GCPoseEstimator extends SubsystemBase {
     else {
       usePhotonVision();
     }
+    SmartDashboard.putString("Current limelight", CLL);
   }
 
   public Pose2d getEstimatedPosition() {
@@ -189,16 +193,18 @@ public class GCPoseEstimator extends SubsystemBase {
           // * Switches between limeights based on what can actually see april tags
           if(mt2.tagCount == 0 ) {
             currentMt2 = mt2_2;
+            CLL = "LL3a";
           }
           else if (mt2_2.tagCount == 0 ) {
             currentMt2 = mt2;
+            CLL = "LL4";
           }
           else {
             doRejectUpdate = true;
           }
         }
         // ! Change the threshold based on what you want the cutoff to be 
-        if(Math.abs(currentMt2.pose.getX() - prevPose.getX()) > 5 || Math.abs(currentMt2.pose.getY() - prevPose.getY()) > 5) {
+        if((Math.abs(currentMt2.pose.getX() - prevPose.getX()) > 5 || Math.abs(currentMt2.pose.getY() - prevPose.getY()) > 5 ) && (currentMt2.timestampSeconds < 300)) {
           doRejectUpdate = true;
         }
         if(!doRejectUpdate)
@@ -206,9 +212,11 @@ public class GCPoseEstimator extends SubsystemBase {
           // * Switches between limeights based on which one can see more april tags 
           if(mt2.tagCount >= mt2_2.tagCount) {
             currentMt2 = mt2;
+            CLL = "LL4";
           }
           else {
             currentMt2 = mt2_2;
+            CLL = "LL3a";
           }
           m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
           m_poseEstimator.addVisionMeasurement(
