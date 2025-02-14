@@ -21,6 +21,7 @@ public class CoralHolder extends SubsystemBase {
   DigitalInput m_flipSwitch;
   double fake_coral = 0;
   double fake_coral_speed = 0;
+  public boolean m_upToSpeed = false;
   RelativeEncoder m_RelativeEncoder;
   public CoralHolder() {
     m_coralMotor = new SparkMax(CoralHolderConstants.kCoralHolderMotorPort, MotorType.kBrushless);
@@ -45,6 +46,8 @@ public class CoralHolder extends SubsystemBase {
     SmartDashboard.putNumber("Fake Coral Position", fake_coral);
     SmartDashboard.putNumber("Fake Coral Speed", fake_coral_speed);
     }
+    SmartDashboard.putNumber("Coral Holder Speed", getHolderSpeed());
+    SmartDashboard.putBoolean("Coral Holder Up-To-Speed", m_upToSpeed);
   }
 
   //True when coral Present

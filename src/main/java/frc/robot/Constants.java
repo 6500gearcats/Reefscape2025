@@ -147,7 +147,7 @@ public final class Constants {
 }
 
 public static class AlgaeIntakeConstants {
-    public static final int kAlgaeMotorPort = 11;
+    public static final int kAlgaeMotorPort = 12;
     public static final int kAlgaeSwitchPort = 3;
 }
 
@@ -231,13 +231,13 @@ public static class ArmConstants{
     public static final double kRotationsToMeters = Units.inchesToMeters(0.55);
   }
 
-  public static class IntakeConstants {
+/*   public static class IntakeConstants {
     public static final int kIntakeMotorPort = 9;
     public static final double kFeedSpeed = 0.50;
     public static final double kReverseFeedSpeed = -0.1;
     public static final double kPickUpSpeed = 0.6;
     public static final double kPickUpSpeedSlow = 0.2;
-  }
+  }*/
 
   // values
 

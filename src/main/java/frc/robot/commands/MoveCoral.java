@@ -13,10 +13,12 @@ public class MoveCoral extends Command {
   /** Creates a new CoralHolder. */
   CoralHolder m_CoralHolder;
   Double speed;
-  boolean upToSpeed;
-  public MoveCoral(CoralHolder coralHolder, double speed) {
+  boolean upToSpeed = false;
+  boolean isIntake;
+  public MoveCoral(CoralHolder coralHolder, double speed, boolean isIntake) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_CoralHolder = coralHolder;
+    this.isIntake = isIntake;
     this.speed = speed;
     addRequirements(m_CoralHolder);
   }
@@ -34,17 +36,24 @@ public class MoveCoral extends Command {
     if(m_CoralHolder.getHolderSpeed() > 200){
         upToSpeed = true;
     }
+
+    m_CoralHolder.m_upToSpeed = upToSpeed;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_CoralHolder.shootCoral(0);
+    m_CoralHolder.shootCoral(.6);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_CoralHolder.getHolderSpeed() < 200 && upToSpeed;
+    if (isIntake) {
+    return m_CoralHolder.getHolderSpeed() < 150 && upToSpeed;
+   }
+   else {
+    return false;
+   }
   }
 }

@@ -80,18 +80,18 @@ public class RobotContainer {
 
     //TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
     //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new FlipGroundIntake(m_groundIntake)).onFalse(new FlipGroundIntake(m_groundIntake));
-    new Trigger(() -> m_gunner.getLeftY() > 0.5).whileTrue(new SetElevatorSpeed(m_elevator, 0.3));
-    new Trigger(() -> m_gunner.getLeftY() < -0.5).whileTrue(new SetElevatorSpeed(m_elevator, -0.4));
-    new JoystickButton(m_driver, XboxController.Button.kA.value).whileTrue(new IntakeAlgae(m_AlgaeIntake, 0.2));
-    new JoystickButton(m_driver, XboxController.Button.kB.value).whileTrue(new IntakeAlgae(m_AlgaeIntake, -0.2));
+    new Trigger(() -> m_gunner.getRightY() > 0.5).whileTrue(new SetElevatorSpeed(m_elevator, 0.3));
+    new Trigger(() -> m_gunner.getRightY() < -0.5).whileTrue(new SetElevatorSpeed(m_elevator, -0.4));
+    new JoystickButton(m_driver, XboxController.Button.kA.value).whileTrue(new IntakeAlgae(m_AlgaeIntake, 0.6));
+    new JoystickButton(m_driver, XboxController.Button.kB.value).whileTrue(new IntakeAlgae(m_AlgaeIntake, -0.6));
 
-    new Trigger(() -> m_gunner.getLeftY() > 0.2).whileTrue(new SetArmSpeed(m_arm, -0.05));
-    new Trigger(() -> m_gunner.getLeftY() < -0.2).whileTrue(new SetArmSpeed(m_arm, 0.05));
+    new Trigger(() -> m_gunner.getLeftY() > 0.2).whileTrue(new SetArmSpeed(m_arm, -0.25));
+    new Trigger(() -> m_gunner.getLeftY() < -0.2).whileTrue(new SetArmSpeed(m_arm, 0.25));
 
     new JoystickButton(m_driver, XboxController.Button.kY.value).whileTrue(new SetClimberSpeed(m_climber, 0.1));
 
-    new JoystickButton(m_gunner, XboxController.Button.kA.value).whileTrue(new MoveCoral(m_CoralHolder, -0.1));
-    new JoystickButton(m_gunner, XboxController.Button.kB.value).whileTrue(new MoveCoral(m_CoralHolder, 0.1));
+    new JoystickButton(m_gunner, XboxController.Button.kA.value).onTrue(new MoveCoral(m_CoralHolder, -0.5, true));
+    new JoystickButton(m_gunner, XboxController.Button.kB.value).whileTrue(new MoveCoral(m_CoralHolder, 0.5, false));
     new JoystickButton(m_gunner, XboxController.Button.kX.value).whileTrue(new SetElevatorHeight(m_elevator, 0.15));
   }
 
