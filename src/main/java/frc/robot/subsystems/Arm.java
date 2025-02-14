@@ -22,6 +22,7 @@ public class Arm extends SubsystemBase {
   double armPosition;
   double fakeArmPosition = 0;
   double fakeArmSpeed = 0;
+  public static boolean armCorrectingPosition = false;
 
   /** Creates a new Arm. */
   public Arm() {}
@@ -38,14 +39,25 @@ public class Arm extends SubsystemBase {
     }
     SmartDashboard.putNumber("Arm Position", armPosition);
     
+    armCorrectingPosition = getArmPosition() < 0.1 && getArmPosition() > 0.9;
+
+    if(armCorrectingPosition && Elevator.elevatorCorrectingPosition){
+      correctArm((0.5 - getArmPosition()) * 0.2);
+    }
   }
 
   public void spinArm(double speed) {
-    m_armMotor.set(speed);
+    if(!armCorrectingPosition && Elevator.elevatorCorrectingPosition){
+      m_armMotor.set(speed);
 
-    if(Robot.isSimulation()){
-      fakeArmSpeed = speed;
+      if(Robot.isSimulation()){
+        fakeArmSpeed = speed;
+      }
     }
+  }
+
+  public void correctArm(double speed){
+    m_armMotor.set(speed);
   }
 
   public double getArmPosition() {

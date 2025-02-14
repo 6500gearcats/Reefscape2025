@@ -26,7 +26,7 @@ public class Elevator extends SubsystemBase {
   //private DigitalInput m_elevatorTopLimitSwitch = new DigitalInput(ElevatorConstants.kElevatorTopSwitchPort);
   private DigitalInput m_elevatorBottomLimitSwitch = new DigitalInput(ElevatorConstants.kElevatordBottomSwitchPort);
   private RelativeEncoder m_encoder = m_elevatorMotor.getAlternateEncoder();
-
+  public static boolean elevatorCorrectingPosition = false;
   
   /** Creates a new Elevator. */
   public Elevator() {
@@ -46,6 +46,7 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elevator Height (m)", getElevatorHeight());
     SmartDashboard.putBoolean("Elevator At Bottom", ElevatorAtBottom());
     //SmartDashboard.putBoolean("Elevator Limit Reached", elevatorAtLimit());
+    elevatorCorrectingPosition = getElevatorHeight() < 0.5;
   }
 
   // Return the height of the elevator in meters
