@@ -47,9 +47,9 @@ public final class Constants {
 
     // Chassis configuration
     // Distance between centers of right and left wheels on robot
-    public static final double kTrackWidth = Units.inchesToMeters(23.5);
+    public static final double kTrackWidth = Units.inchesToMeters(25.5);
     // Distance between front and back wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(28.5);
+    public static final double kWheelBase = Units.inchesToMeters(25.5);
 
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -87,7 +87,7 @@ public final class Constants {
     // This changes the drive speed of the module (a pinion gear with more teeth
     // will result in a
     // robot that drives faster).
-    public static final int kDrivingMotorPinionTeeth = 13;
+    public static final int kDrivingMotorPinionTeeth = 14;
 
     // Invert the turning encoder, since the output shaft rotates in the opposite
     // direction of
