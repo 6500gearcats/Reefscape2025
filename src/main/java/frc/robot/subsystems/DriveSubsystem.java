@@ -208,7 +208,8 @@ publisher = NetworkTableInstance.getDefault()
     if (Robot.isReal()) {
       m_field.setRobotPose(getPose());
     } else {
-      m_field.setRobotPose(m_simOdometryPose);
+      Pose2d temp =new Pose2d(m_simOdometryPose.getX(), m_simOdometryPose.getY(), new Rotation2d(m_simOdometryPose.getRotation().getDegrees() * 0.005));
+      m_field.setRobotPose(temp);
 
       Pose2d CurrentPos = m_simOdometryPose;
       double xPos = CurrentPos.getX();

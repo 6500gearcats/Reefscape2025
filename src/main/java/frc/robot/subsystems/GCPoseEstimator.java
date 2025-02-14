@@ -12,11 +12,9 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.LimelightHelpers;
 
@@ -173,35 +171,51 @@ public class GCPoseEstimator extends SubsystemBase {
       LimelightHelpers.SetRobotOrientation(m_limelightName2, m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
       LimelightHelpers.PoseEstimate currentMt2;
 
+      // * Following code prefers mt2 becuase we presume it is the more powerfull limelight of the two
       LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(m_limelightName1);
       currentMt2 = mt2;
 
       LimelightHelpers.PoseEstimate mt2_2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(m_limelightName2);
+
+      Pose2d prevPose = new Pose2d();
       
       if(mt2 != null && mt2_2 != null) {
         if(Math.abs(DriveSubsystem.m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
         {
           doRejectUpdate = true;
         }
-        if(mt2.tagCount == 0)
+        if(mt2.tagCount == 0 || mt2_2.tagCount == 0)
         {
+          // * Switches between limeights based on what can actually see april tags
+          if(mt2.tagCount == 0 ) {
+            currentMt2 = mt2_2;
+          }
+          else if (mt2_2.tagCount == 0 ) {
+            currentMt2 = mt2;
+          }
+          else {
+            doRejectUpdate = true;
+          }
+        }
+        // ! Change the threshold based on what you want the cutoff to be 
+        if(Math.abs(currentMt2.pose.getX() - prevPose.getX()) > 5 || Math.abs(currentMt2.pose.getY() - prevPose.getY()) > 5) {
           doRejectUpdate = true;
         }
         if(!doRejectUpdate)
         {
-          if(mt2.tagCount > mt2_2.tagCount) {
+          // * Switches between limeights based on which one can see more april tags 
+          if(mt2.tagCount >= mt2_2.tagCount) {
             currentMt2 = mt2;
           }
-          else if(mt2.tagCount > mt2_2.tagCount) {
+          else {
             currentMt2 = mt2_2;
           }
-          // else {
-          //   currentMt2 = mt2;
-          // }
           m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
           m_poseEstimator.addVisionMeasurement(
               currentMt2.pose,
               currentMt2.timestampSeconds);
+          
+          prevPose = currentMt2.pose;
         }
       }
     }

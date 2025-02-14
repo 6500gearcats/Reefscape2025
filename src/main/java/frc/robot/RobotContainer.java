@@ -12,6 +12,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -37,6 +38,10 @@ public class RobotContainer {
 
   XboxController m_driver = new XboxController(0);
   XboxController m_gunner = new XboxController(1);
+
+  // * test controllers
+  PS4Controller  m_driverP = new PS4Controller (0);
+  PS4Controller  m_gunnerP = new PS4Controller(1);
 
   GCPhotonVision m_PhotonCamera = new GCPhotonVision(new PhotonCamera("ArducamTwo"));
   GCLimelight m_LimelightA = new GCLimelight("limelight-gcc");
@@ -66,9 +71,9 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_robotDrive.drive(
-                MathUtil.applyDeadband(-m_driver.getLeftY(), 0.1), //0.1
-                MathUtil.applyDeadband(-m_driver.getLeftX(), 0.1), //0.1
-                MathUtil.applyDeadband(-m_driver.getRightX(), 0.1),
+                MathUtil.applyDeadband(-m_driverP.getLeftY(), 0.1), //0.1
+                MathUtil.applyDeadband(-m_driverP.getLeftX(), 0.1), //0.1
+                MathUtil.applyDeadband(-m_driverP.getRightX(), 0.1),
                 !m_driver.getRightBumper()),
             m_robotDrive));
   }
@@ -80,8 +85,8 @@ public class RobotContainer {
     // * Only sending in one limelight to the folloeing april tag commands
     //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new FlipGroundIntake(m_groundIntake)).onFalse(new FlipGroundIntake(m_groundIntake));
     
-    new JoystickButton(m_driver, Button.kB.value).whileTrue(new SetAprilTagHorizontalOffset(14, m_visionLL1, m_robotDrive, .5));
-    new JoystickButton(m_driver, Button.kY.value).whileTrue(new SetAprilTagVerticalOffset(14, m_visionLL1, m_robotDrive, 0));
+    new JoystickButton(m_driverP, Button.kB.value).whileTrue(new SetAprilTagHorizontalOffset(14, m_visionLL1, m_robotDrive, .5));
+    new JoystickButton(m_driverP, Button.kY.value).whileTrue(new SetAprilTagVerticalOffset(14, m_visionLL1, m_robotDrive, 0));
     
   }
 
