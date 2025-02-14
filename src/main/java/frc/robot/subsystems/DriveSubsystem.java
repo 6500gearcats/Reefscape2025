@@ -6,12 +6,11 @@ package frc.robot.subsystems;
 
 import java.util.Map;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 // Path Planner Imports
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.hal.SimBoolean;
 import edu.wpi.first.hal.SimDouble;
@@ -70,7 +69,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
-  private AHRS m_gyro;
+  private Pigeon2 m_gyro;
 
   private int m_gyroSim;
   private SimDouble m_simAngle;
@@ -107,7 +106,7 @@ public class DriveSubsystem extends SubsystemBase {
        * details.
        */
 
-      m_gyro = new AHRS(NavXComType.kMXP_SPI);
+      m_gyro = new Pigeon2(0, "rio");
       System.out.println("AHRS constructed");
     } catch (RuntimeException ex) {
       System.out.println("AHRS not constructed");
@@ -115,7 +114,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     // m_gyro.setAngleAdjustment(180.0);
-    m_gyro.zeroYaw();
+    m_gyro.setYaw(0);
 
     if (RobotBase.isSimulation()) {
       m_gyroSim = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
@@ -199,7 +198,7 @@ publisher = NetworkTableInstance.getDefault()
       SmartDashboard.putNumber("Position: Y", yPos);
     }
 
-    SmartDashboard.putNumber("NavX Pitch", m_gyro.getPitch());
+    SmartDashboard.putNumber("NavX Pitch", m_gyro.getPitch().getValueAsDouble());
     SmartDashboard.putNumber("NavX Yaw angle", getAngle());
 
     SmartDashboard.putBoolean("Field Oriented", m_fieldOriented);
@@ -441,7 +440,7 @@ publisher = NetworkTableInstance.getDefault()
 
   /* Return the NavX pitch angle */
   public double getPitch() {
-    return m_gyro.getPitch();
+    return m_gyro.getPitch().getValueAsDouble();
   }
 
   /* Return the NavX yaw angle */

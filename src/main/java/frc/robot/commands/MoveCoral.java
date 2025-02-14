@@ -43,17 +43,12 @@ public class MoveCoral extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_CoralHolder.shootCoral(.6);
+    m_CoralHolder.shootCoral(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (isIntake) {
-    return m_CoralHolder.getHolderSpeed() < 150 && upToSpeed;
-   }
-   else {
     return false;
    }
-  }
 }

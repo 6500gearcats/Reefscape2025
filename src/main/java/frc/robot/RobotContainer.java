@@ -90,7 +90,7 @@ public class RobotContainer {
 
     new JoystickButton(m_driver, XboxController.Button.kY.value).whileTrue(new SetClimberSpeed(m_climber, 0.1));
 
-    new JoystickButton(m_gunner, XboxController.Button.kA.value).onTrue(new MoveCoral(m_CoralHolder, -0.5, true));
+    new JoystickButton(m_gunner, XboxController.Button.kA.value).whileTrue(new MoveCoral(m_CoralHolder, -0.5, true));
     new JoystickButton(m_gunner, XboxController.Button.kB.value).whileTrue(new MoveCoral(m_CoralHolder, 0.5, false));
     new JoystickButton(m_gunner, XboxController.Button.kX.value).whileTrue(new SetElevatorHeight(m_elevator, 0.15));
   }
