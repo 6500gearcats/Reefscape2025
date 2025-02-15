@@ -116,6 +116,8 @@ public class GCPoseEstimator extends SubsystemBase {
     //TODO: add logic to update useMegaTag2 dynamically based on what limelight sees
     boolean useMegaTag2 = true; //set to false to use MegaTag1
     boolean doRejectUpdate = false;
+    LimelightHelpers.SetIMUMode("limelight-gcc", 2);
+
     if(useMegaTag2 == false)
     {
       /*
@@ -124,7 +126,7 @@ public class GCPoseEstimator extends SubsystemBase {
       * FRC teams should always use botpose_wpiblue for pose-related functionality
       */
 
-      LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-gca");
+      LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-gcc");
       
       if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
       {
@@ -157,8 +159,8 @@ public class GCPoseEstimator extends SubsystemBase {
       * For 2024 and beyond, the origin of your coordinate system should always be the "blue" origin.
       * FRC teams should always use botpose_wpiblue for pose-related functionality
       */
-      LimelightHelpers.SetRobotOrientation("limelight-gca", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
-      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-gca");
+      LimelightHelpers.SetRobotOrientation("limelight-gcc", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+      LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-gcc");
       if(Math.abs(DriveSubsystem.m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {
         doRejectUpdate = true;
@@ -180,10 +182,10 @@ public class GCPoseEstimator extends SubsystemBase {
 // * The following method is PhotonVision integration
 // TODO: add simualtion support for PhotonVision
   public void usePhotonVision() {
-    var visionEst = m_vision.getEstimatedGlobalPose();
-    visionEst.ifPresent(est -> {
-      var estStdDevs = m_vision.getEstimationStdDevs(est.estimatedPose.toPose2d());
-      m_poseEstimator.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-    });
+    // var visionEst = m_vision.getEstimatedGlobalPose();
+    // visionEst.ifPresent(est -> {
+    //   var estStdDevs = m_vision.getEstimationStdDevs(est.estimatedPose.toPose2d());
+    //   m_poseEstimator.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+    // });
   }
 }
