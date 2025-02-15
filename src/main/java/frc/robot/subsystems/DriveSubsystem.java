@@ -11,6 +11,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
+import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.hal.SimBoolean;
 import edu.wpi.first.hal.SimDouble;
@@ -71,7 +72,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
-  public static AHRS m_gyro;
+  public static Pigeon2 m_gyro;
+  public static AHRS m_gyro2;
 
   private int m_gyroSim;
   private SimDouble m_simAngle;
@@ -115,16 +117,16 @@ public class DriveSubsystem extends SubsystemBase {
        * See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for
        * details.
        */
-
-      m_gyro = new AHRS(NavXComType.kMXP_SPI);
-      System.out.println("AHRS constructed");
+      m_gyro2 = new AHRS(NavXComType.kMXP_SPI);
+      m_gyro = new Pigeon2(0, "rio");
+      System.out.println("Pigeon2 constructed");
     } catch (RuntimeException ex) {
-      System.out.println("AHRS not constructed");
-      DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
+      System.out.println("Pigeon2 not constructed");
+      DriverStation.reportError("Error instantiating Pigeon2:  " + ex.getMessage(), true);
     }
 
     // m_gyro.setAngleAdjustment(180.0);
-    m_gyro.zeroYaw();
+    m_gyro.setYaw(0);
 
     if (RobotBase.isSimulation()) {
       m_gyroSim = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
@@ -217,8 +219,8 @@ publisher = NetworkTableInstance.getDefault()
       SmartDashboard.putNumber("Position: Y", yPos);
     }
 
-    SmartDashboard.putNumber("NavX Pitch", m_gyro.getPitch());
-    SmartDashboard.putNumber("NavX Yaw angle", getAngle());
+    SmartDashboard.putNumber("Pigeon2 Pitch", m_gyro.getPitch().getValueAsDouble());
+    SmartDashboard.putNumber("Pigeon2 Yaw angle", getAngle());
 
     SmartDashboard.putBoolean("Field Oriented", m_fieldOriented);
 
@@ -454,19 +456,19 @@ publisher = NetworkTableInstance.getDefault()
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return m_gyro.getAngularVelocityZWorld().getValueAsDouble() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
   /* Return the NavX pitch angle */
   public double getPitch() {
-    return m_gyro.getPitch();
+    return m_gyro.getPitch().getValueAsDouble();
   }
 
   /* Return the NavX yaw angle */
   public double getAngle() {
     // return -m_gyro.getYaw();
     if (Robot.isReal()) {
-      return -m_gyro.getAngle();
+      return m_gyro.getYaw().getValueAsDouble();
     } else {
       return m_simAngle.get();
     }
