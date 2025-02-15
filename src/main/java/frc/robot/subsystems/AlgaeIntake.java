@@ -21,6 +21,7 @@ public class AlgaeIntake extends SubsystemBase {
   double m_fakeSpeed = 0;
   boolean m_fakeSwitch = false;
   double m_fakeAlgaePosition = 0;
+  public boolean m_running = false;
 
   public AlgaeIntake() {
     m_intakeMotor = new SparkMax(AlgaeIntakeConstants.kAlgaeMotorPort, MotorType.kBrushless);
@@ -40,6 +41,8 @@ public class AlgaeIntake extends SubsystemBase {
 
   public void intakeAlgae(double speed) {
     m_intakeMotor.set(speed);
+
+    m_running = speed != 0;
 
     if(Robot.isSimulation()){
       m_fakeSpeed = speed/100;

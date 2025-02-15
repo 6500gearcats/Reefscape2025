@@ -29,6 +29,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.Vision;
 import frc.robot.commands.IntakeAlgae;
 import frc.robot.commands.MoveCoral;
+import frc.robot.commands.OutakeAlgae;
 import frc.robot.commands.SetArmSpeed;
 import frc.robot.commands.SetClimberSpeed;
 import frc.robot.commands.SetElevatorHeight;
@@ -82,7 +83,7 @@ public class RobotContainer {
     //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new FlipGroundIntake(m_groundIntake)).onFalse(new FlipGroundIntake(m_groundIntake));
     new Trigger(() -> m_gunner.getRightY() > 0.5).whileTrue(new SetElevatorSpeed(m_elevator, 0.3));
     new Trigger(() -> m_gunner.getRightY() < -0.5).whileTrue(new SetElevatorSpeed(m_elevator, -0.4));
-    new JoystickButton(m_driver, XboxController.Button.kA.value).whileTrue(new IntakeAlgae(m_AlgaeIntake, 0.6));
+    new JoystickButton(m_driver, XboxController.Button.kA.value).whileTrue(new OutakeAlgae(m_AlgaeIntake, 0.6));
     new JoystickButton(m_driver, XboxController.Button.kB.value).whileTrue(new IntakeAlgae(m_AlgaeIntake, -0.6));
 
     new Trigger(() -> m_gunner.getLeftY() > 0.2).whileTrue(new SetArmSpeed(m_arm, -0.25));

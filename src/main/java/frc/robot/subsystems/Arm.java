@@ -47,7 +47,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void spinArm(double speed) {
-    if(!armCorrectingPosition && Elevator.elevatorCorrectingPosition){
+    if(!(armCorrectingPosition && Elevator.elevatorCorrectingPosition)){
       m_armMotor.set(speed);
 
       if(Robot.isSimulation()){

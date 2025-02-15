@@ -9,11 +9,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.AlgaeIntake;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class IntakeAlgae extends Command {
+public class OutakeAlgae extends Command {
   AlgaeIntake m_algaeIntake;
   double speed;
   /** Creates a new IntakeAlgae. */
-  public IntakeAlgae(AlgaeIntake m_algaeIntake, double speed) {
+  public OutakeAlgae(AlgaeIntake m_algaeIntake, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_algaeIntake = m_algaeIntake;
     this.speed = speed;
@@ -33,7 +33,7 @@ public class IntakeAlgae extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-      m_algaeIntake.intakeAlgae(-0.2);
+      m_algaeIntake.intakeAlgae(0);
   }
 
   // Returns true when the command should end.
