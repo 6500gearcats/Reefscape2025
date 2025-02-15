@@ -28,18 +28,24 @@ public class SetElevatorHeight extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_elevator.setElevatorSpeed(-2 * (m_height - m_elevator.getElevatorHeight()) - 0.1);
+    double velocity = -2 * (m_height - m_elevator.getElevatorHeight()) - 0.04;
+
+    if(Math.abs(velocity) < 0.2 - .04){
+      velocity = .2 * Math.abs(velocity)/velocity -.04;
+    }
+
+    m_elevator.setElevatorSpeed(velocity);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_elevator.setElevatorSpeed(0);
+    m_elevator.setElevatorSpeed(-0.04);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_elevator.ElevatorAtBottom() && -2 * (m_height - m_elevator.getElevatorHeight()) - 0.1 > 0;//m_elevator.elevatorAtLimit();
+    return (m_elevator.ElevatorAtBottom() && -2 * (m_height - m_elevator.getElevatorHeight()) - 0.1 > 0) || Math.abs(m_height - m_elevator.getElevatorHeight()) <0.02;//m_elevator.elevatorAtLimit();
   }
 }
