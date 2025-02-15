@@ -23,6 +23,8 @@ public class Vision extends SubsystemBase {
   private boolean isLimelight;
   private GCLimelight limelight;
   private GCPhotonVision photonCam;
+  private static SendableChooser<Integer> tagChooser = new SendableChooser<Integer>();
+  public static int chosenTag = 1;
   /** Creates a new Vision. */
 
   // IMPORTANT: The following code uses an overflow constructor
@@ -33,6 +35,14 @@ public class Vision extends SubsystemBase {
     isLimelight = false;
     limelight = null;
     photonCam = photonvision;
+
+    // Fiducial id chooser stuff
+    tagChooser.setDefaultOption("Tag 17", 17);
+    tagChooser.addOption("Tag 1", 1);
+    tagChooser.addOption("Tag 16", 16);
+    tagChooser.addOption("Tag 14", 14);
+
+    SmartDashboard.putData("Tag Chooser", tagChooser);
   }
 
   // Limelight camera code
