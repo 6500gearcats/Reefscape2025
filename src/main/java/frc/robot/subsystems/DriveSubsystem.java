@@ -347,7 +347,8 @@ publisher = NetworkTableInstance.getDefault()
 
     double max = m_maxSpeed.getDouble(DriveConstants.kTurboModeModifier);
     
-    if (turboEnable) {
+    if(Elevator.elevatorTooHighForTurbo){
+    } else if (turboEnable) {
       
       xSpeed *= max;
       ySpeed *= max;

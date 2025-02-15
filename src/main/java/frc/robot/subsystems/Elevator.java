@@ -25,8 +25,11 @@ public class Elevator extends SubsystemBase {
   private LaserCan m_elevatorLidar = new LaserCan(ElevatorConstants.kLidarChannel);
   //private DigitalInput m_elevatorTopLimitSwitch = new DigitalInput(ElevatorConstants.kElevatorTopSwitchPort);
   private DigitalInput m_elevatorBottomLimitSwitch = new DigitalInput(ElevatorConstants.kElevatordBottomSwitchPort);
-  private RelativeEncoder m_encoder = m_elevatorMotor.getAlternateEncoder();
+  private RelativeEncoder m_encoder = m_elevatorMotor.getEncoder();
   public static boolean elevatorCorrectingPosition = false;
+  public static boolean elevatorTooHigh = false;
+  public static boolean elevatorTooHighForTurbo = false;
+  public String elevatorState = "innactive";
   
   /** Creates a new Elevator. */
   public Elevator() {
@@ -45,8 +48,13 @@ public class Elevator extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Elevator Height (m)", getElevatorHeight());
     SmartDashboard.putBoolean("Elevator At Bottom", ElevatorAtBottom());
+    SmartDashboard.putBoolean("No Turbo", elevatorTooHighForTurbo);
+    SmartDashboard.putNumber("Encoder Rotations", m_encoder.getPosition());
+    SmartDashboard.putBoolean("Height Malfunctioning", !(m_elevatorLidar.getMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) || m_elevatorLidar.getMeasurement().distance_mm == 0 && !ElevatorAtBottom());
     //SmartDashboard.putBoolean("Elevator Limit Reached", elevatorAtLimit());
-    elevatorCorrectingPosition = getElevatorHeight() < 0.3;
+    elevatorCorrectingPosition = getElevatorHeight() < 0.18;
+    elevatorTooHigh = getElevatorHeight() > .3;
+    elevatorTooHighForTurbo = getElevatorHeight() > 0.05;
   }
 
   // Return the height of the elevator in meters
@@ -69,6 +77,8 @@ public class Elevator extends SubsystemBase {
   public void setElevatorSpeed(double speed){
     if(!(Arm.armCorrectingPosition && elevatorCorrectingPosition)){
       m_elevatorMotor.set(speed);
+    } else {
+      m_elevatorMotor.set(-0.04);
     }
   }
 

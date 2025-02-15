@@ -34,6 +34,7 @@ import frc.robot.commands.SetArmSpeed;
 import frc.robot.commands.SetClimberSpeed;
 import frc.robot.commands.SetElevatorHeight;
 import frc.robot.commands.SetElevatorSpeed;
+import frc.robot.commands.TurboEnable;
 
 public class RobotContainer {
 
@@ -79,6 +80,7 @@ public class RobotContainer {
   private void configureBindings() {
     // Configure your button bindings here
 
+    new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value).whileTrue(new TurboEnable(m_robotDrive));
     //TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
     //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new FlipGroundIntake(m_groundIntake)).onFalse(new FlipGroundIntake(m_groundIntake));
     new Trigger(() -> m_gunner.getRightY() > 0.5).whileTrue(new SetElevatorSpeed(m_elevator, 0.3));

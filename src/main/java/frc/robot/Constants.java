@@ -228,7 +228,7 @@ public static class ArmConstants{
     public static final int kElevatorTopSwitchPort = 0;
     public static final int kElevatordBottomSwitchPort = 0;
     public static final int kLidarChannel = 0;
-    public static final double kRotationsToMeters = Units.inchesToMeters(0.55);
+    public static final double kRotationsToMeters = -1.0 * Units.inchesToMeters(11);
   }
 
 /*   public static class IntakeConstants {
