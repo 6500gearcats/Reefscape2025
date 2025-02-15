@@ -46,7 +46,7 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elevator Height (m)", getElevatorHeight());
     SmartDashboard.putBoolean("Elevator At Bottom", ElevatorAtBottom());
     //SmartDashboard.putBoolean("Elevator Limit Reached", elevatorAtLimit());
-    elevatorCorrectingPosition = getElevatorHeight() < 0.5;
+    elevatorCorrectingPosition = getElevatorHeight() < 0.3;
   }
 
   // Return the height of the elevator in meters

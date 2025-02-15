@@ -23,6 +23,8 @@ public class Arm extends SubsystemBase {
   double fakeArmPosition = 0;
   double fakeArmSpeed = 0;
   public static boolean armCorrectingPosition = false;
+  boolean onlyCorrectArmPosition = false;
+  double commandedArmSpeed = 0;
 
   /** Creates a new Arm. */
   public Arm() {}
@@ -38,17 +40,27 @@ public class Arm extends SubsystemBase {
       SmartDashboard.putNumber("Fake arm position", fakeArmPosition);
     }
     SmartDashboard.putNumber("Arm Position", armPosition);
+    SmartDashboard.putNumber("Arm Commanded Speed", commandedArmSpeed);
+    SmartDashboard.putBoolean("Making Corrections", armCorrectingPosition && Elevator.elevatorCorrectingPosition);
+    SmartDashboard.putBoolean("MakingArmCorrections", armCorrectingPosition);
+    SmartDashboard.putBoolean("Making Elevator Correct", Elevator.elevatorCorrectingPosition);
     
-    armCorrectingPosition = getArmPosition() < 0.1 && getArmPosition() > 0.9;
+    armCorrectingPosition = getArmPosition() < 0.1 || getArmPosition() > 0.45;
 
     if(armCorrectingPosition && Elevator.elevatorCorrectingPosition){
-      correctArm((0.5 - getArmPosition()) * 0.2);
+      correctArm((0.265 - getArmPosition()) * -0.2);
+    }
+
+    onlyCorrectArmPosition = getArmPosition() < 0.05 && getArmPosition() > 0.5;
+    if(onlyCorrectArmPosition){
+      correctArm((0.265 - getArmPosition()) * -0.2);
     }
   }
 
   public void spinArm(double speed) {
     if(!(armCorrectingPosition && Elevator.elevatorCorrectingPosition)){
       m_armMotor.set(speed);
+      commandedArmSpeed = speed;
 
       if(Robot.isSimulation()){
         fakeArmSpeed = speed;
@@ -58,6 +70,7 @@ public class Arm extends SubsystemBase {
 
   public void correctArm(double speed){
     m_armMotor.set(speed);
+    commandedArmSpeed = speed;
   }
 
   public double getArmPosition() {
