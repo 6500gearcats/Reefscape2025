@@ -106,7 +106,7 @@ public class DriveSubsystem extends SubsystemBase {
        * details.
        */
 
-      m_gyro = new Pigeon2(0, "rio");
+      m_gyro = new Pigeon2(30, "rio");
       System.out.println("AHRS constructed");
     } catch (RuntimeException ex) {
       System.out.println("AHRS not constructed");
@@ -448,7 +448,7 @@ publisher = NetworkTableInstance.getDefault()
   public double getAngle() {
     // return -m_gyro.getYaw();
     if (Robot.isReal()) {
-      return -m_gyro.getAngle();
+      return m_gyro.getYaw().getValueAsDouble();
     } else {
       return m_simAngle.get();
     }
