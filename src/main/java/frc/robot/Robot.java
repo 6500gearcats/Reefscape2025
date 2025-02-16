@@ -8,6 +8,7 @@ import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.DriveSubsystem;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -16,6 +17,10 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
+
+    DriveSubsystem m_drive = new DriveSubsystem(null, null);
+    LimelightHelpers.SetRobotOrientation("limelight-gcc", m_drive.getAngle(), 0, 0, 0, 0, 0);
+    LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.4318, 0.1905, 0.495, 0, 0, 180);
 
     PortForwarder.add(5801, "limelight-gca.local", 5801);
   }
