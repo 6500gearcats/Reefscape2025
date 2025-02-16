@@ -5,22 +5,16 @@
 package frc.robot.subsystems;
 
 import java.util.Map;
-import java.util.function.BiConsumer;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 // Path Planner Imports
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.controllers.PathFollowingController;
-import com.pathplanner.lib.util.DriveFeedforwards;
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.hal.SimBoolean;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
-import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -36,7 +30,6 @@ import edu.wpi.first.networktables.StructArrayPublisher;
 //import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -48,10 +41,6 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Robot;
 import frc.robot.Vision;
-import com.revrobotics.spark.SparkSim;
-import com.revrobotics.sim.SparkMaxSim;
-import com.revrobotics.sim.SparkSimFaultManager;
-
 
 public class DriveSubsystem extends SubsystemBase {
   public boolean turboEnable = false;
@@ -80,14 +69,13 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
-  private AHRS m_gyro;
+  private Pigeon2 m_gyro;
 
   private int m_gyroSim;
   private SimDouble m_simAngle;
   private SimBoolean m_connected;
   private SimBoolean m_calibrating;
   private boolean m_fieldOriented;
-  private Rotation2d simRotation = new Rotation2d();
 
   private ChassisSpeeds m_lastSpeeds;
 
@@ -118,7 +106,7 @@ public class DriveSubsystem extends SubsystemBase {
        * details.
        */
 
-      m_gyro = new AHRS(NavXComType.kMXP_SPI);
+      m_gyro = new Pigeon2(30, "rio");
       System.out.println("AHRS constructed");
     } catch (RuntimeException ex) {
       System.out.println("AHRS not constructed");
@@ -126,7 +114,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     // m_gyro.setAngleAdjustment(180.0);
-    m_gyro.zeroYaw();
+    m_gyro.setYaw(0);
 
     if (RobotBase.isSimulation()) {
       m_gyroSim = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
@@ -210,7 +198,7 @@ publisher = NetworkTableInstance.getDefault()
       SmartDashboard.putNumber("Position: Y", yPos);
     }
 
-    SmartDashboard.putNumber("NavX Pitch", m_gyro.getPitch());
+    SmartDashboard.putNumber("NavX Pitch", m_gyro.getPitch().getValueAsDouble());
     SmartDashboard.putNumber("NavX Yaw angle", getAngle());
 
     SmartDashboard.putBoolean("Field Oriented", m_fieldOriented);
@@ -314,9 +302,9 @@ publisher = NetworkTableInstance.getDefault()
         });
 
     if (Robot.isSimulation()) {
-      SwerveModuleState[] measuredStates = new SwerveModuleState[] {
-          m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()
-      };
+      // SwerveModuleState[] measuredStates = new SwerveModuleState[] {
+      //     m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()
+      // };
       // ChassisSpeeds speeds =
       // DriveConstants.kDriveKinematics.toChassisSpeeds(measuredStates);
       ChassisSpeeds speeds = m_lastSpeeds;
@@ -359,7 +347,8 @@ publisher = NetworkTableInstance.getDefault()
 
     double max = m_maxSpeed.getDouble(DriveConstants.kTurboModeModifier);
     
-    if (turboEnable) {
+    if(Elevator.elevatorTooHighForTurbo){
+    } else if (turboEnable) {
       
       xSpeed *= max;
       ySpeed *= max;
@@ -452,14 +441,14 @@ publisher = NetworkTableInstance.getDefault()
 
   /* Return the NavX pitch angle */
   public double getPitch() {
-    return m_gyro.getPitch();
+    return m_gyro.getPitch().getValueAsDouble();
   }
 
   /* Return the NavX yaw angle */
   public double getAngle() {
     // return -m_gyro.getYaw();
     if (Robot.isReal()) {
-      return -m_gyro.getAngle();
+      return m_gyro.getYaw().getValueAsDouble();
     } else {
       return m_simAngle.get();
     }
