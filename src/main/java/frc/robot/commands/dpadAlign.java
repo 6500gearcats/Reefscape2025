@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.DriveSubsystem;
 
 
@@ -34,7 +35,7 @@ public class dpadAlign extends Command {
   int choice;
   public dpadAlign(DriveSubsystem newM_Drive, int choice) {
     m_drive = newM_Drive;
-    constraints = new PathConstraints(3.0, 3.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
+    constraints = new PathConstraints(1.0, 1.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
     this.choice = choice;
 
     addRequirements(m_drive);
@@ -44,9 +45,11 @@ public class dpadAlign extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Command pathFindCommand = AutoBuilder.pathfindToPose(//getPoseOffset(
-    getBestAprilTag(), constraints);
-    pathFindCommand.schedule();
+    if (LimelightHelpers.getTV("limelight-gcc")) {
+      Command pathFindCommand = AutoBuilder.pathfindToPose(//getPoseOffset(
+      getBestAprilTag(), constraints);
+      pathFindCommand.schedule();
+    }
   }
 
 
@@ -83,12 +86,12 @@ public class dpadAlign extends Command {
     double newX;
     double newY;
     if (choice==1) {
-      newX = (newPose.getX() + Math.cos(tempAngle) * 1) + Math.cos(tempAngle + Math.PI/2) * .25;
-      newY = (newPose.getY() + Math.sin(tempAngle) * 1) + Math.sin(tempAngle + Math.PI/2) * .25;
+      newX = (newPose.getX() + Math.cos(tempAngle) * .66) + Math.cos(tempAngle + Math.PI/2) * .3;
+      newY = (newPose.getY() + Math.sin(tempAngle) * .66) + Math.sin(tempAngle + Math.PI/2) * .3;
     }
     else {
-      newX = (newPose.getX() + Math.cos(tempAngle) * 1) - Math.cos(tempAngle + Math.PI/2) * .25;
-      newY = (newPose.getY() + Math.sin(tempAngle) * 1) - Math.sin(tempAngle + Math.PI/2) * .25;
+      newX = (newPose.getX() + Math.cos(tempAngle) * .66) - Math.cos(tempAngle + Math.PI/2) * .3;
+      newY = (newPose.getY() + Math.sin(tempAngle) * .66) - Math.sin(tempAngle + Math.PI/2) * .3;
     }
     Pose2d thirdPose = new Pose2d(newX, newY, newPose.getRotation().plus(new Rotation2d(Math.PI)));
     System.out.println("New Poses values" + thirdPose.getX() + ", " + thirdPose.getY() + ". Rotation: " + thirdPose.getRotation());

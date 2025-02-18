@@ -59,13 +59,15 @@ public class GCPoseEstimator extends SubsystemBase {
   private Supplier<Rotation2d> m_rotationSupplier;
   private Supplier<SwerveModulePosition[]> m_swerveModulePositionSupplier;
   private boolean m_useLimeLight;
+  private DriveSubsystem m_robotDrive;
 
   private Vision m_vision;
 
 
   /** Creates a new PoseEstimator. */
   // * Uses Limelight
-  public GCPoseEstimator(Supplier<Rotation2d> rotationSupplier, Supplier<SwerveModulePosition[]> swerveModulePositionSupplier) {
+  public GCPoseEstimator(DriveSubsystem m_robotDrive, Supplier<Rotation2d> rotationSupplier, Supplier<SwerveModulePosition[]> swerveModulePositionSupplier) {
+    this.m_robotDrive = m_robotDrive;
     m_rotationSupplier = rotationSupplier;
     m_swerveModulePositionSupplier = swerveModulePositionSupplier;
     m_useLimeLight = true;
@@ -114,9 +116,8 @@ public class GCPoseEstimator extends SubsystemBase {
   //The following method is limelight integration from LimeLight themselves.
   public void useLimeLight() {
     //TODO: add logic to update useMegaTag2 dynamically based on what limelight sees
-    boolean useMegaTag2 = true; //set to false to use MegaTag1
+    boolean useMegaTag2 = false; //set to false to use MegaTag1
     boolean doRejectUpdate = false;
-    LimelightHelpers.SetIMUMode("limelight-gcc", 2);
 
     if(useMegaTag2 == false)
     {
@@ -159,7 +160,7 @@ public class GCPoseEstimator extends SubsystemBase {
       * For 2024 and beyond, the origin of your coordinate system should always be the "blue" origin.
       * FRC teams should always use botpose_wpiblue for pose-related functionality
       */
-      LimelightHelpers.SetRobotOrientation("limelight-gcc", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+      LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
       LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-gcc");
       if(Math.abs(DriveSubsystem.m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {

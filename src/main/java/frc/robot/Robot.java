@@ -18,10 +18,6 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
 
-    DriveSubsystem m_drive = new DriveSubsystem(null, null);
-    LimelightHelpers.SetRobotOrientation("limelight-gcc", m_drive.getAngle(), 0, 0, 0, 0, 0);
-    LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.4318, 0.1905, 0.495, 0, 0, 180);
-
     PortForwarder.add(5801, "limelight-gca.local", 5801);
   }
 

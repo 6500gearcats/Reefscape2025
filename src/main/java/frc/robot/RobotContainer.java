@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -53,6 +54,11 @@ public class RobotContainer {
   DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera, m_vision);
 
   public RobotContainer() {
+    m_robotDrive.zeroHeading();
+    LimelightHelpers.SetRobotOrientation(
+      "limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
+    LimelightHelpers.setCameraPose_RobotSpace(
+      "limelight-gcc", -0.4318, 0.1905, 0.495, 0, 0, 180);
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -80,6 +86,7 @@ public class RobotContainer {
     new JoystickButton(m_driver, Button.kB.value).onTrue(new SetAprilTagHorizontalOffset(17, m_vision, m_robotDrive, .5));
     new JoystickButton(m_driver, Button.kY.value).onTrue(new SetAprilTagVerticalOffset(17, m_vision, m_robotDrive, 0));
     new JoystickButton(m_driver, Button.kX.value).onTrue(new dpadAlign(m_robotDrive, 0));
+    new JoystickButton(m_driver, Button.kStart.value).onTrue(new InstantCommand(() -> resetRobotGyroAndOrientation()));
     new POVButton(m_driver, 90).onTrue(new dpadAlign(m_robotDrive, 1));
     new POVButton(m_driver, 270).onTrue(new dpadAlign(m_robotDrive, 0));
   }
@@ -87,4 +94,11 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
+
+  public void resetRobotGyroAndOrientation() {
+    m_robotDrive.zeroHeading();
+    LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
+    LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.4318, 0.1905, 0.495, 0, 0, 180);
+  }
+  
 }
