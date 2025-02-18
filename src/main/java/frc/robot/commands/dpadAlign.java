@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.DriveSubsystem;
@@ -32,11 +33,12 @@ public class dpadAlign extends Command {
   PathConstraints constraints;
   DriveSubsystem m_drive;
   AprilTagFieldLayout field;
-  int choice;
-  public dpadAlign(DriveSubsystem newM_Drive, int choice) {
+  boolean right;
+  public dpadAlign(DriveSubsystem newM_Drive, boolean right) {
     m_drive = newM_Drive;
     constraints = new PathConstraints(1.0, 1.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
-    this.choice = choice;
+    this.right = right;
+    m_drive.right = right;
 
     addRequirements(m_drive);
   }
@@ -55,7 +57,8 @@ public class dpadAlign extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
 
   // Called once the command ends or is interrupted.
@@ -83,17 +86,18 @@ public class dpadAlign extends Command {
     System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
 
     double tempAngle = field.getTagPose(bestAprilTag).get().toPose2d().getRotation().getRadians();
-    double newX;
-    double newY;
-    if (choice==1) {
+    double newX = 0;
+    double newY = 0;
+    if (right) {
       newX = (newPose.getX() + Math.cos(tempAngle) * .66) + Math.cos(tempAngle + Math.PI/2) * .3;
       newY = (newPose.getY() + Math.sin(tempAngle) * .66) + Math.sin(tempAngle + Math.PI/2) * .3;
     }
-    else {
+    else if (!right) {
       newX = (newPose.getX() + Math.cos(tempAngle) * .66) - Math.cos(tempAngle + Math.PI/2) * .3;
       newY = (newPose.getY() + Math.sin(tempAngle) * .66) - Math.sin(tempAngle + Math.PI/2) * .3;
     }
-    Pose2d thirdPose = new Pose2d(newX, newY, newPose.getRotation().plus(new Rotation2d(Math.PI)));
+    Pose2d thirdPose = new Pose2d(newX, newY, newPose.getRotation());
+    //.getRotation().plus(new Rotation2d(Math.PI)));
     System.out.println("New Poses values" + thirdPose.getX() + ", " + thirdPose.getY() + ". Rotation: " + thirdPose.getRotation());
     return thirdPose;
   }

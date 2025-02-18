@@ -47,6 +47,7 @@ public class DriveSubsystem extends SubsystemBase {
   // ! Update this to use the pose estimator instead of normal odametry
 
   public boolean turboEnable = false;
+  public boolean right = false;
 
   // Create MAXSwerveModules 
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
@@ -225,6 +226,7 @@ publisher = NetworkTableInstance.getDefault()
       SmartDashboard.putNumber("Position: X", xPos);
       SmartDashboard.putNumber("Position: Y", yPos);
     }
+    SmartDashboard.putBoolean("Right Side line-up?", right);
 
     SmartDashboard.putNumber("Pigeon2 Pitch", m_gyro.getPitch().getValueAsDouble());
     SmartDashboard.putNumber("Pigeon2 Yaw angle", getAngle());
