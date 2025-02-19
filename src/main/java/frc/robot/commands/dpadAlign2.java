@@ -28,13 +28,13 @@ import frc.robot.subsystems.DriveSubsystem;
 
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class dpadAlign extends Command {
+public class dpadAlign2 extends Command {
   /** Creates a new PathFindToPos. */
   PathConstraints constraints;
   DriveSubsystem m_drive;
   AprilTagFieldLayout field;
   boolean right;
-  public dpadAlign(DriveSubsystem newM_Drive) {
+  public dpadAlign2(DriveSubsystem newM_Drive) {
     m_drive = newM_Drive;
     constraints = new PathConstraints(1.0, 1.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
 
@@ -46,9 +46,11 @@ public class dpadAlign extends Command {
   @Override
   public void initialize() {
     if (LimelightHelpers.getTV("limelight-gcc")) {
-      Command pathFindCommand = AutoBuilder.pathfindToPose(//getPoseOffset(
-      getBestAprilTag(), constraints);
-      pathFindCommand.schedule();
+      // Command pathFindCommand = AutoBuilder.pathfindToPose(//getPoseOffset(
+      // getBestAprilTag(), constraints);
+      // pathFindCommand.schedule();
+
+      m_drive.drive()
     }
   }
 
@@ -56,6 +58,9 @@ public class dpadAlign extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    Pose2d myPose = m_drive.getPose();
+    
+    m_drive.drive()
   }
 
 
@@ -86,8 +91,8 @@ public class dpadAlign extends Command {
     double tempAngle = field.getTagPose(bestAprilTag).get().toPose2d().getRotation().getRadians();
     double newX = 0;
     double newY = 0;
-    newX = (newPose.getX() + Math.cos(tempAngle) * .66) - Math.cos(tempAngle + Math.PI/2) * .3;
-    newY = (newPose.getY() + Math.sin(tempAngle) * .66) - Math.sin(tempAngle + Math.PI/2) * .3;
+    newX = (newPose.getX() + Math.cos(tempAngle) * .66) + Math.cos(tempAngle + Math.PI/2) * .3;
+    newY = (newPose.getY() + Math.sin(tempAngle) * .66) + Math.sin(tempAngle + Math.PI/2) * .3;
     Pose2d thirdPose = new Pose2d(newX, newY, newPose.getRotation());
     //.getRotation().plus(new Rotation2d(Math.PI)));
     System.out.println("New Poses values" + thirdPose.getX() + ", " + thirdPose.getY() + ". Rotation: " + thirdPose.getRotation());
