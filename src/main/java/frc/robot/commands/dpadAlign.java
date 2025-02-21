@@ -8,6 +8,8 @@ package frc.robot.commands;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -21,8 +23,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -33,10 +38,10 @@ public class dpadAlign extends Command {
   PathConstraints constraints;
   DriveSubsystem m_drive;
   AprilTagFieldLayout field;
-  boolean right;
+  Pose2d targetPose;
   public dpadAlign(DriveSubsystem newM_Drive) {
     m_drive = newM_Drive;
-    constraints = new PathConstraints(1.0, 1.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
+    constraints = new PathConstraints(3.0, 3.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
 
     addRequirements(m_drive);
   }
@@ -45,11 +50,18 @@ public class dpadAlign extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (LimelightHelpers.getTV("limelight-gcc")) {
-      Command pathFindCommand = AutoBuilder.pathfindToPose(//getPoseOffset(
-      getBestAprilTag(), constraints);
-      pathFindCommand.schedule();
-    }
+    //if (LimelightHelpers.getTV("limelight-gcc")) {
+      targetPose = getBestAprilTag();
+      if (targetPose == null) {
+        System.out.println("Target is null");
+      }
+      else {
+        Commands.defer(() ->  AutoBuilder.pathfindToPose(
+        targetPose, constraints), getRequirements()).schedule();
+        //Command pathPlan = AutoBuilder.pathfindToPose(targetPose, constraints);
+        //pathPlan.schedule();
+      }
+    //}
   }
 
 
@@ -69,12 +81,9 @@ public class dpadAlign extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_drive.getPose().equals(getBestAprilTag());
+    double limit = 0.1;
+    return m_drive.getPose().getX() - targetPose.getX() < limit && m_drive.getPose().getY() - targetPose.getY() < limit;
   }
-
-  // private Pose2d getPoseOffset(Pose2d pose) {
-
-  // }
 
   private Pose2d getBestAprilTag() {
     field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
@@ -88,8 +97,7 @@ public class dpadAlign extends Command {
     double newY = 0;
     newX = (newPose.getX() + Math.cos(tempAngle) * .66) - Math.cos(tempAngle + Math.PI/2) * .3;
     newY = (newPose.getY() + Math.sin(tempAngle) * .66) - Math.sin(tempAngle + Math.PI/2) * .3;
-    Pose2d thirdPose = new Pose2d(newX, newY, newPose.getRotation());
-    //.getRotation().plus(new Rotation2d(Math.PI)));
+    Pose2d thirdPose = new Pose2d(newX, newY, newPose.getRotation().plus(new Rotation2d(Math.PI)));
     System.out.println("New Poses values" + thirdPose.getX() + ", " + thirdPose.getY() + ". Rotation: " + thirdPose.getRotation());
     return thirdPose;
   }
@@ -98,16 +106,37 @@ public class dpadAlign extends Command {
     int integer = 0;
     ArrayList<Double> poses = new ArrayList<Double>();
     ArrayList<Integer> list = new ArrayList<Integer>();
-    for (int i = 1; i<23; i++) {
-      Translation2d pose = field.getTagPose(i).get().getTranslation().toTranslation2d();
-      double distance = robotPose.getDistance(pose);
-      poses.add(distance);
-      list.add(i);
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+        if (alliance.get() == Alliance.Red) {
+          for (int i = 6; i<12; i++) {
+            Translation2d pose = field.getTagPose(i).get().getTranslation().toTranslation2d();
+            double distance = robotPose.getDistance(pose);
+            poses.add(distance);
+            list.add(i);
+          }
+        }
+        if (alliance.get() == Alliance.Blue) {
+          for (int i = 17; i<23; i++) {
+            Translation2d pose = field.getTagPose(i).get().getTranslation().toTranslation2d();
+            double distance = robotPose.getDistance(pose);
+            poses.add(distance);
+            list.add(i);
+          }
+        }
+    }
+    else {
+      for (int i = 1; i<23; i++) {
+        Translation2d pose = field.getTagPose(i).get().getTranslation().toTranslation2d();
+        double distance = robotPose.getDistance(pose);
+        poses.add(distance);
+        list.add(i);
+      }
     }
     double minValue = Collections.min(poses);
     System.out.println("Min value: " + minValue);
     integer = poses.indexOf(minValue);
-    System.out.println("Integer of least distance: " + integer);
+    System.out.println("AprilTag of least distance: " + list.get(integer));
     return list.get(integer);
   }
 }

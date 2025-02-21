@@ -128,29 +128,30 @@ public class GCPoseEstimator extends SubsystemBase {
       */
 
       LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-gcc");
-      
-      if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
-      {
-        if(mt1.rawFiducials[0].ambiguity > .7)
+      if (mt1!=null) {
+        if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
+        {
+          if(mt1.rawFiducials[0].ambiguity > .7)
+          {
+            doRejectUpdate = true;
+          }
+          if(mt1.rawFiducials[0].distToCamera > 3)
+          {
+            doRejectUpdate = true;
+          }
+        }
+        if(mt1.tagCount == 0)
         {
           doRejectUpdate = true;
         }
-        if(mt1.rawFiducials[0].distToCamera > 3)
-        {
-          doRejectUpdate = true;
-        }
-      }
-      if(mt1.tagCount == 0)
-      {
-        doRejectUpdate = true;
-      }
 
-      if(!doRejectUpdate)
-      {
-        m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));
-        m_poseEstimator.addVisionMeasurement(
-            mt1.pose,
-            mt1.timestampSeconds);
+        if(!doRejectUpdate)
+        {
+          m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));
+          m_poseEstimator.addVisionMeasurement(
+              mt1.pose,
+              mt1.timestampSeconds);
+        }
       }
     }
     else if (useMegaTag2 == true)
