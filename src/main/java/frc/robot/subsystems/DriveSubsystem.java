@@ -110,6 +110,7 @@ public class DriveSubsystem extends SubsystemBase {
   private Pose2d m_simOdometryPose;
   private ShuffleboardTab m_driveTab = Shuffleboard.getTab("Drive");
   private GenericEntry m_maxSpeed;
+  public int AprilTagID = 0;
   
   /*public SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, m_gyro.getRotation2d(), new SwerveModulePosition[] {
     m_frontLeft.getPosition(),
@@ -242,7 +243,8 @@ publisher = NetworkTableInstance.getDefault()
     aprilTagPose = getBestAprilTag();
     aprilTagPose2 = getBestAprilTag2();
     
-    SmartDashboard.putNumber("Integer of april tag Drive: ", getClosestAprilTagID(getPose().getTranslation()));
+    AprilTagID = getClosestAprilTagID(getPose().getTranslation());
+    SmartDashboard.putNumber("Integer of april tag Drive: ", AprilTagID);
 
     SmartDashboard.putNumber("Pigeon2 Pitch", m_gyro.getPitch().getValueAsDouble());
     SmartDashboard.putNumber("Pigeon2 Yaw angle", getAngle());

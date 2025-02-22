@@ -116,7 +116,7 @@ public class RobotContainer {
     field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
     Pose2d pose = m_robotDrive.getPose();
     int bestAprilTag = getClosestAprilTagID(pose.getTranslation());
-    Pose2d newPose = field.getTagPose(bestAprilTag).get().toPose2d();
+    Pose2d newPose = field.getTagPose(m_robotDrive.AprilTagID).get().toPose2d();
     System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
 
     double tempAngle = field.getTagPose(bestAprilTag).get().toPose2d().getRotation().getRadians();
