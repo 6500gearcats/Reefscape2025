@@ -39,6 +39,7 @@ public class dpadAlign2 extends Command {
   DriveSubsystem m_drive;
   AprilTagFieldLayout field;
   Pose2d targetPose;
+  Command pathPlanCommand;
   public dpadAlign2(DriveSubsystem newM_Drive) {
     m_drive = newM_Drive;
     constraints = new PathConstraints(3.0, 3.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
@@ -50,7 +51,7 @@ public class dpadAlign2 extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //if (LimelightHelpers.getTV("limelight-gcc")) {
+    if (LimelightHelpers.getTV("limelight-gcc")) {
       targetPose = getBestAprilTag();
       if (targetPose == null) {
         System.out.println("Target is null");
@@ -61,7 +62,7 @@ public class dpadAlign2 extends Command {
         //Command pathPlan = AutoBuilder.pathfindToPose(targetPose, constraints);
         //pathPlan.schedule();
       }
-    //}
+    }
   }
 
 
@@ -81,8 +82,9 @@ public class dpadAlign2 extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    double limit = 0.1;
-    return m_drive.getPose().getX() - targetPose.getX() < limit && m_drive.getPose().getY() - targetPose.getY() < limit;
+    return false;
+    //double limit = 0.1;
+    //return m_drive.getPose().getX() - targetPose.getX() < limit && m_drive.getPose().getY() - targetPose.getY() < limit;
   }
 
   private Pose2d getBestAprilTag() {
