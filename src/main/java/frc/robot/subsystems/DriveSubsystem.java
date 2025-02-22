@@ -237,10 +237,10 @@ publisher = NetworkTableInstance.getDefault()
       SmartDashboard.putNumber("Position: Y", yPos);
     }
     SmartDashboard.putNumber("Integer of april tag: ", aprilTag);
-    //aprilTagDrive = getClosestAprilTagID(getPose().getTranslation());
+    aprilTagDrive = getClosestAprilTagID(getPose().getTranslation());
     //aprilTagPose = field.getTagPose(aprilTagDrive).get().toPose2d();
-    aprilTagPose = getBestAprilTag();
-    aprilTagPose2 = getBestAprilTag2();
+    //aprilTagPose = getBestAprilTag();
+    //aprilTagPose2 = getBestAprilTag2();
     
     SmartDashboard.putNumber("Integer of april tag Drive: ", getClosestAprilTagID(getPose().getTranslation()));
 
