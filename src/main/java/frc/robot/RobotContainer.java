@@ -43,6 +43,7 @@ import frc.robot.GCPhotonVision;
 import frc.robot.commands.AlignWithAprilTag;
 import frc.robot.commands.AlignWithSelectedAprilTag;
 import frc.robot.commands.RunCoral;
+import frc.robot.commands.RunCoral2;
 import frc.robot.commands.dpadAlign;
 import frc.robot.commands.dpadAlign2;
 import frc.robot.commands.SetAprilTagHorizontalOffset;
@@ -104,18 +105,18 @@ public class RobotContainer {
     new JoystickButton(m_driver, Button.kY.value).onTrue(new SetAprilTagVerticalOffset(17, m_vision, m_robotDrive, 0));
     new JoystickButton(m_driver, Button.kX.value).onTrue(new dpadAlign(m_robotDrive));
     new JoystickButton(m_driver, Button.kStart.value).onTrue(new InstantCommand(() -> resetRobotGyroAndOrientation()));
-    new POVButton(m_driver, 90).whileTrue(AutoBuilder.pathfindToPose(getBestAprilTag(m_robotDrive.aprilTagDrive), new PathConstraints(3.0, 3.0, Units.degreesToRadians(540), Units.degreesToRadians(720))));
-    new POVButton(m_driver, 270).whileTrue(AutoBuilder.pathfindToPose(getBestAprilTag2(m_robotDrive.aprilTagDrive), new PathConstraints(3.0, 3.0, Units.degreesToRadians(540), Units.degreesToRadians(720))));
+    new POVButton(m_driver, 90).whileTrue(new RunCoral(m_robotDrive));
+    new POVButton(m_driver, 270).whileTrue(new RunCoral2(m_robotDrive));
   }
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
 
-  private Pose2d getBestAprilTag(int ID) {
+  private Pose2d getBestAprilTag() {
     field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
     Pose2d pose = m_robotDrive.getPose();
-    int bestAprilTag = ID;
+    int bestAprilTag = getClosestAprilTagID(pose.getTranslation());
     Pose2d newPose = field.getTagPose(bestAprilTag).get().toPose2d();
     System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
 
@@ -129,10 +130,10 @@ public class RobotContainer {
     return thirdPose;
   }
 
-  private Pose2d getBestAprilTag2(int ID) {
+  private Pose2d getBestAprilTag2() {
     field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
     Pose2d pose = m_robotDrive.getPose();
-    int bestAprilTag = ID;
+    int bestAprilTag = getClosestAprilTagID(pose.getTranslation());
     Pose2d newPose = field.getTagPose(bestAprilTag).get().toPose2d();
     System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
 
@@ -186,7 +187,7 @@ public class RobotContainer {
     //System.out.println("Min value: " + minValue);
     //integer = poses.indexOf(minValue);
     //System.out.println("AprilTag of least distance: " + list.get(integer));
-    m_robotDrive.aprilTag = integer;//list.get(integer);
+    //m_robotDrive.aprilTag = integer;//list.get(integer);
     return integer;
   }
 
