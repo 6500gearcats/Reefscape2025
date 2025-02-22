@@ -43,11 +43,8 @@ import frc.robot.GCPhotonVision;
 import frc.robot.commands.AlignWithAprilTag;
 import frc.robot.commands.AlignWithSelectedAprilTag;
 import frc.robot.commands.RunCoral;
-import frc.robot.commands.dpadAlign;
-import frc.robot.commands.dpadAlign2;
 import frc.robot.commands.SetAprilTagHorizontalOffset;
 import frc.robot.commands.SetAprilTagVerticalOffset;
-import frc.robot.commands.dpadAlign;
 
 public class RobotContainer {
 
@@ -102,7 +99,6 @@ public class RobotContainer {
     new JoystickButton(m_driver, Button.kA.value).onTrue(new AlignWithSelectedAprilTag(m_vision, m_robotDrive));
     new JoystickButton(m_driver, Button.kB.value).onTrue(new SetAprilTagHorizontalOffset(17, m_vision, m_robotDrive, .5));
     new JoystickButton(m_driver, Button.kY.value).onTrue(new SetAprilTagVerticalOffset(17, m_vision, m_robotDrive, 0));
-    new JoystickButton(m_driver, Button.kX.value).onTrue(new dpadAlign(m_robotDrive));
     new JoystickButton(m_driver, Button.kStart.value).onTrue(new InstantCommand(() -> resetRobotGyroAndOrientation()));
     new POVButton(m_driver, 90).whileTrue(new InstantCommand(()->getBestAprilTag()).andThen(AutoBuilder.pathfindToPose(newPose, new PathConstraints(3.0, 3.0, Units.degreesToRadians(540), Units.degreesToRadians(720)))));
     new POVButton(m_driver, 270).whileTrue(new InstantCommand(()->getBestAprilTag2()).andThen(AutoBuilder.pathfindToPose(newPose, new PathConstraints(3.0, 3.0, Units.degreesToRadians(540), Units.degreesToRadians(720)))));
@@ -117,7 +113,7 @@ public class RobotContainer {
     Pose2d pose = m_robotDrive.getPose();
     int bestAprilTag = getClosestAprilTagID(pose.getTranslation());
     Pose2d newPose = field.getTagPose(m_robotDrive.AprilTagID).get().toPose2d();
-    System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
+    //System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
 
     double tempAngle = field.getTagPose(bestAprilTag).get().toPose2d().getRotation().getRadians();
     double newX = 0;
@@ -125,7 +121,7 @@ public class RobotContainer {
     newX = (newPose.getX() + Math.cos(tempAngle) * .66) + Math.cos(tempAngle + Math.PI/2) * .3;
     newY = (newPose.getY() + Math.sin(tempAngle) * .66) + Math.sin(tempAngle + Math.PI/2) * .3;
     Pose2d thirdPose = new Pose2d(newX, newY, newPose.getRotation().plus(new Rotation2d(Math.PI)));
-    System.out.println("New Poses values" + thirdPose.getX() + ", " + thirdPose.getY() + ". Rotation: " + thirdPose.getRotation());
+    //System.out.println("New Poses values" + thirdPose.getX() + ", " + thirdPose.getY() + ". Rotation: " + thirdPose.getRotation());
     this.newPose = thirdPose;
   }
 
@@ -134,7 +130,7 @@ public class RobotContainer {
     Pose2d pose = m_robotDrive.getPose();
     int bestAprilTag = getClosestAprilTagID(pose.getTranslation());
     Pose2d newPose = field.getTagPose(bestAprilTag).get().toPose2d();
-    System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
+    //System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
 
     double tempAngle = field.getTagPose(bestAprilTag).get().toPose2d().getRotation().getRadians();
     double newX = 0;
@@ -142,7 +138,7 @@ public class RobotContainer {
     newX = (newPose.getX() + Math.cos(tempAngle) * .66) - Math.cos(tempAngle + Math.PI/2) * .3;
     newY = (newPose.getY() + Math.sin(tempAngle) * .66) - Math.sin(tempAngle + Math.PI/2) * .3;
     Pose2d thirdPose = new Pose2d(newX, newY, newPose.getRotation().plus(new Rotation2d(Math.PI)));
-    System.out.println("New Poses values" + thirdPose.getX() + ", " + thirdPose.getY() + ". Rotation: " + thirdPose.getRotation());
+    //System.out.println("New Poses values" + thirdPose.getX() + ", " + thirdPose.getY() + ". Rotation: " + thirdPose.getRotation());
     this.newPose = thirdPose;
   }
 
