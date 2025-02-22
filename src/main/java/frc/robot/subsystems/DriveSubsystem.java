@@ -237,7 +237,7 @@ publisher = NetworkTableInstance.getDefault()
       SmartDashboard.putNumber("Position: Y", yPos);
     }
     SmartDashboard.putNumber("Integer of april tag: ", aprilTag);
-    aprilTagDrive = getClosestAprilTagID(getPose().getTranslation());
+    //aprilTagDrive = getClosestAprilTagID(getPose().getTranslation());
     //aprilTagPose = field.getTagPose(aprilTagDrive).get().toPose2d();
     //aprilTagPose = getBestAprilTag();
     //aprilTagPose2 = getBestAprilTag2();
@@ -534,7 +534,7 @@ publisher = NetworkTableInstance.getDefault()
     Pose2d pose = getPose();
     int bestAprilTag = getClosestAprilTagID(pose.getTranslation());
     Pose2d newPose = field.getTagPose(bestAprilTag).get().toPose2d();
-    System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
+    //System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
 
     double tempAngle = field.getTagPose(bestAprilTag).get().toPose2d().getRotation().getRadians();
     double newX = 0;
@@ -542,7 +542,7 @@ publisher = NetworkTableInstance.getDefault()
     newX = (newPose.getX() + Math.cos(tempAngle) * .66) + Math.cos(tempAngle + Math.PI/2) * .3;
     newY = (newPose.getY() + Math.sin(tempAngle) * .66) + Math.sin(tempAngle + Math.PI/2) * .3;
     Pose2d thirdPose = new Pose2d(newX, newY, newPose.getRotation().plus(new Rotation2d(Math.PI)));
-    System.out.println("New Poses values" + thirdPose.getX() + ", " + thirdPose.getY() + ". Rotation: " + thirdPose.getRotation());
+    //System.out.println("New Poses values" + thirdPose.getX() + ", " + thirdPose.getY() + ". Rotation: " + thirdPose.getRotation());
     return thirdPose;
   }
 
@@ -551,7 +551,7 @@ publisher = NetworkTableInstance.getDefault()
     Pose2d pose = getPose();
     int bestAprilTag = getClosestAprilTagID(pose.getTranslation());
     Pose2d newPose = field.getTagPose(bestAprilTag).get().toPose2d();
-    System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
+    //System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
 
     double tempAngle = field.getTagPose(bestAprilTag).get().toPose2d().getRotation().getRadians();
     double newX = 0;
@@ -559,7 +559,7 @@ publisher = NetworkTableInstance.getDefault()
     newX = (newPose.getX() + Math.cos(tempAngle) * .66) - Math.cos(tempAngle + Math.PI/2) * .3;
     newY = (newPose.getY() + Math.sin(tempAngle) * .66) - Math.sin(tempAngle + Math.PI/2) * .3;
     Pose2d thirdPose = new Pose2d(newX, newY, newPose.getRotation().plus(new Rotation2d(Math.PI)));
-    System.out.println("New Poses values" + thirdPose.getX() + ", " + thirdPose.getY() + ". Rotation: " + thirdPose.getRotation());
+    //System.out.println("New Poses values" + thirdPose.getX() + ", " + thirdPose.getY() + ". Rotation: " + thirdPose.getRotation());
     return thirdPose;
   }
 
