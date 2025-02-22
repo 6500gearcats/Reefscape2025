@@ -36,16 +36,16 @@ public class GCAutoBuilder extends SubsystemBase {
   }
 
   public Command pathFindToPose() {
-    return AutoBuilder.pathfindToPose(getBestAprilTag(m_robotDrive.aprilTagDrive), new PathConstraints(3.0, 3.0, Units.degreesToRadians(540), Units.degreesToRadians(720)));
+    return AutoBuilder.pathfindToPose(getBestAprilTag(), new PathConstraints(3.0, 3.0, Units.degreesToRadians(540), Units.degreesToRadians(720)));
   }
   public Command pathFindToPose2() {
-    return AutoBuilder.pathfindToPose(getBestAprilTag2(m_robotDrive.aprilTagDrive), new PathConstraints(3.0, 3.0, Units.degreesToRadians(540), Units.degreesToRadians(720)));
+    return AutoBuilder.pathfindToPose(getBestAprilTag2(), new PathConstraints(3.0, 3.0, Units.degreesToRadians(540), Units.degreesToRadians(720)));
   }
 
-  private Pose2d getBestAprilTag(int ID) {
+  private Pose2d getBestAprilTag() {
     field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
     Pose2d pose = m_robotDrive.getPose();
-    int bestAprilTag = ID;
+    int bestAprilTag = getClosestAprilTagID(pose.getTranslation());
     Pose2d newPose = field.getTagPose(bestAprilTag).get().toPose2d();
     //System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
 
@@ -59,10 +59,10 @@ public class GCAutoBuilder extends SubsystemBase {
     return thirdPose;
   }
 
-  private Pose2d getBestAprilTag2(int ID) {
+  private Pose2d getBestAprilTag2() {
     field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
     Pose2d pose = m_robotDrive.getPose();
-    int bestAprilTag = ID;
+    int bestAprilTag = getClosestAprilTagID(pose.getTranslation());
     Pose2d newPose = field.getTagPose(bestAprilTag).get().toPose2d();
     //System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
 
