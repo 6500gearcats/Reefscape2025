@@ -195,5 +195,10 @@ public class RobotContainer {
     LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
     LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.4318, 0.1905, 0.495, 0, 0, 180);
   }
+
+  public void setDpadAlignButtonBindings(){
+    new POVButton(m_driver, 90).whileTrue(new InstantCommand(()->getBestAprilTag()).andThen(AutoBuilder.pathfindToPose(newPose, new PathConstraints(3.0, 3.0, Units.degreesToRadians(540), Units.degreesToRadians(720)))));
+    new POVButton(m_driver, 270).whileTrue(new InstantCommand(()->getBestAprilTag2()).andThen(AutoBuilder.pathfindToPose(newPose, new PathConstraints(3.0, 3.0, Units.degreesToRadians(540), Units.degreesToRadians(720)))));
+  }
   
 }
