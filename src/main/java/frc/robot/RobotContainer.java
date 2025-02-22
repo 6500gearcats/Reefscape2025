@@ -83,25 +83,26 @@ public class RobotContainer {
     // Configure your button bindings here
 
     new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value).whileTrue(new TurboEnable(m_robotDrive));
+    new JoystickButton(m_driver, XboxController.Button.kStart.value).onTrue(new RunCommand(() -> m_robotDrive.zeroHeading()));
     //TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
     //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new FlipGroundIntake(m_groundIntake)).onFalse(new FlipGroundIntake(m_groundIntake));
-    new Trigger(() -> m_gunner.getRightY() > 0.5).whileTrue(new SetElevatorSpeed(m_elevator, 0.3));
-    new Trigger(() -> m_gunner.getRightY() < -0.5).whileTrue(new SetElevatorSpeed(m_elevator, -0.4));
+    new Trigger(() -> m_gunner.getRightY() > 0.5).whileTrue(new SetElevatorSpeed(m_elevator, () -> m_gunner.getRightY()));
+    new Trigger(() -> m_gunner.getRightY() < -0.5).whileTrue(new SetElevatorSpeed(m_elevator,  () -> m_gunner.getRightY()));
     new Trigger(() -> m_gunner.getLeftTriggerAxis() > 0.3).whileTrue(new IntakeAlgae(m_AlgaeIntake, -0.6));
     new Trigger(() -> m_gunner.getRightTriggerAxis() > 0.3).whileTrue(new OutakeAlgae(m_AlgaeIntake, 1.1));
 
-    new Trigger(() -> m_gunner.getLeftY() > 0.2).whileTrue(new SetArmSpeed(m_arm, -0.25));
-    new Trigger(() -> m_gunner.getLeftY() < -0.2).whileTrue(new SetArmSpeed(m_arm, 0.25));
+    new Trigger(() -> m_gunner.getLeftY() > 0.2).whileTrue(new SetArmSpeed(m_arm, () -> -0.25 * m_gunner.getLeftY()));
+    new Trigger(() -> m_gunner.getLeftY() < -0.2).whileTrue(new SetArmSpeed(m_arm, () ->  -0.25 *  m_gunner.getLeftY()));
 
     new JoystickButton(m_gunner, XboxController.Button.kStart.value).whileTrue(new SetClimberSpeed(m_climber, 0.2));
     new JoystickButton(m_gunner, XboxController.Button.kBack.value).whileTrue(new SetClimberSpeed(m_climber, -0.2));
 
     new JoystickButton(m_gunner, XboxController.Button.kLeftBumper.value).whileTrue(new MoveCoral(m_CoralHolder, -0.5, true));
-    new JoystickButton(m_gunner, XboxController.Button.kRightBumper.value).whileTrue(new MoveCoral(m_CoralHolder, 0.5, false).withTimeout(0.2).andThen(new SetArmSpeed(m_arm, 0.4).withTimeout(0.6)));
+    new JoystickButton(m_gunner, XboxController.Button.kRightBumper.value).whileTrue(new MoveCoral(m_CoralHolder, 0.5, false).withTimeout(0.2).andThen(new SetArmSpeed(m_arm, ()-> 0.4).withTimeout(0.6)));
 
     new JoystickButton(m_gunner, XboxController.Button.kX.value).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.547));
-    new JoystickButton(m_gunner, XboxController.Button.kY.value).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.715, .561));
-    new JoystickButton(m_gunner, XboxController.Button.kB.value).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.19, 0.56));
+    new JoystickButton(m_gunner, XboxController.Button.kY.value).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.8/*0.715*/, .561));
+    new JoystickButton(m_gunner, XboxController.Button.kB.value).whileTrue(new SetElevatorHeight(m_elevator, 0.25).andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.19, 0.56)));
     new JoystickButton(m_gunner, XboxController.Button.kA.value).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.16, 0.1));
     new POVButton(m_gunner, 270).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.43, 0.381));
     new POVButton(m_gunner, 90).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.448));

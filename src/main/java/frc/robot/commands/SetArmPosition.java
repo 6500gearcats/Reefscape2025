@@ -29,10 +29,10 @@ public class SetArmPosition extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double velocity = (position - m_arm.getArmPosition()) * -0.6;
+    double velocity = (position - m_arm.getArmPosition()) * -2.5;
 
-    if(Math.abs(velocity) < .2){
-      velocity = .2 * Math.abs(velocity)/velocity;
+    if(Math.abs(velocity) < .4){
+      velocity = .4 * Math.abs(velocity)/velocity;
     }
 
     m_arm.spinArm(velocity);

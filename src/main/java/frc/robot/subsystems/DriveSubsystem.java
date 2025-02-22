@@ -198,8 +198,8 @@ publisher = NetworkTableInstance.getDefault()
       SmartDashboard.putNumber("Position: Y", yPos);
     }
 
-    SmartDashboard.putNumber("NavX Pitch", m_gyro.getPitch().getValueAsDouble());
-    SmartDashboard.putNumber("NavX Yaw angle", getAngle());
+    SmartDashboard.putNumber("Pigeon Pitch", m_gyro.getPitch().getValueAsDouble());
+    SmartDashboard.putNumber("Pigeon Yaw angle", getAngle());
 
     SmartDashboard.putBoolean("Field Oriented", m_fieldOriented);
 
