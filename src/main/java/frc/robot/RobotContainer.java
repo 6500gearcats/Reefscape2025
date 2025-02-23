@@ -31,6 +31,8 @@ import frc.robot.GCPhotonVision;
 import frc.robot.commands.AlignWithAprilTag;
 import frc.robot.commands.AlignWithSelectedAprilTag;
 import frc.robot.commands.dpadAlign;
+import frc.robot.commands.dpadAlignLeft;
+import frc.robot.commands.dpadAlignRight;
 import frc.robot.commands.SetAprilTagHorizontalOffset;
 import frc.robot.commands.SetAprilTagVerticalOffset;
 import frc.robot.commands.dpadAlign;
@@ -87,8 +89,8 @@ public class RobotContainer {
     new JoystickButton(m_driver, Button.kY.value).onTrue(new SetAprilTagVerticalOffset(17, m_vision, m_robotDrive, 0));
     new JoystickButton(m_driver, Button.kX.value).onTrue(new dpadAlign(m_robotDrive, false));
     new JoystickButton(m_driver, Button.kStart.value).onTrue(new InstantCommand(() -> resetRobotGyroAndOrientation()));
-    new POVButton(m_driver, 90).whileTrue(new dpadAlign(m_robotDrive, true));
-    new POVButton(m_driver, 270).whileTrue(new dpadAlign(m_robotDrive, false));
+    new POVButton(m_driver, 90).onTrue(new dpadAlignRight(m_robotDrive).getPathCommand());
+    new POVButton(m_driver, 270).onTrue(new dpadAlignLeft(m_robotDrive).getPathCommand());
   }
 
   public Command getAutonomousCommand() {

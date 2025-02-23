@@ -5,7 +5,6 @@
 
 package frc.robot.commands;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -13,16 +12,13 @@ import java.util.Collections;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -32,54 +28,29 @@ public class dpadAlign extends Command {
   /** Creates a new PathFindToPos. */
   PathConstraints constraints;
   DriveSubsystem m_drive;
-  AprilTagFieldLayout field;
+  AprilTagFieldLayout field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
   boolean right;
+
   public dpadAlign(DriveSubsystem newM_Drive, boolean right) {
     m_drive = newM_Drive;
     constraints = new PathConstraints(1.0, 1.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
     this.right = right;
-    m_drive.right = right;
+    addRequirements(m_drive);   
 
-    addRequirements(m_drive);
   }
 
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
+  public Command getPathCommand() {
+    Command pathFindCommand = Commands.none();
     if (LimelightHelpers.getTV("limelight-gcc")) {
-      Command pathFindCommand = AutoBuilder.pathfindToPose(//getPoseOffset(
+       pathFindCommand = AutoBuilder.pathfindToPose(//getPoseOffset(
       getBestAprilTag(), constraints);
-      pathFindCommand.schedule();
     }
+    return pathFindCommand;
+    
   }
-
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-  }
-
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    m_drive.drive(0, 0, 0, interrupted);
-  }
-
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
-
-  // private Pose2d getPoseOffset(Pose2d pose) {
-
-  // }
 
   private Pose2d getBestAprilTag() {
-    field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
+    
     Pose2d pose = m_drive.getPose();
     int bestAprilTag = getClosestAprilTagID(pose.getTranslation());
     Pose2d newPose = field.getTagPose(bestAprilTag).get().toPose2d();
