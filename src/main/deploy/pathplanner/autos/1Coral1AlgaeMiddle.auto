@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Place-Holder Coral Place"
+            "name": "CoralPlace"
           }
         },
         {
@@ -25,7 +25,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Place-Holder Algae Grab"
+            "name": "AlgaeGrab"
           }
         },
         {
@@ -37,7 +37,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Place-Holder Algae Processor"
+            "name": "AlgaeProcessor"
           }
         }
       ]

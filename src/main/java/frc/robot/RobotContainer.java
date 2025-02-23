@@ -4,35 +4,16 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.function.IntSupplier;
-
 import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathConstraints;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -42,19 +23,14 @@ import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CoralHolder;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.GCPoseEstimator;
 import frc.robot.subsystems.Vision;
-import frc.robot.GCPhotonVision;
-import frc.robot.commands.AlignWithAprilTag;
-import frc.robot.commands.AlignWithSelectedAprilTag;
+import frc.robot.commands.AlgaeGrab;
+import frc.robot.commands.AlgaeSequence;
+import frc.robot.commands.CoralGrab;
 import frc.robot.commands.RunCoralLeft;
 import frc.robot.commands.RunCoralRight;
-import frc.robot.commands.SetAprilTagHorizontalOffset;
-import frc.robot.commands.SetAprilTagVerticalOffset;
 import frc.robot.commands.IntakeAlgae;
 import frc.robot.commands.L4Sequence;
 import frc.robot.commands.MoveCoral;
@@ -62,10 +38,8 @@ import frc.robot.commands.OutakeAlgae;
 import frc.robot.commands.RunAlgaeMiddle;
 import frc.robot.commands.SetArmSpeed;
 import frc.robot.commands.SetClimberSpeed;
-import frc.robot.commands.SetElevatorHeight;
 import frc.robot.commands.SetElevatorSpeed;
 import frc.robot.commands.TurboEnable;
-import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetArmAndElevatorPositions;
 public class RobotContainer {
 
@@ -95,10 +69,11 @@ public class RobotContainer {
   Elevator m_elevator = new Elevator();
 
   public RobotContainer() {
-    NamedCommands.registerCommand("Coral Place", new L4Sequence(m_arm, m_AlgaeIntake, m_elevator, 1.1));
-    NamedCommands.registerCommand("Coral Grab", new L4Sequence(m_arm, m_AlgaeIntake, m_elevator, -0.6));
-    NamedCommands.registerCommand("Algae Grab", null);
-    NamedCommands.registerCommand("Algae Processor", null);    m_robotDrive.zeroHeading();
+    NamedCommands.registerCommand("CoralPlace", new L4Sequence(m_arm, m_CoralHolder, m_elevator));
+    NamedCommands.registerCommand("CoralGrab", new CoralGrab(m_arm, m_CoralHolder, m_elevator));
+    NamedCommands.registerCommand("AlgaeGrab", new AlgaeGrab(m_arm, m_AlgaeIntake, m_elevator));
+    NamedCommands.registerCommand("AlgaeProcessor", new AlgaeSequence(m_arm, m_AlgaeIntake, m_elevator));    
+    m_robotDrive.zeroHeading();
     LimelightHelpers.SetRobotOrientation(
       "limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
       LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 0, 180);
