@@ -75,8 +75,7 @@ public class RobotContainer {
     m_robotDrive.zeroHeading();
     LimelightHelpers.SetRobotOrientation(
       "limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
-    LimelightHelpers.setCameraPose_RobotSpace(
-      "limelight-gcc", -0.4318, 0.1905, 0.495, 0, 0, 180);
+      LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", 0.30, 0.177, 0.29, 0, 0, 0);
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -116,7 +115,7 @@ public class RobotContainer {
   public void resetRobotGyroAndOrientation() {
     m_robotDrive.zeroHeading();
     LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
-    LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.4318, 0.1905, 0.495, 0, 0, 180);
+    LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", 0.30, 0.177, 0.29, 0, 0, 0);
   }
   
 }
