@@ -9,8 +9,8 @@ public class AlgaeSequence extends SequentialCommandGroup {
     /** Creates a new L4Sequence. */
     public AlgaeSequence(Arm m_arm, AlgaeIntake m_AlgaeIntake, Elevator m_elevator) {
         addCommands(
-                // Sets elevator and arm to processor position
-                new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361),
-                new OutakeAlgae(m_AlgaeIntake, 1.1));
+        // Sets elevator and arm to processor position
+        new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361),
+        new OutakeAlgae(m_AlgaeIntake, 1.1));
     }
 }

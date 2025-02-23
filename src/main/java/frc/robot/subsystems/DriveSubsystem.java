@@ -15,8 +15,6 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
-import com.ctre.phoenix6.hardware.Pigeon2;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.hal.SimBoolean;
@@ -49,7 +47,6 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.GCPhotonVision;
 import frc.robot.Robot;
-import frc.robot.subsystems.Vision;
 
 public class DriveSubsystem extends SubsystemBase {
   // ! Update this to use the pose estimator instead of normal odametry

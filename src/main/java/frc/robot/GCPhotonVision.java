@@ -37,8 +37,6 @@ import edu.wpi.first.math.numbers.N1;
  import edu.wpi.first.math.numbers.N3;
  import edu.wpi.first.math.util.Units;
  import edu.wpi.first.wpilibj.smartdashboard.Field2d;
- import frc.robot.Constants.VisionConstants;
- 
  import java.util.List;
  import java.util.Optional;
  import org.photonvision.EstimatedRobotPose;

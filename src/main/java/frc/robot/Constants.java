@@ -141,11 +141,6 @@ public final class Constants {
     public static final int kGunnerControllerPort = 1;
   }
 
-  // TODO Add real values
-  public static class AlignerConstants {
-    public static final int kAlignerMotorPort = 0;
-}
-
 public static class AlgaeIntakeConstants {
     public static final int kAlgaeMotorPort = 12;
     public static final int kAlgaeSwitchPort = 3;
@@ -194,29 +189,10 @@ public static class ArmConstants{
     public static final double kFreeSpeedRpm = 5676;
   }
 
-  public static final class GyroConstants {
-    public static final double kTiltPitch = 65; // 11? tilt angle=
-  }
-
-  public static class Vision {
-    public static final String kCameraName = "YOUR CAMERA NAME";
-    // Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-    public static final Transform3d kRobotToCam =
-            new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0));
-    // The layout of the AprilTags on the field
-    public static final AprilTagFieldLayout kTagLayout =
-            AprilTagFields.kDefaultField.loadAprilTagLayoutField();
-    // The standard deviations of our vision estimated poses, which affect correction rate
-    // (Fake values. Experiment and determine estimation noise on an actual robot.)
-    public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
-    public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
-}
+// Most of these constants are outdated but are needed for simulation purposes
 public static class VisionConstants {
-    public static final String kCameraNameTag = "Microsoft_LifeCam_HD-3000";
-    public static final String kCameraNameNote = "Microsoft_LifeCam_VX-5000";
-    public static final String kCameraNameGlobal = "Global_Shutter_Camera";
     // Cam mounted facing forward, half a meter forward of center, half a meter up
-    // from center.
+    // from center. KEEP FOR SIMULATION PURPOSES even though old
     public static final Transform3d kRobotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5),
         new Rotation3d(0, 0, 0));
 
@@ -247,20 +223,7 @@ public static class VisionConstants {
     public static final double kRotationsToMeters = -1.0 * Units.inchesToMeters(11);
   }
 
-/*   public static class IntakeConstants {
-    public static final int kIntakeMotorPort = 9;
-    public static final double kFeedSpeed = 0.50;
-    public static final double kReverseFeedSpeed = -0.1;
-    public static final double kPickUpSpeed = 0.6;
-    public static final double kPickUpSpeedSlow = 0.2;
-  }*/
-
-  // values
-
   public static final double kRangeSpeedOffset = 0.6;
   public static final double ANGULAR_P = 0.1;
   public static final double ANGULAR_D = 0.0;
-  public static final double kDefaultNoteFinderSpeed = 1;
 }
-
-//

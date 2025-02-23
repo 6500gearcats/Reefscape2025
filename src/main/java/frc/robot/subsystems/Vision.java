@@ -6,8 +6,6 @@ package frc.robot.subsystems;
 
 import java.util.Optional;
 
-import javax.net.ssl.TrustManagerFactory;
-
 import org.photonvision.EstimatedRobotPose;
 
 import edu.wpi.first.math.Matrix;
@@ -17,7 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.GCLimelight;
 import frc.robot.GCPhotonVision;
-import frc.robot.LimelightHelpers;
 
 public class Vision extends SubsystemBase {
   private boolean isLimelight;

@@ -12,20 +12,13 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.LimelightHelpers;
 
-//TODO: Remove this suppress warnings after finishing
-@SuppressWarnings("unused")
-
 public class GCPoseEstimator extends SubsystemBase {
-
-  //TODO: Add appropriate the standard deviation for the model's states and the vision measurements.
 
   /* 
   * This uses the Kulman Filter to estimate the pose of the robot. 
@@ -58,11 +51,7 @@ public class GCPoseEstimator extends SubsystemBase {
   private SwerveDrivePoseEstimator m_poseEstimator;
   private Supplier<Rotation2d> m_rotationSupplier;
   private Supplier<SwerveModulePosition[]> m_swerveModulePositionSupplier;
-  private boolean m_useLimeLight;
   private DriveSubsystem m_robotDrive;
-
-  private Vision m_vision;
-
 
   /** Creates a new PoseEstimator. */
   // * Uses Limelight
@@ -70,7 +59,6 @@ public class GCPoseEstimator extends SubsystemBase {
     this.m_robotDrive = m_robotDrive;
     m_rotationSupplier = rotationSupplier;
     m_swerveModulePositionSupplier = swerveModulePositionSupplier;
-    m_useLimeLight = true;
 
     m_poseEstimator = new SwerveDrivePoseEstimator(
       DriveConstants.kDriveKinematics,
@@ -85,8 +73,6 @@ public class GCPoseEstimator extends SubsystemBase {
   public GCPoseEstimator(Supplier<Rotation2d> rotationSupplier, Supplier<SwerveModulePosition[]> swerveModulePositionSupplier, Vision vision) {
     m_rotationSupplier = rotationSupplier;
     m_swerveModulePositionSupplier = swerveModulePositionSupplier;
-    m_useLimeLight = false;
-    m_vision = vision;
 
     m_poseEstimator = new SwerveDrivePoseEstimator(
       DriveConstants.kDriveKinematics,
@@ -101,12 +87,7 @@ public class GCPoseEstimator extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     m_poseEstimator.update(m_rotationSupplier.get(), m_swerveModulePositionSupplier.get());
-    if(m_useLimeLight) {
-      useLimeLight();
-    }
-    else {
-      usePhotonVision();
-    }
+    useLimeLight();
   }
 
   public Pose2d getEstimatedPosition() {
@@ -114,8 +95,8 @@ public class GCPoseEstimator extends SubsystemBase {
   }
 
   //The following method is limelight integration from LimeLight themselves.
+  @SuppressWarnings("removal")
   public void useLimeLight() {
-    //TODO: add logic to update useMegaTag2 dynamically based on what limelight sees
     boolean useMegaTag2 = false; //set to false to use MegaTag1
     boolean doRejectUpdate = false;
 
@@ -179,15 +160,5 @@ public class GCPoseEstimator extends SubsystemBase {
             mt2.timestampSeconds);
       }
     }
-  }
-
-// * The following method is PhotonVision integration
-// TODO: add simualtion support for PhotonVision
-  public void usePhotonVision() {
-    // var visionEst = m_vision.getEstimatedGlobalPose();
-    // visionEst.ifPresent(est -> {
-    //   var estStdDevs = m_vision.getEstimationStdDevs(est.estimatedPose.toPose2d());
-    //   m_poseEstimator.addVisionMeasurement(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-    // });
   }
 }
