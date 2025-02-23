@@ -30,7 +30,10 @@
  import edu.wpi.first.math.VecBuilder;
  import edu.wpi.first.math.geometry.Pose2d;
  import edu.wpi.first.math.geometry.Rotation2d;
- import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N1;
  import edu.wpi.first.math.numbers.N3;
  import edu.wpi.first.math.util.Units;
  import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -49,7 +52,7 @@
  import org.photonvision.targeting.PhotonPipelineResult;
  import org.photonvision.targeting.PhotonTrackedTarget;
  
- public class Vision {
+ public class GCPhotonVision {
      private final PhotonCamera m_camera;
      // private final PhotonCamera cameraNote;
      private final PhotonPoseEstimator photonEstimator;
@@ -59,7 +62,7 @@
      private PhotonCameraSim cameraSim;
      private VisionSystemSim visionSim;
  
-     public Vision(PhotonCamera camera) {
+     public GCPhotonVision(PhotonCamera camera) {
          m_camera = camera;
  
          photonEstimator = new PhotonPoseEstimator(
@@ -183,6 +186,42 @@
              return null;
          return visionSim.getDebugField();
      }
+
+     public double getBestTargetRotation()
+     {
+        var result = getLatestCameraResult();
+
+        if(result.hasTargets()){
+            return result.getBestTarget().getYaw();
+        }
+
+        return 0;
+     }
+
+     public double getBestTargetRange()
+     {
+        var result = getLatestCameraResult();
+
+        if(result.hasTargets()){
+            return PhotonUtils.calculateDistanceToTargetMeters(
+                CAMERA_HEIGHT_METERS, // Previously declarde
+                TARGET_HEIGHT_METERS,
+                CAMERA_PITCH_RADIANS,
+                Units.degreesToRadians(result.getBestTarget().getPitch()));
+        }
+        return 0;
+     }
+
+     public double getBestTargetPitch()
+     {
+        var result = getLatestCameraResult();
+
+        if(result.hasTargets()){
+            return result.getBestTarget().getPitch();
+        }
+
+        return 0.0;
+     }
  
      public double getChosenTargetRotation(int targetID) {
          var result = getLatestCameraResult();
@@ -204,7 +243,65 @@
  
          return rotation;
      }
- 
+
+     public double getChosenTargetPitch(int targetID) {
+        var result = getLatestCameraResult();
+        // Get a list of all of the targets that have been detected.
+        List<PhotonTrackedTarget> targets = result.getTargets();
+        double rotation = 0;
+
+        // For each target we have check if it matches the id you want.
+        for (PhotonTrackedTarget target : targets) {
+            if (result.hasTargets()) {
+                if (target.getFiducialId() == targetID) {
+                    // Use the value of target to find our rotation using the getYaw command
+                    return target.getPitch();
+                }
+            } else {
+                rotation = 0;
+            }
+        }
+
+        return rotation;
+    }
+
+    public double getChosenTargetSkew(int targetID) {
+        var result = getLatestCameraResult();
+        // Get a list of all of the targets that have been detected.
+        List<PhotonTrackedTarget> targets = result.getTargets();
+        double rotation = 0;
+
+        // For each target we have check if it matches the id you want.
+        for (PhotonTrackedTarget target : targets) {
+            if (result.hasTargets()) {
+                if (target.getFiducialId() == targetID) {
+                    // Use the value of target to find our rotation using the getYaw command
+                    return target.getSkew();
+                }
+            } else {
+                rotation = 0;
+            }
+        }
+
+        return rotation;
+    }
+
+    public boolean hasChosenTarget(int targetID) {
+        var result = getLatestCameraResult();
+        // Get a list of all of the targets that have been detected.
+        List<PhotonTrackedTarget> targets = result.getTargets();
+
+        // For each target we have check if it matches the id you want.
+        for (PhotonTrackedTarget target : targets) {
+            if (target.getFiducialId() == targetID) {
+                // Use the value of target to find our rotation using the getYaw command
+                return true;
+            }
+        }
+
+        return false;
+    }
+
      public double getChosenTargetRange(int targetID) {
          var result = getLatestCameraResult();
          List<PhotonTrackedTarget> targets = result.getTargets();
@@ -264,6 +361,28 @@
          }
  
          return pitch;
+     }
+
+     public Transform3d getAprilTag3dData(int targetID) {
+        var result = getLatestCameraResult();
+         List<PhotonTrackedTarget> targets = result.getTargets();
+         if (result.hasTargets()) {
+             for (PhotonTrackedTarget target : targets) {
+                 if (target.getFiducialId() == targetID) {
+                     return target.getBestCameraToTarget();
+                 }
+             }
+         }
+         return new Transform3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0));
+     }
+
+     public Transform3d getMultiTagResult() {
+        var result = m_camera.getLatestResult();
+        Transform3d fieldToCamera = null;
+        if (result.getMultiTagResult().isPresent()) {
+        fieldToCamera = result.getMultiTagResult().get().estimatedPose.best;
+        }
+        return fieldToCamera;
      }
  
  }

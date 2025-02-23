@@ -4,20 +4,28 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.Optional;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 // Path Planner Imports
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
+import com.ctre.phoenix6.hardware.Pigeon2;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.hal.SimBoolean;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -27,8 +35,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
-//import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -37,13 +45,21 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.GCPhotonVision;
 import frc.robot.Robot;
-import frc.robot.Vision;
+import frc.robot.subsystems.Vision;
 
 public class DriveSubsystem extends SubsystemBase {
+  // ! Update this to use the pose estimator instead of normal odametry
+
   public boolean turboEnable = false;
+  public int aprilTag = 0;
+  public int aprilTagDrive = 0;
+  public Pose2d aprilTagPose = new Pose2d();
+  public Pose2d aprilTagPose2 = new Pose2d();
+  private AprilTagFieldLayout field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
 
   // Create MAXSwerveModules 
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
@@ -69,7 +85,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
-  private Pigeon2 m_gyro;
+  public static Pigeon2 m_gyro;
+  public static AHRS m_gyro2;
 
   private int m_gyroSim;
   private SimDouble m_simAngle;
@@ -82,19 +99,33 @@ public class DriveSubsystem extends SubsystemBase {
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
 
+  //The new Pose Estimator
+  private GCPoseEstimator m_poseEstimator;
+
   private final Field2d m_field = new Field2d();
 
-  private Vision m_simVision;
+  private GCPhotonVision m_simVision;
+  // ! Temporarily added this to make the pose estimator
+  private Vision m_vision;
 
   private Pose2d m_simOdometryPose;
   private ShuffleboardTab m_driveTab = Shuffleboard.getTab("Drive");
   private GenericEntry m_maxSpeed;
+  
+  /*public SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, m_gyro.getRotation2d(), new SwerveModulePosition[] {
+    m_frontLeft.getPosition(),
+    m_frontRight.getPosition(),
+    m_rearLeft.getPosition(),
+    m_rearRight.getPosition()
+}, new Pose2d(0.0, 0.0, new Rotation2d()));*/
 
   private final StructArrayPublisher<SwerveModuleState> publisher;  
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem(Vision vision) {
-    m_simVision = vision;
+  public DriveSubsystem(GCPhotonVision simVision, Vision vision) {
+    m_simVision = simVision;
+    // ! Temporarily added this to make the pose estimator
+    m_vision = vision;
     try {
       /*
        * Communicate w/navX-MXP via theimport com.kauailabs.navx.frc.AHRS;A MXP SPI
@@ -105,15 +136,16 @@ public class DriveSubsystem extends SubsystemBase {
        * See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for
        * details.
        */
-
+      m_gyro2 = new AHRS(NavXComType.kMXP_SPI);
       m_gyro = new Pigeon2(30, "rio");
-      System.out.println("AHRS constructed");
+      System.out.println("Pigeon2 constructed");
     } catch (RuntimeException ex) {
-      System.out.println("AHRS not constructed");
-      DriverStation.reportError("Error instantiating navX-MXP:  " + ex.getMessage(), true);
+      System.out.println("Pigeon2 not constructed");
+      DriverStation.reportError("Error instantiating Pigeon2:  " + ex.getMessage(), true);
     }
 
     // m_gyro.setAngleAdjustment(180.0);
+    m_gyro.setYaw(0);
     m_gyro.setYaw(0);
 
     if (RobotBase.isSimulation()) {
@@ -125,6 +157,15 @@ public class DriveSubsystem extends SubsystemBase {
       m_calibrating.set(false);
       SmartDashboard.putNumber(getName(), getPitch());
     }
+
+    // * Create a new PoseEstimator
+    if(m_vision.usingLimelight()){
+      m_poseEstimator = new GCPoseEstimator(this, this::getRotation2d, this::getWheelPositions);
+    }
+    else{
+      m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions, m_vision);
+    }
+
 
     m_odometry = new SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
@@ -187,7 +228,7 @@ publisher = NetworkTableInstance.getDefault()
     updateOdometry();
 
     if (Robot.isReal()) {
-      m_field.setRobotPose(m_odometry.getPoseMeters());
+      m_field.setRobotPose(getPose());
     } else {
       m_field.setRobotPose(m_simOdometryPose);
 
@@ -197,9 +238,17 @@ publisher = NetworkTableInstance.getDefault()
       SmartDashboard.putNumber("Position: X", xPos);
       SmartDashboard.putNumber("Position: Y", yPos);
     }
+    SmartDashboard.putNumber("Integer of april tag: ", aprilTag);
+    aprilTagDrive = getClosestAprilTagID(getPose().getTranslation());
+    //aprilTagPose = field.getTagPose(aprilTagDrive).get().toPose2d();
+    //aprilTagPose = getBestAprilTag();
+    //aprilTagPose2 = getBestAprilTag2();
+    
+    SmartDashboard.putNumber("Integer of april tag Drive: ", getClosestAprilTagID(getPose().getTranslation()));
 
-    SmartDashboard.putNumber("NavX Pitch", m_gyro.getPitch().getValueAsDouble());
-    SmartDashboard.putNumber("NavX Yaw angle", getAngle());
+    SmartDashboard.putNumber("Pigeon2 Pitch", m_gyro.getPitch().getValueAsDouble());
+    SmartDashboard.putNumber("Pigeon2 Yaw angle", getAngle());
+    SmartDashboard.putNumber("Pigeon2 Yaw angle radians", Math.toRadians(getAngle()));
 
     SmartDashboard.putBoolean("Field Oriented", m_fieldOriented);
 
@@ -256,7 +305,7 @@ publisher = NetworkTableInstance.getDefault()
    */
   public Pose2d getPose() {
     if (Robot.isReal()) {
-      return m_odometry.getPoseMeters();
+      return m_poseEstimator.getEstimatedPosition();
     } else {
       return m_simOdometryPose;
     }
@@ -436,7 +485,7 @@ publisher = NetworkTableInstance.getDefault()
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return m_gyro.getAngularVelocityZWorld().getValueAsDouble() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
   /* Return the NavX pitch angle */
@@ -467,5 +516,98 @@ publisher = NetworkTableInstance.getDefault()
     m_rearLeft.setCoast();
     m_frontRight.setCoast();
     m_rearRight.setCoast();
+  }
+
+  //Code Added for pose estimator- Pranav
+  public Rotation2d getRotation2d(){
+    return m_gyro.getRotation2d();
+  }
+
+  public SwerveModulePosition[] getWheelPositions(){
+    return new SwerveModulePosition[] {
+      m_frontLeft.getPosition(),
+      m_frontRight.getPosition(),
+      m_rearLeft.getPosition(),
+      m_rearRight.getPosition()
+    };
+  }
+
+  public Pose2d getBestAprilTag() {
+    field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
+    Pose2d pose = getPose();
+    int bestAprilTag = getClosestAprilTagID(pose.getTranslation());
+    Pose2d newPose = field.getTagPose(bestAprilTag).get().toPose2d();
+    System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
+
+    double tempAngle = field.getTagPose(bestAprilTag).get().toPose2d().getRotation().getRadians();
+    double newX = 0;
+    double newY = 0;
+    newX = (newPose.getX() + Math.cos(tempAngle) * .66) + Math.cos(tempAngle + Math.PI/2) * .3;
+    newY = (newPose.getY() + Math.sin(tempAngle) * .66) + Math.sin(tempAngle + Math.PI/2) * .3;
+    Pose2d thirdPose = new Pose2d(newX, newY, newPose.getRotation().plus(new Rotation2d(Math.PI)));
+    System.out.println("New Poses values" + thirdPose.getX() + ", " + thirdPose.getY() + ". Rotation: " + thirdPose.getRotation());
+    return thirdPose;
+  }
+
+  public Pose2d getBestAprilTag2() {
+    field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
+    Pose2d pose = getPose();
+    int bestAprilTag = getClosestAprilTagID(pose.getTranslation());
+    Pose2d newPose = field.getTagPose(bestAprilTag).get().toPose2d();
+    System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
+
+    double tempAngle = field.getTagPose(bestAprilTag).get().toPose2d().getRotation().getRadians();
+    double newX = 0;
+    double newY = 0;
+    newX = (newPose.getX() + Math.cos(tempAngle) * .66) - Math.cos(tempAngle + Math.PI/2) * .3;
+    newY = (newPose.getY() + Math.sin(tempAngle) * .66) - Math.sin(tempAngle + Math.PI/2) * .3;
+    Pose2d thirdPose = new Pose2d(newX, newY, newPose.getRotation().plus(new Rotation2d(Math.PI)));
+    System.out.println("New Poses values" + thirdPose.getX() + ", " + thirdPose.getY() + ". Rotation: " + thirdPose.getRotation());
+    return thirdPose;
+  }
+
+  public int getClosestAprilTagID(Translation2d robotPose) {
+    field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
+    int integer = 0;
+    ArrayList<Double> poses = new ArrayList<Double>();
+    ArrayList<Integer> list = new ArrayList<Integer>();
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+        if (alliance.get() == Alliance.Red) {
+          for (int i = 6; i<12; i++) {
+            Translation2d pose = field.getTagPose(i).get().getTranslation().toTranslation2d();
+            double distance = robotPose.getDistance(pose);
+            poses.add(distance);
+            list.add(i);
+          }
+        }
+        if (alliance.get() == Alliance.Blue) {
+          double distance = (double)Integer.MAX_VALUE;
+          for (int i = 17; i<23; i++) {
+            Translation2d pose = field.getTagPose(i).get().getTranslation().toTranslation2d();
+            if(Math.abs(robotPose.getDistance(pose)) < distance){
+              distance = robotPose.getDistance(pose);
+              integer = i;
+            }
+            //distance = robotPose.getDistance(pose);
+            //poses.add(distance);
+            //list.add(i);
+          }
+        }
+    }
+    else {
+      for (int i = 1; i<23; i++) {
+        Translation2d pose = field.getTagPose(i).get().getTranslation().toTranslation2d();
+        double distance = robotPose.getDistance(pose);
+        poses.add(distance);
+        list.add(i);
+      }
+    }
+    //double minValue = Collections.min(poses);
+    //System.out.println("Min value: " + minValue);
+    //integer = posesfp.indexOf(minValue);
+    //System.out.println("AprilTag of least distance: " + list.get(integer));
+    aprilTagDrive = integer;//list.get(integer);
+    return integer;
   }
 }
