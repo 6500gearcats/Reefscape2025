@@ -136,7 +136,7 @@ public class DriveSubsystem extends SubsystemBase {
        * details.
        */
       m_gyro2 = new AHRS(NavXComType.kMXP_SPI);
-      m_gyro = new Pigeon2(0, "rio");
+      m_gyro = new Pigeon2(30, "rio");
       System.out.println("Pigeon2 constructed");
     } catch (RuntimeException ex) {
       System.out.println("Pigeon2 not constructed");
