@@ -49,13 +49,14 @@ import frc.robot.subsystems.Vision;
 import frc.robot.GCPhotonVision;
 import frc.robot.commands.AlignWithAprilTag;
 import frc.robot.commands.AlignWithSelectedAprilTag;
-import frc.robot.commands.RunCoral;
-import frc.robot.commands.RunCoral2;
+import frc.robot.commands.RunCoralLeft;
+import frc.robot.commands.RunCoralRight;
 import frc.robot.commands.SetAprilTagHorizontalOffset;
 import frc.robot.commands.SetAprilTagVerticalOffset;
 import frc.robot.commands.IntakeAlgae;
 import frc.robot.commands.MoveCoral;
 import frc.robot.commands.OutakeAlgae;
+import frc.robot.commands.RunAlgaeMiddle;
 import frc.robot.commands.SetArmSpeed;
 import frc.robot.commands.SetClimberSpeed;
 import frc.robot.commands.SetElevatorHeight;
@@ -142,8 +143,9 @@ public class RobotContainer {
     new POVButton(m_gunner, 0).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.65, 0.164));
     new POVButton(m_gunner, 180).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361));
     new JoystickButton(m_driver, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> resetRobotGyroAndOrientation()));
-    new POVButton(m_driver, 90).whileTrue(new RunCoral(m_robotDrive));
-    new POVButton(m_driver, 270).whileTrue(new RunCoral2(m_robotDrive));
+    new POVButton(m_driver, 90).whileTrue(new RunCoralRight(m_robotDrive));
+    new POVButton(m_driver, 0).whileTrue(new RunAlgaeMiddle(m_robotDrive));
+    new POVButton(m_driver, 270).whileTrue(new RunCoralLeft(m_robotDrive));
   }
 
   public Command getAutonomousCommand() {

@@ -35,12 +35,12 @@ import frc.robot.subsystems.DriveSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 
 
-public class RunCoral2 extends ParallelDeadlineGroup {
+public class RunAlgaeMiddle extends ParallelDeadlineGroup {
 
 
     AprilTagFieldLayout field;
     DriveSubsystem m_drive;
-  public RunCoral2(DriveSubsystem m_drive) {
+  public RunAlgaeMiddle(DriveSubsystem m_drive) {
       super(new IsRobotAtPosition(m_drive));
       this.m_drive = m_drive;
       System.out.println("RunCoral Command Initialized");
@@ -90,8 +90,8 @@ public class PathfindingCommand extends Command {
 
 
         double tempAngle = tagPose.getRotation().getRadians();
-        double newX = tagPose.getX() + Math.cos(tempAngle) * 0.66 - Math.cos(tempAngle + Math.PI / 2) * 0.3;
-        double newY = tagPose.getY() + Math.sin(tempAngle) * 0.66 - Math.sin(tempAngle + Math.PI / 2) * 0.3;
+        double newX = tagPose.getX() + Math.cos(tempAngle) * 0.75;
+        double newY = tagPose.getY() + Math.sin(tempAngle) * 0.75;
 
 
         return new Pose2d(newX, newY, tagPose.getRotation());
