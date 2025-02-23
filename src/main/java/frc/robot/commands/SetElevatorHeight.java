@@ -30,8 +30,8 @@ public class SetElevatorHeight extends Command {
   public void execute() {
     double velocity = -2 * (m_height - m_elevator.getElevatorHeight()) - 0.04;
 
-    if(Math.abs(velocity) < 0.2 - .04){
-      velocity = .2 * Math.abs(velocity)/velocity -.04;
+    if(Math.abs(velocity) < 0.4 - .04){
+      velocity = .4 * Math.abs(velocity)/velocity -.04;
     }
 
     m_elevator.setElevatorSpeed(velocity);
