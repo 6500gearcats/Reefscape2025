@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
+// Path Planner Imports
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -47,7 +49,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.GCPhotonVision;
 import frc.robot.Robot;
-
+import frc.robot.subsystems.Vision;
 
 public class DriveSubsystem extends SubsystemBase {
   // ! Update this to use the pose estimator instead of normal odametry
@@ -91,7 +93,6 @@ public class DriveSubsystem extends SubsystemBase {
   private SimBoolean m_connected;
   private SimBoolean m_calibrating;
   private boolean m_fieldOriented;
-  private Rotation2d simRotation = new Rotation2d();
 
   private ChassisSpeeds m_lastSpeeds;
 
@@ -144,6 +145,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     // m_gyro.setAngleAdjustment(180.0);
+    m_gyro.setYaw(0);
     m_gyro.setYaw(0);
 
     if (RobotBase.isSimulation()) {
@@ -349,9 +351,9 @@ publisher = NetworkTableInstance.getDefault()
         });
 
     if (Robot.isSimulation()) {
-      SwerveModuleState[] measuredStates = new SwerveModuleState[] {
-          m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()
-      };
+      // SwerveModuleState[] measuredStates = new SwerveModuleState[] {
+      //     m_frontLeft.getState(), m_frontRight.getState(), m_rearLeft.getState(), m_rearRight.getState()
+      // };
       // ChassisSpeeds speeds =
       // DriveConstants.kDriveKinematics.toChassisSpeeds(measuredStates);
       ChassisSpeeds speeds = m_lastSpeeds;
@@ -394,7 +396,8 @@ publisher = NetworkTableInstance.getDefault()
 
     double max = m_maxSpeed.getDouble(DriveConstants.kTurboModeModifier);
     
-    if (turboEnable) {
+    if(Elevator.elevatorTooHighForTurbo){
+    } else if (turboEnable) {
       
       xSpeed *= max;
       ySpeed *= max;

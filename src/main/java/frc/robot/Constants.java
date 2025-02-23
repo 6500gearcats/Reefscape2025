@@ -47,9 +47,9 @@ public final class Constants {
 
     // Chassis configuration
     // Distance between centers of right and left wheels on robot
-    public static final double kTrackWidth = Units.inchesToMeters(23.5);
+    public static final double kTrackWidth = Units.inchesToMeters(25.5);
     // Distance between front and back wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(28.5);
+    public static final double kWheelBase = Units.inchesToMeters(25.5);
 
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -87,7 +87,7 @@ public final class Constants {
     // This changes the drive speed of the module (a pinion gear with more teeth
     // will result in a
     // robot that drives faster).
-    public static final int kDrivingMotorPinionTeeth = 13;
+    public static final int kDrivingMotorPinionTeeth = 14;
 
     // Invert the turning encoder, since the output shaft rotates in the opposite
     // direction of
@@ -141,6 +141,30 @@ public final class Constants {
     public static final int kGunnerControllerPort = 1;
   }
 
+  // TODO Add real values
+  public static class AlignerConstants {
+    public static final int kAlignerMotorPort = 0;
+}
+
+public static class AlgaeIntakeConstants {
+    public static final int kAlgaeMotorPort = 12;
+    public static final int kAlgaeSwitchPort = 3;
+}
+
+public static class ClimberConstants {
+    public static final int kClimberMotorPort = 15;
+    public static final int kClimberGrabberMotorPort = 7;
+    public static final int kClimberSwitchPort = 1;
+}
+
+public static class CoralHolderConstants {
+    public static final int kCoralHolderMotorPort = 10;
+}
+
+public static class ArmConstants{
+    public static final int kArmMotorPort = 9;
+}
+
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
@@ -168,46 +192,6 @@ public final class Constants {
 
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
-  }
-
-  // These constants are not correct, temporary until parts added.
-
-  public static final class NeckConstants {
-    // These are port values (where it's located on the robot)
-    public static final int kNeckMotorPort = 11;
-    // NOT UPDATED TO 2024 NECK VALUES
-    public static final double kNeckReverseSpeed = -0.4;
-    public static final double kNeckForwardSpeed = 0.6; // Was 0.6
-    public static final double kNeckForwardMaxSpeed = 0.15;
-    public static final double kNeckReverseMaxSpeed = -0.15;
-    public static final double kNeckStableSpeed = 0.058;
-
-    // TODO tune
-    public static final double kNeckSlowModifier = 0.57;
-
-    // NOT UPDATED TO 2024 NECK VALUES
-    public static final double kEncoderUpperThreshold = 0.30;
-    public static final double kEncoderLowerThreshold = 0.01;
-    public static final double KEncoderDeadbandThreshold = 0.01;
-    public static final double kNeckStowAngle = 0.8;
-    public static final double kNeckFloorAngle = 0;
-    public static final double kNeckHighAngle = 0.315; // good
-    public static final double kNeckMidAngle = 0.37; // good
-    public static final double kNeckLowAngle = 0.70;
-    public static final double kLoadingStation = 0.36;
-
-    // Controller constants
-    public static final double kNeck_kS = 1.7;
-    public static final double kNeck_kG = 0.5;
-    public static final double kNeck_kV = 0.0;
-
-    public static final double kNeck_kP = 0.0;
-    public static final double kNeck_kI = 0.0;
-    public static final double kNeck_kD = 0.0;
-    public static final double kNeck_kP2 = 1;
-    public static final double kNeck_kI2 = 0;
-    public static final double kNeck_kD2 = 0;
-
   }
 
   public static final class GyroConstants {
@@ -255,49 +239,21 @@ public static class VisionConstants {
 
   }
 
-  public static class ShootNoteConstants {
-    public static final long kmiliSeconds = 1000;
+  public static class ElevatorConstants {
+    public static final int kElevatorMotorPort = 16;
+    public static final int kElevatorTopSwitchPort = 0;
+    public static final int kElevatordBottomSwitchPort = 0;
+    public static final int kLidarChannel = 0;
+    public static final double kRotationsToMeters = -1.0 * Units.inchesToMeters(11);
   }
 
-  public static class ShooterConstants {
-    public static final int kShooterMotorPort = 10;
-
-    // NOT UPDATED TO 2024 SHOOTER VALUES (besides port)
-    public static final double kShooterSpeedSlow = 0.6;
-    public static final double kBackwardsShooter = 0.2;
-    public static final double kShooterFastRPM = 2100;
-    // public static final int kShooterSlowRPM = 3000;
-    public static final int kDistanceShooterRPM = 2500; // Was 3000
-    public static final int kShooterTrapRPM = 3000;
-    public static final double kShooterSpeedFast = -0.6;
-    public static final double kDistanceShooterSpeedFast = -0.8; // was -0.75
-    public static final double kShooterReverseFast = 1;
-    public static final double kShooterSpeed = 1.1; // 0.43
-    public static final double kBallFiredThreshold = 0.1;
-    public static final int kShooterEncoderPort = 10;
-    public static final double kShooterDistanceFactor = 12.391;
-
-    public static final double kRangeAngleError = 0.02;
-  }
-
-  public static class ClimberConstants {
-    public static final int kRight_ClimberMotorPort = 13;
-    public static final int kLeft_ClimberMotorPort = 12;
-    public static final double kMaxDriveSpeed = 0.1;
-    public static final double kMaxArmHeight = 7.7;
-    public static final double kMinArmHeight = 0.1; // Random filler number
-    public static final double kClimberSpeed = 0;
-    public static final double kClimberSpeedUp = 0.75;
-    public static final double kClimberSpeedDown = -0.6;
-  }
-
-  public static class IntakeConstants {
+/*   public static class IntakeConstants {
     public static final int kIntakeMotorPort = 9;
     public static final double kFeedSpeed = 0.50;
     public static final double kReverseFeedSpeed = -0.1;
     public static final double kPickUpSpeed = 0.6;
     public static final double kPickUpSpeedSlow = 0.2;
-  }
+  }*/
 
   // values
 
