@@ -128,7 +128,7 @@ public class RobotContainer {
     new Trigger(() -> m_gunner.getLeftY() > 0.2).whileTrue(new SetArmSpeed(m_arm, -0.25));
     new Trigger(() -> m_gunner.getLeftY() < -0.2).whileTrue(new SetArmSpeed(m_arm, 0.25));
 
-    new JoystickButton(m_gunner, XboxController.Button.kStart.value).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0, 0.15).andThen(new SetClimberSpeed(m_climber, 0.3)));
+    new JoystickButton(m_gunner, XboxController.Button.kStart.value).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0, 0.2).andThen(new SetClimberSpeed(m_climber, 0.3)));
     new JoystickButton(m_gunner, XboxController.Button.kBack.value).whileTrue(new SetClimberSpeed(m_climber, -0.3));
 
     new JoystickButton(m_gunner, XboxController.Button.kLeftBumper.value).whileTrue(new MoveCoral(m_CoralHolder, 0.5, true));
