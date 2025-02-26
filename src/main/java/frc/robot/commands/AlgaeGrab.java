@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.Arm;
@@ -16,10 +17,11 @@ import frc.robot.subsystems.Elevator;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AlgaeGrab extends SequentialCommandGroup {
   /** Creates a new L4Sequence. */
-  public AlgaeGrab(Arm m_arm, AlgaeIntake m_AlgaeIntake, Elevator m_elevator) {
+  public AlgaeGrab(Arm m_arm, AlgaeIntake m_AlgaeIntake, Elevator m_elevator, DriveSubsystem m_drive) {
     addCommands(
       // Sets elevator and arm to L4 Coral position
       new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.448),
+      new InstantCommand(()->m_drive.drive(1, 0, 0, false)).withTimeout(.5),
       new IntakeAlgae(m_AlgaeIntake, -0.6)
     );
   }
