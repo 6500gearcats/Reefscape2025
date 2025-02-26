@@ -80,7 +80,7 @@ public class RobotContainer {
       LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 0, 180);
 
     // Build an auto chooser. This will use Commands.none() as the default option.
-    autoChooser = AutoBuilder.buildAutoChooser();
+    autoChooser = AutoBuilder.buildAutoChooser("3CoralTop");
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     configureBindings();

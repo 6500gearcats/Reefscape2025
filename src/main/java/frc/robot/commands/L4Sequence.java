@@ -21,7 +21,7 @@ public class L4Sequence extends SequentialCommandGroup {
     addCommands(
       // Sets elevator and arm to L4 Coral position
       new SetArmAndElevatorPositions(m_elevator, m_arm, 0.715, .561),
-      new InstantCommand(()->m_drive.drive(1, 0, 0, false)).withTimeout(.5),
+      new InstantCommand(()->m_drive.drive(-1, 0, 0, false)).withTimeout(.5),
       new MoveCoral(m_CoralHolder, 0.5, false)
     );
   }
