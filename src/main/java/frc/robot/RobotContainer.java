@@ -44,8 +44,8 @@ import frc.robot.commands.TurboEnable;
 import frc.robot.commands.SetArmAndElevatorPositions;
 public class RobotContainer {
 
-  AprilTagFieldLayout field;
-  Pose2d newPose = new Pose2d();
+  // AprilTagFieldLayout field;
+  // Pose2d newPose = new Pose2d();
 
   XboxController m_driver = new XboxController(0);
   XboxController m_gunner = new XboxController(1);
@@ -72,15 +72,16 @@ public class RobotContainer {
     NamedCommands.registerCommand("CoralPlace", new L4Sequence(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("CoralGrab", new CoralGrab(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("AlgaeGrab", new AlgaeGrab(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
-    NamedCommands.registerCommand("AlgaeProcessor", new AlgaeSequence(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));    
+    NamedCommands.registerCommand("RaiseElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.715, .561));
+    NamedCommands.registerCommand("AlgaeProcessor", new AlgaeSequence(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
+    // Build an auto chooser. This will use Commands.none() as the default option.
+    autoChooser = AutoBuilder.buildAutoChooser("3CoralTop");
+    SmartDashboard.putData("Autonomous Chooser", autoChooser);
+    
     m_robotDrive.zeroHeading();
     LimelightHelpers.SetRobotOrientation(
       "limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
       LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 0, 180);
-
-    // Build an auto chooser. This will use Commands.none() as the default option.
-    autoChooser = AutoBuilder.buildAutoChooser("3CoralTop");
-    SmartDashboard.putData("Auto Chooser", autoChooser);
 
     configureBindings();
 
