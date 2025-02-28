@@ -11,9 +11,9 @@ public class AlgaeSequence extends SequentialCommandGroup {
     /** Creates a new L4Sequence. */
     public AlgaeSequence(Arm m_arm, AlgaeIntake m_AlgaeIntake, Elevator m_elevator, DriveSubsystem m_drive) {
         addCommands(
-                // Sets elevator and arm to processor position
-                new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361),
-                new InstantCommand(()->m_drive.drive(1, 0, 0, false)).withTimeout(.5),
-                new OutakeAlgae(m_AlgaeIntake, 1.1));
+                // This code assumes AlgaeGrab has just run and the elevator/arm are already in correct positions
+                // Outakes algae
+                // TODO: Add an isFinished into OutakeAlgae so that we don't have to use withTimeout
+                new OutakeAlgae(m_AlgaeIntake, 1.1).withTimeout(0.3));
     }
 }

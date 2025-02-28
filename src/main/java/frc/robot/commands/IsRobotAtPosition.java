@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -11,7 +12,9 @@ import frc.robot.subsystems.DriveSubsystem;
 public class IsRobotAtPosition extends Command {
   /** Creates a new IsRobotAtPosition. */
   DriveSubsystem m_drive;
+  Pose2d targetPose;
   public IsRobotAtPosition(DriveSubsystem m_drive) {
+    this.targetPose = targetPose;
     this.m_drive = m_drive;
   }
 
@@ -33,6 +36,7 @@ public class IsRobotAtPosition extends Command {
   @Override
   public boolean isFinished() {
     return false;
+    //double limit = 0.05;
     //return m_drive.getPose().getX() - targetPose.getX() < limit && m_drive.getPose().getY() - targetPose.getY() < limit;
   }
 }

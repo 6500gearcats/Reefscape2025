@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.Arm;
@@ -16,11 +17,12 @@ import frc.robot.subsystems.Elevator;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class CoralGrab extends SequentialCommandGroup {
   /** Creates a new L4Sequence. */
-  public CoralGrab(Arm m_arm, CoralHolder m_CoralHolder, Elevator m_elevator) {
+  public CoralGrab(Arm m_arm, CoralHolder m_CoralHolder, Elevator m_elevator, DriveSubsystem m_drive) {
     addCommands(
-      // Sets elevator and arm to L4 Coral position
-      new SetArmAndElevatorPositions(m_elevator, m_arm, 0.16, 0.1),
-      new MoveCoral(m_CoralHolder, -0.5, true)
+      // This code assumes L4Sequence has just run and the elevator/arm are already in correct positions 
+      // Intakes coral
+      // TODO: REALLY need to add an isFinished into MoveCoral so that we don't have to use withTimeout
+      new MoveCoral(m_CoralHolder, -0.5, true).withTimeout(2)
     );
   }
 }

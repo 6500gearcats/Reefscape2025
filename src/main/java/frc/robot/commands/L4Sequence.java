@@ -21,8 +21,15 @@ public class L4Sequence extends SequentialCommandGroup {
     addCommands(
       // Sets elevator and arm to L4 Coral position
       new SetArmAndElevatorPositions(m_elevator, m_arm, 0.715, .561),
+      // Runs forward because path allows room for elevator and arm to raise first
       new InstantCommand(()->m_drive.drive(-1, 0, 0, false)).withTimeout(.5),
-      new MoveCoral(m_CoralHolder, 0.5, false)
+      // Outtakes coral (hopefully onto L4)
+      // TODO: Add an isFinished into MoveCoral so that we don't have to use withTimeout
+      new MoveCoral(m_CoralHolder, 0.5, false).withTimeout(0.5),
+      // Runs backward to allow elevator room to go back down
+      new InstantCommand(()->m_drive.drive(1, 0, 0, false)).withTimeout(.5),
+      // Moves elevator and arm back down to source
+      new SetArmAndElevatorPositions(m_elevator, m_arm, 0.16, 0.1)
     );
   }
 }
