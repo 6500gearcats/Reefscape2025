@@ -5,7 +5,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.CoralHolder;
@@ -25,9 +27,11 @@ public class L4Sequence extends SequentialCommandGroup {
       //new InstantCommand(()->m_drive.drive(-1, 0, 0, false)).withTimeout(.5),
       // Outtakes coral (hopefully onto L4)
       // TODO: Add an isFinished into MoveCoral so that we don't have to use withTimeout
-      new MoveCoral(m_CoralHolder, 0.5, false).withTimeout(0.5),
+      new MoveCoral(m_CoralHolder, -0.5, false).withTimeout(0.5),
+      new SetArmSpeed(m_arm, .4).withTimeout(.2),
+      new WaitCommand(0.5),
       // Runs backward to allow elevator room to go back down
-      new InstantCommand(()->m_drive.drive(1, 0, 0, false)).withTimeout(.5),
+      //new RunCommand(()->m_drive.drive(0.4, 0, 0, false)).withTimeout(.05),
       // Moves elevator and arm back down to source
       new SetArmAndElevatorPositions(m_elevator, m_arm, 0.16, 0.1)
     );
