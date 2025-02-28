@@ -61,7 +61,31 @@
         {
           "type": "named",
           "data": {
+            "name": "RaiseElevatorL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TopSourceToCoralGo"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "CoralPlace"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TopSourceToCoralBack"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LowerElevatorL4"
           }
         },
         {
@@ -80,12 +104,6 @@
           "type": "path",
           "data": {
             "pathName": "TopSourceToCoralLeft"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralPlace"
           }
         }
       ]

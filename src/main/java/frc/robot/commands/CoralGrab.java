@@ -22,7 +22,7 @@ public class CoralGrab extends SequentialCommandGroup {
       // This code assumes L4Sequence has just run and the elevator/arm are already in correct positions 
       // Intakes coral
       // TODO: REALLY need to add an isFinished into MoveCoral so that we don't have to use withTimeout
-      new MoveCoral(m_CoralHolder, -0.5, true).withTimeout(2)
+      new MoveCoral(m_CoralHolder, 0.5, true).withTimeout(2)
     );
   }
 }
