@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -19,12 +20,14 @@ public class CoralHolder extends SubsystemBase {
   /** Creates a new CoralHolder. */
   SparkMax m_coralMotor;
   DigitalInput m_flipSwitch;
+  SparkLimitSwitch m_coralSwitch;
   double fake_coral = 0;
   double fake_coral_speed = 0;
   public boolean m_upToSpeed = false;
   RelativeEncoder m_RelativeEncoder;
   public CoralHolder() {
     m_coralMotor = new SparkMax(CoralHolderConstants.kCoralHolderMotorPort, MotorType.kBrushless);
+    m_coralSwitch = m_coralMotor.getForwardLimitSwitch();
     // TODO: change this DigitalInput channel
     m_flipSwitch = new DigitalInput(1);
     m_RelativeEncoder  = m_coralMotor.getEncoder();
@@ -48,11 +51,17 @@ public class CoralHolder extends SubsystemBase {
     }
     SmartDashboard.putNumber("Coral Holder Speed", getHolderSpeed());
     SmartDashboard.putBoolean("Coral Holder Up-To-Speed", m_upToSpeed);
+    SmartDashboard.putBoolean("Coral Holder Limit Switch Pressed", isCoralIn());
   }
 
   //True when coral Present
   public double getHolderSpeed(){
     return m_RelativeEncoder.getVelocity();
+  }
+
+  //True means coral is in
+  public boolean isCoralIn(){
+    return m_coralSwitch.isPressed();
   }
 }
 ;

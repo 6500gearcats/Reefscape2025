@@ -29,7 +29,9 @@ public class Elevator extends SubsystemBase {
   public static boolean elevatorCorrectingPosition = false;
   public static boolean elevatorTooHigh = false;
   public static boolean elevatorTooHighForTurbo = false;
+  public static boolean elevatorTooHighForRegularSpeed = false;
   public String elevatorState = "innactive";
+  
   
   /** Creates a new Elevator. */
   public Elevator() {
@@ -55,6 +57,7 @@ public class Elevator extends SubsystemBase {
     elevatorCorrectingPosition = getElevatorHeight() < 0.18;
     elevatorTooHigh = getElevatorHeight() > .3;
     elevatorTooHighForTurbo = getElevatorHeight() > 0.05;
+    elevatorTooHighForRegularSpeed = getElevatorHeight() > 0.2;
   }
 
   // Return the height of the elevator in meters
