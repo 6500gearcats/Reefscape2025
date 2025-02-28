@@ -31,6 +31,18 @@
         {
           "type": "path",
           "data": {
+            "pathName": "CoraCloseToFar"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LowerElevatorL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "TopCoralToSource"
           }
         },
