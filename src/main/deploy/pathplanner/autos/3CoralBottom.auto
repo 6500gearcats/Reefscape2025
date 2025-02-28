@@ -1,0 +1,73 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomToCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralPlace"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomCoralToSource"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralGrab"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomSourceToCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralPlace"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomCoralReturn"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralGrab"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomSourceToCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralPlace"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "3 Note Auto",
+  "choreoAuto": false
+}

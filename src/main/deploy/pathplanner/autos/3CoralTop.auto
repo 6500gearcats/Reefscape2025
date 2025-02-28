@@ -1,0 +1,97 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TopToCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RaiseElevatorL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CoralToCoralClose"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralPlace"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CoraCloseToFar"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LowerElevatorL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TopCoralToSource"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralGrab"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TopSourceToCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralPlace"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TopCoralReturn"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralGrab"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TopSourceToCoralLeft"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralPlace"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "3 Note Auto",
+  "choreoAuto": false
+}
