@@ -87,24 +87,6 @@
           "data": {
             "name": "LowerElevatorL4"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "TopCoralReturn"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralGrab"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "TopSourceToCoralLeft"
-          }
         }
       ]
     }

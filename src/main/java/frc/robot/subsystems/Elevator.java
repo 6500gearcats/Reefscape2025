@@ -56,7 +56,7 @@ public class Elevator extends SubsystemBase {
     //SmartDashboard.putBoolean("Elevator Limit Reached", elevatorAtLimit());
     elevatorCorrectingPosition = getElevatorHeight() < 0.18;
     elevatorTooHigh = getElevatorHeight() > .3;
-    elevatorTooHighForTurbo = getElevatorHeight() > 0.05;
+    elevatorTooHighForTurbo = getElevatorHeight() > 0.18;
     elevatorTooHighForRegularSpeed = getElevatorHeight() > 0.2;
   }
 
