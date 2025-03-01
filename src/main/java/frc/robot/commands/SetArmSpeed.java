@@ -5,6 +5,8 @@
 
 package frc.robot.commands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Arm;
 
@@ -12,8 +14,8 @@ import frc.robot.subsystems.Arm;
 public class SetArmSpeed extends Command {
   /** Creates a new SetArmPOsition. */
   Arm m_arm;
-  double m_speed;
-  public SetArmSpeed(Arm m_arm, double speed) {
+  DoubleSupplier m_speed;
+  public SetArmSpeed(Arm m_arm, DoubleSupplier speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_arm = m_arm;
     this.m_speed = speed;
@@ -29,7 +31,7 @@ public class SetArmSpeed extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_arm.spinArm(m_speed);
+    m_arm.spinArm(m_speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
