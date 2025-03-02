@@ -11,6 +11,7 @@ import java.util.Optional;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -24,6 +25,7 @@ public class ProportionalAlign extends Command {
   AprilTagFieldLayout field;
   double dx;
   double dy;
+  double dr;
   double m_xOffset;
   double m_yOffset;
   DriveSubsystem m_drive;
@@ -45,6 +47,7 @@ public class ProportionalAlign extends Command {
   public void execute() {
     dx = targetPose.getX() - m_drive.getPose().getX();
     dy = targetPose.getY() - m_drive.getPose().getY();
+    dr = targetPose.getRotation().getDegrees() - m_drive.getAngle();
     double total = Math.abs(dx) + Math.abs(dy);
 
     m_drive.distanceX = dx;
@@ -53,7 +56,7 @@ public class ProportionalAlign extends Command {
     double xRat = dx/total;
     double yRat = dy/total;
 
-    m_drive.drive(xRat * 1, yRat * 1, 0.0, true);
+    m_drive.drive(xRat * 1, yRat * 1, dr/180, true);
   }
 
   // Called once the command ends or is interrupted.
@@ -72,10 +75,10 @@ public class ProportionalAlign extends Command {
     Pose2d tagPose = field.getTagPose(bestAprilTag).get().toPose2d();
 
     double tempAngle = tagPose.getRotation().getRadians();
-    double newX = tagPose.getX() + Math.cos(tempAngle) * m_yOffset - Math.cos(tempAngle + Math.PI / 2) * m_xOffset;
-    double newY = tagPose.getY() + Math.sin(tempAngle) * m_yOffset - Math.sin(tempAngle + Math.PI / 2) * m_xOffset;
+    double newX = tagPose.getX() + Math.cos(tempAngle) * m_yOffset + Math.cos(tempAngle + Math.PI / 2) * m_xOffset;
+    double newY = tagPose.getY() + Math.sin(tempAngle) * m_yOffset + Math.sin(tempAngle + Math.PI / 2) * m_xOffset;
 
-    return new Pose2d(newX, newY, tagPose.getRotation());
+    return new Pose2d(newX, newY, tagPose.getRotation().plus(new Rotation2d(Math.PI)));
   }
   
   private int getClosestAprilTagID(Translation2d robotPose) {

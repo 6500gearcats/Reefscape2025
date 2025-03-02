@@ -244,13 +244,6 @@ publisher = NetworkTableInstance.getDefault()
       SmartDashboard.putNumber("Position: X", xPos);
       SmartDashboard.putNumber("Position: Y", yPos);
     }
-    SmartDashboard.putNumber("Integer of april tag: ", aprilTag);
-    aprilTagDrive = getClosestAprilTagID(getPose().getTranslation());
-    //aprilTagPose = field.getTagPose(aprilTagDrive).get().toPose2d();
-    //aprilTagPose = getBestAprilTag();
-    //aprilTagPose2 = getBestAprilTag2();
-    
-    SmartDashboard.putNumber("Integer of april tag Drive: ", getClosestAprilTagID(getPose().getTranslation()));
 
     SmartDashboard.putNumber("Pigeon2 Pitch", m_gyro.getPitch().getValueAsDouble());
     SmartDashboard.putNumber("Pigeon2 Yaw angle", getAngle());
@@ -545,84 +538,5 @@ publisher = NetworkTableInstance.getDefault()
       m_rearLeft.getPosition(),
       m_rearRight.getPosition()
     };
-  }
-
-  public Pose2d getBestAprilTag() {
-    field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
-    Pose2d pose = getPose();
-    int bestAprilTag = getClosestAprilTagID(pose.getTranslation());
-    Pose2d newPose = field.getTagPose(bestAprilTag).get().toPose2d();
-    System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
-
-    double tempAngle = field.getTagPose(bestAprilTag).get().toPose2d().getRotation().getRadians();
-    double newX = 0;
-    double newY = 0;
-    newX = (newPose.getX() + Math.cos(tempAngle) * .66) + Math.cos(tempAngle + Math.PI/2) * .3;
-    newY = (newPose.getY() + Math.sin(tempAngle) * .66) + Math.sin(tempAngle + Math.PI/2) * .3;
-    Pose2d thirdPose = new Pose2d(newX, newY, newPose.getRotation().plus(new Rotation2d(Math.PI)));
-    System.out.println("New Poses values" + thirdPose.getX() + ", " + thirdPose.getY() + ". Rotation: " + thirdPose.getRotation());
-    return thirdPose;
-  }
-
-  public Pose2d getBestAprilTag2() {
-    field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
-    Pose2d pose = getPose();
-    int bestAprilTag = getClosestAprilTagID(pose.getTranslation());
-    Pose2d newPose = field.getTagPose(bestAprilTag).get().toPose2d();
-    System.out.println("Old Poses values" + newPose.getX() + ", " + newPose.getY() + ". Rotation: " + newPose.getRotation());
-
-    double tempAngle = field.getTagPose(bestAprilTag).get().toPose2d().getRotation().getRadians();
-    double newX = 0;
-    double newY = 0;
-    newX = (newPose.getX() + Math.cos(tempAngle) * .66) - Math.cos(tempAngle + Math.PI/2) * .3;
-    newY = (newPose.getY() + Math.sin(tempAngle) * .66) - Math.sin(tempAngle + Math.PI/2) * .3;
-    Pose2d thirdPose = new Pose2d(newX, newY, newPose.getRotation().plus(new Rotation2d(Math.PI)));
-    System.out.println("New Poses values" + thirdPose.getX() + ", " + thirdPose.getY() + ". Rotation: " + thirdPose.getRotation());
-    return thirdPose;
-  }
-
-  public int getClosestAprilTagID(Translation2d robotPose) {
-    field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
-    int integer = 0;
-    ArrayList<Double> poses = new ArrayList<Double>();
-    ArrayList<Integer> list = new ArrayList<Integer>();
-    Optional<Alliance> alliance = DriverStation.getAlliance();
-    if (alliance.isPresent()) {
-        if (alliance.get() == Alliance.Red) {
-          for (int i = 6; i<12; i++) {
-            Translation2d pose = field.getTagPose(i).get().getTranslation().toTranslation2d();
-            double distance = robotPose.getDistance(pose);
-            poses.add(distance);
-            list.add(i);
-          }
-        }
-        if (alliance.get() == Alliance.Blue) {
-          double distance = (double)Integer.MAX_VALUE;
-          for (int i = 17; i<23; i++) {
-            Translation2d pose = field.getTagPose(i).get().getTranslation().toTranslation2d();
-            if(Math.abs(robotPose.getDistance(pose)) < distance){
-              distance = robotPose.getDistance(pose);
-              integer = i;
-            }
-            //distance = robotPose.getDistance(pose);
-            //poses.add(distance);
-            //list.add(i);
-          }
-        }
-    }
-    else {
-      for (int i = 1; i<23; i++) {
-        Translation2d pose = field.getTagPose(i).get().getTranslation().toTranslation2d();
-        double distance = robotPose.getDistance(pose);
-        poses.add(distance);
-        list.add(i);
-      }
-    }
-    //double minValue = Collections.min(poses);
-    //System.out.println("Min value: " + minValue);
-    //integer = posesfp.indexOf(minValue);
-    //System.out.println("AprilTag of least distance: " + list.get(integer));
-    aprilTagDrive = integer;//list.get(integer);
-    return integer;
   }
 }
