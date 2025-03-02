@@ -47,10 +47,13 @@ public class ProportionalAlign extends Command {
     dy = targetPose.getY() - m_drive.getPose().getY();
     double total = Math.abs(dx) + Math.abs(dy);
 
+    m_drive.distanceX = dx;
+    m_drive.distanceY = dy;
+
     double xRat = dx/total;
     double yRat = dy/total;
 
-    m_drive.drive(yRat * 1, xRat * 1, 0.0, false);
+    m_drive.drive(xRat * 1, yRat * 1, 0.0, true);
   }
 
   // Called once the command ends or is interrupted.
@@ -69,8 +72,8 @@ public class ProportionalAlign extends Command {
     Pose2d tagPose = field.getTagPose(bestAprilTag).get().toPose2d();
 
     double tempAngle = tagPose.getRotation().getRadians();
-    double newX = tagPose.getX() + Math.cos(tempAngle) * m_xOffset - Math.cos(tempAngle + Math.PI / 2) * m_yOffset;
-    double newY = tagPose.getY() + Math.sin(tempAngle) * m_xOffset - Math.sin(tempAngle + Math.PI / 2) * m_yOffset;
+    double newX = tagPose.getX() + Math.cos(tempAngle) * m_yOffset - Math.cos(tempAngle + Math.PI / 2) * m_xOffset;
+    double newY = tagPose.getY() + Math.sin(tempAngle) * m_yOffset - Math.sin(tempAngle + Math.PI / 2) * m_xOffset;
 
     return new Pose2d(newX, newY, tagPose.getRotation());
   }

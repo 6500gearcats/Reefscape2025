@@ -59,6 +59,9 @@ public class DriveSubsystem extends SubsystemBase {
   public int aprilTagDrive = 0;
   public Pose2d aprilTagPose = new Pose2d();
   public Pose2d aprilTagPose2 = new Pose2d();
+  public double distanceX = 0;
+  public double distanceY = 0;
+  public double fakeYaw = 0;
   private AprilTagFieldLayout field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
 
   // Create MAXSwerveModules 
@@ -226,6 +229,9 @@ publisher = NetworkTableInstance.getDefault()
   public void periodic() {
     // Update the odometry in the periodic block
     updateOdometry();
+
+    SmartDashboard.putNumber("distanceX", distanceX);
+    SmartDashboard.putNumber("distanceY", distanceY);
 
     if (Robot.isReal()) {
       m_field.setRobotPose(getPose());
@@ -424,6 +430,8 @@ publisher = NetworkTableInstance.getDefault()
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
 
+    fakeYaw += rot;
+
   }
 
   public void drive(ChassisSpeeds speeds) {
@@ -506,7 +514,7 @@ publisher = NetworkTableInstance.getDefault()
     if (Robot.isReal()) {
       return m_gyro.getYaw().getValueAsDouble();
     } else {
-      return m_simAngle.get();
+      return fakeYaw * 1.169;
     }
   }
 
