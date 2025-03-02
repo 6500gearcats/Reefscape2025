@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.Optional;
+
 import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -11,6 +13,8 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -143,9 +147,9 @@ public class RobotContainer {
     // Processor
     new POVButton(m_gunner, 180).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4));
     new JoystickButton(m_driver, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> resetRobotGyroAndOrientation()));
-    //new Trigger(() -> m_driver.getRightTriggerAxis() > 0.2).whileTrue(new RunCoralRight(m_robotDrive));
+    new Trigger(() -> m_driver.getRightTriggerAxis() > 0.2).whileTrue(new RunCoralRight(m_robotDrive));
     //new POVButton(m_driver, 0).whileTrue(new RunAlgaeMiddle(m_robotDrive));
-    //new Trigger(() -> m_driver.getLeftTriggerAxis() > 0.2).whileTrue((new RunCoralLeft(m_robotDrive)));
+    new Trigger(() -> m_driver.getLeftTriggerAxis() > 0.2).whileTrue((new RunCoralLeft(m_robotDrive)));
     new POVButton(m_driver, 180).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
     new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new ProportionalAlign(m_robotDrive, -0.1, .75));
     new JoystickButton(m_driver, XboxController.Button.kB.value).whileTrue(new ProportionalAlign(m_robotDrive, 0.1, .75));
@@ -156,9 +160,19 @@ public class RobotContainer {
   }
 
   public void resetRobotGyroAndOrientation() {
-    m_robotDrive.zeroHeading();
-    LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
-    LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 0, 180);
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            if (alliance.get() == Alliance.Blue) {
+              m_robotDrive.zeroHeading();
+              LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
+              LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 0, 180);          
+            }
+          else {
+            m_robotDrive.zeroHeading();
+            LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
+            LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", 0.318, -0.177, 0.29, 0, 0, 0);        
+          }
+        }
   }
   
 }

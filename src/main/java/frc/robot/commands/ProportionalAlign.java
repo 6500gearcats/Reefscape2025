@@ -28,6 +28,10 @@ public class ProportionalAlign extends Command {
   double dr;
   double m_xOffset;
   double m_yOffset;
+  double targetX;
+  double targetY;
+  double targetAngle;
+
   DriveSubsystem m_drive;
   public ProportionalAlign(DriveSubsystem drive, double xOffset, double yOffset) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -40,14 +44,17 @@ public class ProportionalAlign extends Command {
   @Override
   public void initialize() {
     targetPose = getBestAprilTag(m_drive.getPose());
+    targetX = targetPose.getX();
+    targetY = targetPose.getY();
+    targetAngle = targetPose.getRotation().getDegrees();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    dx = targetPose.getX() - m_drive.getPose().getX();
-    dy = targetPose.getY() - m_drive.getPose().getY();
-    dr = targetPose.getRotation().getDegrees() - m_drive.getAngle();
+    dx = targetX - m_drive.getPose().getX();
+    dy = targetY - m_drive.getPose().getY();
+    dr = targetAngle - m_drive.getAngle();
     double total = Math.abs(dx) + Math.abs(dy);
 
     m_drive.distanceX = dx;
