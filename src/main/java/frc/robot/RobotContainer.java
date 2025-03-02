@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -144,6 +145,7 @@ public class RobotContainer {
     new Trigger(() -> m_driver.getRightTriggerAxis() > 0.2).whileTrue(new RunCoralRight(m_robotDrive));
     new POVButton(m_driver, 0).whileTrue(new RunAlgaeMiddle(m_robotDrive));
     new Trigger(() -> m_driver.getLeftTriggerAxis() > 0.2).whileTrue((new RunCoralLeft(m_robotDrive)));
+    new POVButton(m_driver, 180).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
     
   }

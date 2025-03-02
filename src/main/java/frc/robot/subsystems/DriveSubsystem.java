@@ -252,6 +252,8 @@ publisher = NetworkTableInstance.getDefault()
 
     SmartDashboard.putBoolean("Field Oriented", m_fieldOriented);
 
+    
+
     publisher.set(new SwerveModuleState[] {
         m_frontLeft.getState(), 
         m_frontRight.getState(), 
