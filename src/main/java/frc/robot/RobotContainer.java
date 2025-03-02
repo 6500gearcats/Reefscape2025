@@ -37,6 +37,7 @@ import frc.robot.commands.IntakeAlgae;
 import frc.robot.commands.L4Sequence;
 import frc.robot.commands.MoveCoral;
 import frc.robot.commands.OutakeAlgae;
+import frc.robot.commands.ProportionalAlign;
 import frc.robot.commands.RunAlgaeMiddle;
 import frc.robot.commands.SetArmSpeed;
 import frc.robot.commands.SetClimberSpeed;
@@ -146,7 +147,7 @@ public class RobotContainer {
     new POVButton(m_driver, 0).whileTrue(new RunAlgaeMiddle(m_robotDrive));
     new Trigger(() -> m_driver.getLeftTriggerAxis() > 0.2).whileTrue((new RunCoralLeft(m_robotDrive)));
     new POVButton(m_driver, 180).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
-
+    new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new ProportionalAlign(m_robotDrive, 0, 0));
     
   }
 
