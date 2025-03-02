@@ -46,7 +46,7 @@ public class ProportionalAlign extends Command {
     targetPose = getBestAprilTag(m_drive.getPose());
     targetX = targetPose.getX();
     targetY = targetPose.getY();
-    targetAngle = targetPose.getRotation().getDegrees();
+    //targetAngle = targetPose.getRotation().getDegrees();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -54,7 +54,7 @@ public class ProportionalAlign extends Command {
   public void execute() {
     dx = targetX - m_drive.getPose().getX();
     dy = targetY - m_drive.getPose().getY();
-    dr = targetAngle - m_drive.getAngle();
+    // dr = targetAngle - m_drive.getAngle();
     double total = Math.abs(dx) + Math.abs(dy);
 
     m_drive.distanceX = dx;
@@ -63,7 +63,15 @@ public class ProportionalAlign extends Command {
     double xRat = dx/total;
     double yRat = dy/total;
 
-    m_drive.drive(xRat * 1, yRat * 1, dr/180, true);
+    if(dx * .9 > 1){
+      m_drive.drive(xRat * 1, yRat * 1, 0, true);
+    } else if (dx * .9 > .4) {
+      m_drive.drive(dx * .9, dy *.9, 0, true);
+    } else {
+      m_drive.drive(xRat * .4, yRat * .4, 0, true);
+    }
+    // dr/180
+    
   }
 
   // Called once the command ends or is interrupted.
@@ -73,7 +81,7 @@ public class ProportionalAlign extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(dx) < 0.05 && Math.abs(dy) < 0.05;
   }
 
   private Pose2d getBestAprilTag(Pose2d robotPose) {

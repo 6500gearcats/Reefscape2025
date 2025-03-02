@@ -25,9 +25,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    CommandScheduler.getInstance().onCommandExecute((command) -> {
-      SmartDashboard.putString("Command Current:", command.getName());
-    });
+    //.getInstance().onCommandExecute((command) -> {
+    //  SmartDashboard.putString("Command Current:", command.getName());
+    //});
   }
 
   @Override
