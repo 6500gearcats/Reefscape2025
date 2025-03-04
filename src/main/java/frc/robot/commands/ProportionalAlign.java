@@ -74,8 +74,9 @@ public class ProportionalAlign extends Command {
       yRat = 0;
     }
 
-    if(Math.abs(dr) < 0.1){
-
+    if(Math.abs(dr)/160 < 0.001){
+      dr = 0.5 * (dr/Math.abs(dr));
+      dr *= 160;
     }
 
     if(dx * .9 > 1){
