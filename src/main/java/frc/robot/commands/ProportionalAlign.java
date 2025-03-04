@@ -31,6 +31,7 @@ public class ProportionalAlign extends Command {
   double targetX;
   double targetY;
   double targetAngle;
+  int drModifier = 130;
 
   DriveSubsystem m_drive;
 
@@ -84,17 +85,17 @@ public class ProportionalAlign extends Command {
     //   dr = 0;
     // }
 
-    if (Math.abs(dr) / 130 < 0.05) {
+    if (Math.abs(dr) / drModifier < 0.05) {
       dr = 0.05 * (dr / Math.abs(dr));
-      dr *= 130;
+      dr *= drModifier;
     }
 
     if (Math.abs(dx) * 2.5 > 3.5 && Math.abs(dy) * 2.5 > 3.5) {
-      m_drive.drive(xRat * 3, yRat * 3, dr / 130, true);
+      m_drive.drive(xRat * 3, yRat * 3, dr / drModifier, true);
     } else if (Math.abs(dx) * 2.5 > .4 && Math.abs(dy) * 2.5 > .4) {
-      m_drive.drive(dx * 2.5, dy * 2.5, dr / 130, true);
+      m_drive.drive(dx * 2.5, dy * 2.5, dr / drModifier, true);
     } else {
-      m_drive.drive(xRat * .4, yRat * .4, dr / 130, true);
+      m_drive.drive(xRat * .4, yRat * .4, dr / drModifier, true);
     }
   }
 
