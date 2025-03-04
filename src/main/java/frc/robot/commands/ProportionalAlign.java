@@ -31,8 +31,10 @@ public class ProportionalAlign extends Command {
   double targetX;
   double targetY;
   double targetAngle;
+  int drModifier = 130;
 
   DriveSubsystem m_drive;
+
   public ProportionalAlign(DriveSubsystem drive, double xOffset, double yOffset) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_xOffset = xOffset;
@@ -46,7 +48,7 @@ public class ProportionalAlign extends Command {
     targetPose = getBestAprilTag(m_drive.getPose());
     targetX = targetPose.getX();
     targetY = targetPose.getY();
-    //targetAngle = targetPose.getRotation().getDegrees();
+    targetAngle = targetPose.getRotation().getDegrees();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -54,43 +56,53 @@ public class ProportionalAlign extends Command {
   public void execute() {
     dx = targetX - m_drive.getPose().getX();
     dy = targetY - m_drive.getPose().getY();
-    dr = targetAngle - ((m_drive.getAngle() % 360) -180);
+    dr = targetAngle - ((m_drive.getAngle() % 360) - 180);
     double total = Math.abs(dx) + Math.abs(dy);
 
     m_drive.distanceX = dx;
     m_drive.distanceY = dy;
     m_drive.distanceR = dr;
 
-    double xRat = dx/total;
-    double yRat = dy/total;
+    double xRat = dx / total;
+    double yRat = dy / total;
 
-    if(Math.abs(dx) < 0.05){
+    /*if (Math.abs(dr) > 180) {
+      dr %= 360;
+      dr -= 180;
+    }*/
+
+    if (Math.abs(dx) < 0.05) {
       dx = 0;
       xRat = 0;
     }
 
-    if(Math.abs(dy) < 0.05){
+    if (Math.abs(dy) < 0.05) {
       dy = 0;
       yRat = 0;
     }
 
-    if(Math.abs(dr)/160 < 0.001){
-      dr = 0.5 * (dr/Math.abs(dr));
-      dr *= 160;
+    // if (Math.abs(dr) < 1) {
+    //   dr = 0;
+    // }
+
+    if (Math.abs(dr) / drModifier < 0.05) {
+      dr = 0.05 * (dr / Math.abs(dr));
+      dr *= drModifier;
     }
 
-    if(dx * .9 > 1){
-      m_drive.drive(xRat * 1, yRat * 1, dr/160, true);
-    } else if (dx * .9 > .4) {
-      m_drive.drive(dx * .9, dy *.9, dr/160, true);
+    if (Math.abs(dx) * 2.5 > 3.5 && Math.abs(dy) * 2.5 > 3.5) {
+      m_drive.drive(xRat * 3, yRat * 3, dr / drModifier, true);
+    } else if (Math.abs(dx) * 2.5 > .4 && Math.abs(dy) * 2.5 > .4) {
+      m_drive.drive(dx * 2.5, dy * 2.5, dr / drModifier, true);
     } else {
-      m_drive.drive(xRat * .4, yRat * .4, dr/160, true);
+      m_drive.drive(xRat * .4, yRat * .4, dr / drModifier, true);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
@@ -109,18 +121,16 @@ public class ProportionalAlign extends Command {
 
     return new Pose2d(newX, newY, tagPose.getRotation().plus(new Rotation2d(Math.PI)));
   }
-  
+
   private int getClosestAprilTagID(Translation2d robotPose) {
     int integer = 0;
     ArrayList<Double> distances = new ArrayList<>();
     ArrayList<Integer> tags = new ArrayList<>();
     Optional<Alliance> alliance = DriverStation.getAlliance();
 
-
     if (alliance.isPresent()) {
-    int startTag = (alliance.get() == Alliance.Red) ? 6 : 17;
-    int endTag = (alliance.get() == Alliance.Red) ? 12 : 23;
-
+      int startTag = (alliance.get() == Alliance.Red) ? 6 : 17;
+      int endTag = (alliance.get() == Alliance.Red) ? 12 : 23;
 
       for (int i = startTag; i < endTag; i++) {
         Translation2d tagPose = field.getTagPose(i).get().getTranslation().toTranslation2d();
@@ -137,10 +147,9 @@ public class ProportionalAlign extends Command {
       }
     }
 
-
     double minDistance = Collections.min(distances);
     integer = distances.indexOf(minDistance);
     return tags.get(integer);
   }
-  
+
 }

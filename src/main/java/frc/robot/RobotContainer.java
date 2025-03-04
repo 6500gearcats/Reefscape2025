@@ -10,9 +10,7 @@ import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
@@ -35,14 +33,11 @@ import frc.robot.subsystems.Vision;
 import frc.robot.commands.AlgaeGrab;
 import frc.robot.commands.AlgaeSequence;
 import frc.robot.commands.CoralGrab;
-import frc.robot.commands.RunCoralLeft;
-import frc.robot.commands.RunCoralRight;
 import frc.robot.commands.IntakeAlgae;
 import frc.robot.commands.L4Sequence;
 import frc.robot.commands.MoveCoral;
 import frc.robot.commands.OutakeAlgae;
 import frc.robot.commands.ProportionalAlign;
-import frc.robot.commands.RunAlgaeMiddle;
 import frc.robot.commands.SetArmSpeed;
 import frc.robot.commands.SetClimberSpeed;
 import frc.robot.commands.SetElevatorSpeed;
@@ -171,10 +166,8 @@ public class RobotContainer {
     // new POVButton(m_driver, 0).whileTrue(new RunAlgaeMiddle(m_robotDrive));
     new Trigger(() -> m_driver.getLeftTriggerAxis() > 0.2).whileTrue((new RunCoralLeft(m_robotDrive)));
     new POVButton(m_driver, 180).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
-    new JoystickButton(m_driver, XboxController.Button.kX.value)
-        .whileTrue(new ProportionalAlign(m_robotDrive, -0.1, .75));
-    new JoystickButton(m_driver, XboxController.Button.kB.value)
-        .whileTrue(new ProportionalAlign(m_robotDrive, 0.15, .75));
+    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, -0.15, .75));
+    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .75));
   }
 
   public Command getAutonomousCommand() {
