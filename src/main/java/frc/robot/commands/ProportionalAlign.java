@@ -54,11 +54,12 @@ public class ProportionalAlign extends Command {
   public void execute() {
     dx = targetX - m_drive.getPose().getX();
     dy = targetY - m_drive.getPose().getY();
-    // dr = targetAngle - m_drive.getAngle();
+    dr = targetAngle - m_drive.getAngle();
     double total = Math.abs(dx) + Math.abs(dy);
 
     m_drive.distanceX = dx;
     m_drive.distanceY = dy;
+    m_drive.distanceR = dr;
 
     double xRat = dx/total;
     double yRat = dy/total;

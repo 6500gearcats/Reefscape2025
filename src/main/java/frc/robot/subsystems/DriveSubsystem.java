@@ -59,8 +59,11 @@ public class DriveSubsystem extends SubsystemBase {
   public int aprilTagDrive = 0;
   public Pose2d aprilTagPose = new Pose2d();
   public Pose2d aprilTagPose2 = new Pose2d();
+
+  // Proportional alignment logging values
   public double distanceX = 0;
   public double distanceY = 0;
+  public double distanceR = 0;
   public double fakeYaw = 0;
   private AprilTagFieldLayout field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
 
@@ -230,8 +233,9 @@ publisher = NetworkTableInstance.getDefault()
     // Update the odometry in the periodic block
     updateOdometry();
 
-    SmartDashboard.putNumber("distanceX", distanceX);
-    SmartDashboard.putNumber("distanceY", distanceY);
+    SmartDashboard.putNumber("Alignment Distance X", distanceX);
+    SmartDashboard.putNumber("Alignment Distance Y", distanceY);
+    SmartDashboard.putNumber("Alignment Offset Rotation", distanceR);
 
     if (Robot.isReal()) {
       m_field.setRobotPose(getPose());
