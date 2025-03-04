@@ -162,9 +162,6 @@ public class RobotContainer {
     new POVButton(m_gunner, 180).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4));
     new JoystickButton(m_driver, XboxController.Button.kStart.value)
         .onTrue(new InstantCommand(() -> resetRobotGyroAndOrientation()));
-    new Trigger(() -> m_driver.getRightTriggerAxis() > 0.2).whileTrue(new RunCoralRight(m_robotDrive));
-    // new POVButton(m_driver, 0).whileTrue(new RunAlgaeMiddle(m_robotDrive));
-    new Trigger(() -> m_driver.getLeftTriggerAxis() > 0.2).whileTrue((new RunCoralLeft(m_robotDrive)));
     new POVButton(m_driver, 180).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
     new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, -0.15, .75));
     new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .75));
