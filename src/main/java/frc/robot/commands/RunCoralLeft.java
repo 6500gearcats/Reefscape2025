@@ -76,8 +76,6 @@ public class PathfindingCommand extends Command {
   public void end(boolean interrupted) {
       // TODO: Unsure if this code ever runs, will require testing but this should fix the angle being always slightly offset
     System.out.println("Ended pathfinding");
-    new InstantCommand(() -> m_drive.drive(0, 0, 0.2, false)).withTimeout(0.2).schedule();
-      System.out.println("Turned slightly");
   }
 
 

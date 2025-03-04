@@ -13,8 +13,18 @@ public class SetArmPosition extends Command {
   /** Creates a new SetArmPOsition. */
   Arm m_arm;
   double position;
+  double minSpeed;
   public SetArmPosition(Arm m_arm, double position) {
     // Use addRequirements() here to declare subsystem dependencies.
+    minSpeed = 0.4;
+    this.m_arm = m_arm;
+    this.position = position;
+    addRequirements(m_arm);
+  }
+
+  public SetArmPosition(Arm m_arm, double position, double minSpeed) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    this.minSpeed = minSpeed;
     this.m_arm = m_arm;
     this.position = position;
     addRequirements(m_arm);
@@ -31,8 +41,8 @@ public class SetArmPosition extends Command {
   public void execute() {
     double velocity = (position - m_arm.getArmPosition()) * -2.6;
 
-    if(Math.abs(velocity) < .4){
-      velocity = .4 * Math.abs(velocity)/velocity;
+    if(Math.abs(velocity) < minSpeed){
+      velocity = minSpeed * Math.abs(velocity)/velocity;
     }
 
     m_arm.spinArm(velocity);
