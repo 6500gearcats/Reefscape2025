@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.VecBuilder;
@@ -15,6 +16,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
@@ -126,8 +129,15 @@ public class GCPoseEstimator extends SubsystemBase {
       * For 2024 and beyond, the origin of your coordinate system should always be the "blue" origin.
       * FRC teams should always use botpose_wpiblue for pose-related functionality
       */
-
       LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-gcc");
+      // Optional<Alliance> alliance = DriverStation.getAlliance();
+      //   if (alliance.isPresent()) {
+      //       if (alliance.get() == Alliance.Red) {
+      //         mt1 = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-gcc");
+      //       }
+      //     else {
+      //       mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-gcc");
+      // }
       if (mt1!=null) {
         if(mt1.tagCount == 1 && mt1.rawFiducials.length == 1)
         {

@@ -11,13 +11,24 @@ import frc.robot.subsystems.Elevator;
 public class SetElevatorHeight extends Command {
   private Elevator m_elevator;
   private double m_height;
+  private double minSpeed;
 
   /** Creates a new SetElevatorHeight. */
   public SetElevatorHeight(Elevator elevator, double height) {
     // Use addRequirements() here to declare subsystem dependencies.
+    minSpeed = 0.6;
     m_elevator = elevator;
     m_height = height;
 
+    addRequirements(m_elevator);
+  }
+
+  /** Creates a new SetElevatorHeight. */
+  public SetElevatorHeight(Elevator elevator, double height, double minSpeed) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    m_elevator = elevator;
+    m_height = height;
+    this.minSpeed = minSpeed;
     addRequirements(m_elevator);
   }
 
@@ -30,8 +41,8 @@ public class SetElevatorHeight extends Command {
   public void execute() {
     double velocity = -2 * (m_height - m_elevator.getElevatorHeight()) - 0.04;
 
-    if(Math.abs(velocity) < 0.2 - .04){
-      velocity = .2 * Math.abs(velocity)/velocity -.04;
+    if(Math.abs(velocity) < minSpeed - .04){
+      velocity = minSpeed * Math.abs(velocity)/velocity -.04;
     }
 
     m_elevator.setElevatorSpeed(velocity);

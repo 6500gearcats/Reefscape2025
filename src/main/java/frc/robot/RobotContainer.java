@@ -4,34 +4,20 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Optional;
-import java.util.function.IntSupplier;
 
 import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
-
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.estimator.PoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -41,35 +27,26 @@ import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CoralHolder;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.GCPoseEstimator;
 import frc.robot.subsystems.Vision;
-import frc.robot.GCPhotonVision;
-import frc.robot.commands.AlignWithAprilTag;
-import frc.robot.commands.AlignWithSelectedAprilTag;
-import frc.robot.commands.RunCoralLeft;
-import frc.robot.commands.RunCoralRight;
-import frc.robot.commands.SetAprilTagHorizontalOffset;
-import frc.robot.commands.SetAprilTagVerticalOffset;
+import frc.robot.commands.AlgaeGrab;
+import frc.robot.commands.AlgaeSequence;
+import frc.robot.commands.CoralGrab;
 import frc.robot.commands.IntakeAlgae;
+import frc.robot.commands.L4Sequence;
 import frc.robot.commands.MoveCoral;
 import frc.robot.commands.OutakeAlgae;
-import frc.robot.commands.RunAlgaeMiddle;
+import frc.robot.commands.ProportionalAlign;
 import frc.robot.commands.SetArmSpeed;
 import frc.robot.commands.SetClimberSpeed;
-import frc.robot.commands.SetElevatorHeight;
 import frc.robot.commands.SetElevatorSpeed;
 import frc.robot.commands.TurboEnable;
-import frc.robot.commands.SetArmPosition;
 import frc.robot.commands.SetArmAndElevatorPositions;
 public class RobotContainer {
 
-  AprilTagFieldLayout field;
-  Pose2d newPose = new Pose2d();
-
-  private final SendableChooser<Command> autoChooser;
+  // AprilTagFieldLayout field;
+  // Pose2d newPose = new Pose2d();
 
   XboxController m_driver = new XboxController(0);
   XboxController m_gunner = new XboxController(1);
@@ -86,19 +63,27 @@ public class RobotContainer {
   GCPhotonVision vision = new GCPhotonVision(temp_camera);
   Vision m_vision = new Vision(m_Limelight);
   
-  //Temporarily adding this to
   DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera, m_vision);
 
   Elevator m_elevator = new Elevator();
 
+  private final SendableChooser<Command> autoChooser;
+
   public RobotContainer() {
+    NamedCommands.registerCommand("CoralPlace", new L4Sequence(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
+    NamedCommands.registerCommand("CoralGrab", new CoralGrab(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
+    NamedCommands.registerCommand("AlgaeGrab", new AlgaeGrab(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
+    NamedCommands.registerCommand("RaiseElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555));
+    NamedCommands.registerCommand("LowerElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.16, 0.1));
+    NamedCommands.registerCommand("AlgaeProcessor", new AlgaeSequence(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
+    // Build an auto chooser. This will use Commands.none() as the default option.
+    autoChooser = AutoBuilder.buildAutoChooser("3CoralTop");
+    SmartDashboard.putData("Autonomous Chooser", autoChooser);
+    
     m_robotDrive.zeroHeading();
     LimelightHelpers.SetRobotOrientation(
       "limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
       LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 0, 180);
-
-    // Build an auto chooser. This will use Commands.none() as the default option.
-    autoChooser = AutoBuilder.buildAutoChooser();
 
     configureBindings();
 
@@ -115,37 +100,54 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // Configure your button bindings here
 
     new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value).whileTrue(new TurboEnable(m_robotDrive));
     //TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
     //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new FlipGroundIntake(m_groundIntake)).onFalse(new FlipGroundIntake(m_groundIntake));
-    new Trigger(() -> m_gunner.getRightY() > 0.5).whileTrue(new SetElevatorSpeed(m_elevator, 0.3));
-    new Trigger(() -> m_gunner.getRightY() < -0.5).whileTrue(new SetElevatorSpeed(m_elevator, -0.4));
-    new Trigger(() -> m_gunner.getLeftTriggerAxis() > 0.3).whileTrue(new IntakeAlgae(m_AlgaeIntake, -0.6));
+    new Trigger(() -> m_gunner.getRightY() > 0.5).whileTrue(new SetElevatorSpeed(m_elevator, () -> m_gunner.getRightY() * 0.85));
+    new Trigger(() -> m_gunner.getRightY() < -0.5).whileTrue(new SetElevatorSpeed(m_elevator, () -> m_gunner.getRightY() * 0.85));
+    new Trigger(() -> m_gunner.getLeftTriggerAxis() > 0.3).whileTrue(new IntakeAlgae(m_AlgaeIntake, -0.9));
     new Trigger(() -> m_gunner.getRightTriggerAxis() > 0.3).whileTrue(new OutakeAlgae(m_AlgaeIntake, 1.1));
 
-    new Trigger(() -> m_gunner.getLeftY() > 0.2).whileTrue(new SetArmSpeed(m_arm, -0.25));
-    new Trigger(() -> m_gunner.getLeftY() < -0.2).whileTrue(new SetArmSpeed(m_arm, 0.25));
+    new Trigger(() -> m_gunner.getLeftY() > 0.2).whileTrue(new SetArmSpeed(m_arm, () -> m_gunner.getLeftY() * 0.5));
+    new Trigger(() -> m_gunner.getLeftY() < -0.2).whileTrue(new SetArmSpeed(m_arm,  () -> m_gunner.getLeftY() * 0.5));
 
-    new JoystickButton(m_gunner, XboxController.Button.kStart.value).whileTrue(new SetClimberSpeed(m_climber, 0.1));
-    new JoystickButton(m_gunner, XboxController.Button.kBack.value).whileTrue(new SetClimberSpeed(m_climber, -0.1));
+    new JoystickButton(m_gunner, XboxController.Button.kStart.value).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0, 0.168).andThen(new SetClimberSpeed(m_climber, 0.3)));
+    new JoystickButton(m_gunner, XboxController.Button.kBack.value).whileTrue(new SetClimberSpeed(m_climber, -0.3));
 
-    new JoystickButton(m_gunner, XboxController.Button.kLeftBumper.value).whileTrue(new MoveCoral(m_CoralHolder, -0.5, true));
-    new JoystickButton(m_gunner, XboxController.Button.kRightBumper.value).whileTrue(new MoveCoral(m_CoralHolder, 0.5, false).withTimeout(0.2).andThen(new SetArmSpeed(m_arm, 0.4).withTimeout(0.6)));
+    new JoystickButton(m_gunner, XboxController.Button.kLeftBumper.value).whileTrue(new MoveCoral(m_CoralHolder, 0.5, true));
+    new JoystickButton(m_gunner, XboxController.Button.kRightBumper.value).whileTrue(new MoveCoral(m_CoralHolder, -0.5, false).withTimeout(0.2).andThen(new SetArmSpeed(m_arm,()-> 0.4).withTimeout(0.6)));
 
+    // Coral L3
     new JoystickButton(m_gunner, XboxController.Button.kX.value).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.547));
-    new JoystickButton(m_gunner, XboxController.Button.kY.value).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.715, .561));
-    new JoystickButton(m_gunner, XboxController.Button.kB.value).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.19, 0.56));
-    new JoystickButton(m_gunner, XboxController.Button.kA.value).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.16, 0.1));
+
+    // Coral L4
+    new JoystickButton(m_gunner, XboxController.Button.kY.value).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555));
+
+    // Coral L2
+    new JoystickButton(m_gunner, XboxController.Button.kB.value).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.3, 0.1).andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.19, 0.56, 0.2, 0.4)));
+
+    // Source
+    new JoystickButton(m_gunner, XboxController.Button.kA.value).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.18, 0.1, 0.4, 0.4));
+   
+    // Algae L3
     new POVButton(m_gunner, 270).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.43, 0.381));
+
+    // Algae L2
     new POVButton(m_gunner, 90).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.448));
-    new POVButton(m_gunner, 0).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.65, 0.164));
-    new POVButton(m_gunner, 180).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361));
+
+    // Net
+    new POVButton(m_gunner, 0).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.73, 0.17));
+
+    // Processor
+    new POVButton(m_gunner, 180).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4));
     new JoystickButton(m_driver, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> resetRobotGyroAndOrientation()));
-    new POVButton(m_driver, 90).whileTrue(new RunCoralRight(m_robotDrive));
-    new POVButton(m_driver, 0).whileTrue(new RunAlgaeMiddle(m_robotDrive));
-    new POVButton(m_driver, 270).whileTrue(new RunCoralLeft(m_robotDrive));
+    //new Trigger(() -> m_driver.getRightTriggerAxis() > 0.2).whileTrue(new RunCoralRight(m_robotDrive));
+    //new POVButton(m_driver, 0).whileTrue(new RunAlgaeMiddle(m_robotDrive));
+    //new Trigger(() -> m_driver.getLeftTriggerAxis() > 0.2).whileTrue((new RunCoralLeft(m_robotDrive)));
+    new POVButton(m_driver, 180).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
+    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, -0.15, .75));
+    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .75));
   }
 
   public Command getAutonomousCommand() {
@@ -153,9 +155,19 @@ public class RobotContainer {
   }
 
   public void resetRobotGyroAndOrientation() {
-    m_robotDrive.zeroHeading();
-    LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
-    LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 0, 180);
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            if (alliance.get() == Alliance.Blue) {
+              m_robotDrive.zeroHeading();
+              LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
+              LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 0, 180);          
+            }
+          else {
+            m_robotDrive.zeroHeading();
+            LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
+            LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", 0.318, -0.177, 0.29, 0, 0, 0);        
+          }
+        }
   }
   
 }
