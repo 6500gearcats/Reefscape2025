@@ -54,7 +54,7 @@ public class ProportionalAlign extends Command {
   public void execute() {
     dx = targetX - m_drive.getPose().getX();
     dy = targetY - m_drive.getPose().getY();
-    dr = targetAngle - m_drive.getAngle();
+    dr = targetAngle - ((m_drive.getAngle() % 360) -180);
     double total = Math.abs(dx) + Math.abs(dy);
 
     m_drive.distanceX = dx;
@@ -64,15 +64,27 @@ public class ProportionalAlign extends Command {
     double xRat = dx/total;
     double yRat = dy/total;
 
-    if(dx * .9 > 1){
-      m_drive.drive(xRat * 1, yRat * 1, 0, true);
-    } else if (dx * .9 > .4) {
-      m_drive.drive(dx * .9, dy *.9, 0, true);
-    } else {
-      m_drive.drive(xRat * .4, yRat * .4, 0, true);
+    if(Math.abs(dx) < 0.05){
+      dx = 0;
+      xRat = 0;
     }
-    // dr/180
-    
+
+    if(Math.abs(dy) < 0.05){
+      dy = 0;
+      yRat = 0;
+    }
+
+    if(Math.abs(dr) < 0.1){
+
+    }
+
+    if(dx * .9 > 1){
+      m_drive.drive(xRat * 1, yRat * 1, dr/160, true);
+    } else if (dx * .9 > .4) {
+      m_drive.drive(dx * .9, dy *.9, dr/160, true);
+    } else {
+      m_drive.drive(xRat * .4, yRat * .4, dr/160, true);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -82,7 +94,7 @@ public class ProportionalAlign extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(dx) < 0.05 && Math.abs(dy) < 0.05;
+    return Math.abs(dx) < 0.05 && Math.abs(dy) < 0.05 && Math.abs(dr) < 1;
   }
 
   private Pose2d getBestAprilTag(Pose2d robotPose) {
