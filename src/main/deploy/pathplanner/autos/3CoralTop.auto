@@ -17,21 +17,15 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "CoralToCoralClose"
+            "name": "ProportionalAlignLeft"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "CoralPlace"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "CoraCloseToFar"
           }
         },
         {
@@ -65,9 +59,9 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "TopSourceToCoralGo"
+            "name": "ProportionalAlignLeft"
           }
         },
         {
@@ -77,15 +71,27 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "LowerElevatorL4"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "TopSourceToCoralBack"
+            "pathName": "TopCoralReturn"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "LowerElevatorL4"
+            "name": "CoralGrab"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "TopSourceToCoralLeft"
           }
         }
       ]

@@ -13,7 +13,25 @@
         {
           "type": "named",
           "data": {
+            "name": "RaiseElevatorL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ProportionalAlignLeft"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "CoralPlace"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LowerElevatorL4"
           }
         },
         {
@@ -37,7 +55,25 @@
         {
           "type": "named",
           "data": {
+            "name": "RaiseElevatorL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ProportionalAlignLeft"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "CoralPlace"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LowerElevatorL4"
           }
         },
         {

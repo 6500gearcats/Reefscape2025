@@ -13,19 +13,43 @@
         {
           "type": "named",
           "data": {
+            "name": "RaiseElevatorL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ProportionalAlignLeft"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "CoralPlace"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "MiddleBackUp"
+            "name": "LowerElevatorL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ProportionalAlignAlgae"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "AlgaeGrab"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LowerElevatorAlgae"
           }
         },
         {
