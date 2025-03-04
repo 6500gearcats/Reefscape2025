@@ -89,10 +89,10 @@ public class ProportionalAlign extends Command {
       dr *= 130;
     }
 
-    if (Math.abs(dx) * 1.5 > 3 && Math.abs(dy) * 1.5 > 3) {
+    if (Math.abs(dx) * 2.5 > 3.5 && Math.abs(dy) * 2.5 > 3.5) {
       m_drive.drive(xRat * 3, yRat * 3, dr / 130, true);
-    } else if (Math.abs(dx) * 1.5 > .4 && Math.abs(dy) * 1.5 > .4) {
-      m_drive.drive(dx * 1.5, dy * 1.5, dr / 130, true);
+    } else if (Math.abs(dx) * 2.5 > .4 && Math.abs(dy) * 2.5 > .4) {
+      m_drive.drive(dx * 2.5, dy * 2.5, dr / 130, true);
     } else {
       m_drive.drive(xRat * .4, yRat * .4, dr / 130, true);
     }
