@@ -5,15 +5,22 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "TopToCoral"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "RaiseElevatorL4"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "TopToCoral"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RaiseElevatorL4"
+                }
+              }
+            ]
           }
         },
         {
@@ -29,21 +36,41 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "LowerElevatorL4"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "LowerElevatorL4"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "TopCoralToSource"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "TopCoralToSource"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralGrab"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "CoralGrab"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "LowerElevatorL4"
+                }
+              }
+            ]
           }
         },
         {
@@ -71,15 +98,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "LowerElevatorL4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "TopCoralReturn"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "TopCoralReturn"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "LowerElevatorL4"
+                }
+              }
+            ]
           }
         },
         {

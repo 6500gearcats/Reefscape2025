@@ -74,13 +74,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("CoralPlace", new L4Sequence(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("CoralGrab", new CoralGrab(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("AlgaeGrab", new AlgaeGrab(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
-    NamedCommands.registerCommand("RaiseElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555));
-    NamedCommands.registerCommand("LowerElevatorL4", new RunCommand(() -> m_robotDrive.drive(-.5, 0, 0, false)).withTimeout(0.3).andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.16, 0.1)));
-    NamedCommands.registerCommand("LowerElevatorAlgae", new RunCommand(() -> m_robotDrive.drive(-.5, 0, 0, false)).withTimeout(0.3).andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4)));
+    NamedCommands.registerCommand("RaiseElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555, 0.6, 0.4, -5));
+    NamedCommands.registerCommand("LowerElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.18, 0.1, 0.6, 0.4, -4));
+    NamedCommands.registerCommand("LowerElevatorAlgae", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4, -2));
     NamedCommands.registerCommand("AlgaeProcessor", new AlgaeSequence(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
-    NamedCommands.registerCommand("ProportionalAlignLeft", new ProportionalAlign(m_robotDrive, -0.15, .75));
-    NamedCommands.registerCommand("ProportionalAlignRight", new ProportionalAlign(m_robotDrive, 0.2, .75));
-    NamedCommands.registerCommand("ProportionalAlignAlgae", new ProportionalAlign(m_robotDrive, 0, .75));
+    NamedCommands.registerCommand("ProportionalAlignLeft", new ProportionalAlign(m_robotDrive, -0.15, .475, 2));
+    NamedCommands.registerCommand("ProportionalAlignRight", new ProportionalAlign(m_robotDrive, 0.2, .475, 2));
+    NamedCommands.registerCommand("ProportionalAlignAlgae", new ProportionalAlign(m_robotDrive, 0, .475, 2));
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     autoChooser = AutoBuilder.buildAutoChooser("3CoralTop");
@@ -143,11 +143,11 @@ public class RobotContainer {
     // Coral L2
     new JoystickButton(m_gunner, XboxController.Button.kB.value)
         .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.3, 0.1)
-            .andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.19, 0.56, 0.2, 0.4)));
+            .andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.19, 0.56, 0.2, 0.4, -2)));
 
     // Source
     new JoystickButton(m_gunner, XboxController.Button.kA.value)
-        .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.18, 0.1, 0.4, 0.4));
+        .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.18, 0.1, 0.4, 0.4, -2));
 
     // Algae L3
     new POVButton(m_gunner, 270).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.43, 0.381));
@@ -159,12 +159,14 @@ public class RobotContainer {
     new POVButton(m_gunner, 0).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.73, 0.17));
 
     // Processor
-    new POVButton(m_gunner, 180).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4));
-    new JoystickButton(m_driver, XboxController.Button.kStart.value)
-        .onTrue(new InstantCommand(() -> resetRobotGyroAndOrientation()));
+    new POVButton(m_gunner, 180).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4, -2));
+    new JoystickButton(m_driver, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> resetRobotGyroAndOrientation()));
     new POVButton(m_driver, 180).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
-    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, -0.15, .75));
-    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .75));
+    // previous yOffset = 0.75
+    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, -0.15, .475));
+    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .475));
+    new POVButton(m_driver, 0).whileTrue(new ProportionalAlign(m_robotDrive, 0, .475));
+
   }
 
   public Command getAutonomousCommand() {

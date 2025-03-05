@@ -12,6 +12,7 @@ public class SetElevatorHeight extends Command {
   private Elevator m_elevator;
   private double m_height;
   private double minSpeed;
+  private double maxSpeed;
 
   /** Creates a new SetElevatorHeight. */
   public SetElevatorHeight(Elevator elevator, double height) {
@@ -19,16 +20,18 @@ public class SetElevatorHeight extends Command {
     minSpeed = 0.6;
     m_elevator = elevator;
     m_height = height;
+    maxSpeed = -2;
 
     addRequirements(m_elevator);
   }
 
   /** Creates a new SetElevatorHeight. */
-  public SetElevatorHeight(Elevator elevator, double height, double minSpeed) {
+  public SetElevatorHeight(Elevator elevator, double height, double minSpeed, double maxSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_elevator = elevator;
     m_height = height;
     this.minSpeed = minSpeed;
+    this.maxSpeed = maxSpeed;
     addRequirements(m_elevator);
   }
 
@@ -39,7 +42,7 @@ public class SetElevatorHeight extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double velocity = -2 * (m_height - m_elevator.getElevatorHeight()) - 0.04;
+    double velocity = maxSpeed * (m_height - m_elevator.getElevatorHeight()) - 0.04;
 
     if(Math.abs(velocity) < minSpeed - .04){
       velocity = minSpeed * Math.abs(velocity)/velocity -.04;
