@@ -22,17 +22,9 @@ public class AlgaeGrab extends SequentialCommandGroup {
       // TODO: Might need to change this to L3 depending on how algae is set-up
       new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.448),
 
-      // TODO: Consider making these two commands a parallel deadline group
-      // Runs forward because path allows room for elevator and arm to raise first
-      new InstantCommand(()->m_drive.drive(-1, 0, 0, false)).withTimeout(.5),
       // (hopefully) Intakes algae off of reef
       // TODO: Add an isFinished into IntakeAlgae so that we don't have to use withTimeout
-      new IntakeAlgae(m_AlgaeIntake, -0.6).withTimeout(1),
-
-      // Runs backward to allow elevator room to go back down
-      new InstantCommand(()->m_drive.drive(1, 0, 0, false)).withTimeout(.5),
-      // Moves elevator and arm back down to processor
-      new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361)
+      new IntakeAlgae(m_AlgaeIntake, -0.6).withTimeout(1)
     );
   }
 }

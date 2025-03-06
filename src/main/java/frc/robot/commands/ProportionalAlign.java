@@ -28,6 +28,7 @@ public class ProportionalAlign extends Command {
   double dr;
   double m_xOffset;
   double m_yOffset;
+  double m_speedModifier;
   double targetX;
   double targetY;
   double targetAngle;
@@ -37,6 +38,15 @@ public class ProportionalAlign extends Command {
 
   public ProportionalAlign(DriveSubsystem drive, double xOffset, double yOffset) {
     // Use addRequirements() here to declare subsystem dependencies.
+    m_speedModifier = 1;
+    m_xOffset = xOffset;
+    m_yOffset = yOffset;
+    m_drive = drive;
+  }
+
+  public ProportionalAlign(DriveSubsystem drive, double xOffset, double yOffset, double speedModifier) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    m_speedModifier = speedModifier;
     m_xOffset = xOffset;
     m_yOffset = yOffset;
     m_drive = drive;
@@ -56,7 +66,7 @@ public class ProportionalAlign extends Command {
   public void execute() {
     dx = targetX - m_drive.getPose().getX();
     dy = targetY - m_drive.getPose().getY();
-    dr = targetAngle - ((m_drive.getAngle() % 360) - 180);
+    dr = targetAngle - (Math.abs((m_drive.getAngle() % 360)) * (m_drive.getAngle()/Math.abs(m_drive.getAngle())) - 180 * (m_drive.getAngle()/Math.abs(m_drive.getAngle())));
     double total = Math.abs(dx) + Math.abs(dy);
 
     m_drive.distanceX = dx;
@@ -66,10 +76,10 @@ public class ProportionalAlign extends Command {
     double xRat = dx / total;
     double yRat = dy / total;
 
-    /*if (Math.abs(dr) > 180) {
-      dr %= 360;
-      dr -= 180;
-    }*/
+    //if (Math.abs(dr) > 180) {
+    //  dr %= 360;
+    //  dr -= 180;
+    //}
 
     if (Math.abs(dx) < 0.05) {
       dx = 0;
@@ -90,12 +100,12 @@ public class ProportionalAlign extends Command {
       dr *= drModifier;
     }
 
-    if (Math.abs(dx) * 2.5 > 3.5 && Math.abs(dy) * 2.5 > 3.5) {
-      m_drive.drive(xRat * 3, yRat * 3, dr / drModifier, true);
-    } else if (Math.abs(dx) * 2.5 > .4 && Math.abs(dy) * 2.5 > .4) {
-      m_drive.drive(dx * 2.5, dy * 2.5, dr / drModifier, true);
+    if (Math.abs(dx) * 2.5 * m_speedModifier  > 3.5 && Math.abs(dy) * 2.5 * m_speedModifier > 3.5) {
+      m_drive.drive(xRat * 3 * m_speedModifier, yRat * 3 * m_speedModifier, dr / drModifier, true);
+    } else if (Math.abs(dx) * 2.5 * m_speedModifier > .4 && Math.abs(dy) * 2.5 * m_speedModifier > .4) {
+      m_drive.drive(dx * 2.5 * m_speedModifier, dy * 2.5 * m_speedModifier, dr / drModifier, true);
     } else {
-      m_drive.drive(xRat * .4, yRat * .4, dr / drModifier, true);
+      m_drive.drive(xRat * .4 * m_speedModifier, yRat * .4 * m_speedModifier, dr / drModifier, true);
     }
   }
 
@@ -107,7 +117,7 @@ public class ProportionalAlign extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(dx) < 0.05 && Math.abs(dy) < 0.05 && Math.abs(dr) < 1;
+    return Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1 && Math.abs(dr) < 30;
   }
 
   private Pose2d getBestAprilTag(Pose2d robotPose) {
