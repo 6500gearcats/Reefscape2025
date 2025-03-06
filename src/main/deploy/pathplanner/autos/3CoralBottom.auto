@@ -5,63 +5,28 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "BottomToCoral"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BottomToCoral"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RaiseElevatorL4"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "RaiseElevatorL4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ProportionalAlignLeft"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralPlace"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "LowerElevatorL4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BottomCoralToSource"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralGrab"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BottomSourceToCoral"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "RaiseElevatorL4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ProportionalAlignLeft"
+            "name": "ProportionalAlignRight"
           }
         },
         {
@@ -71,27 +36,60 @@
           }
         },
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "LowerElevatorL4"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BottomCoralToSource"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "CoralGrab"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BottomSourceToCoral"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RaiseElevatorL4"
+                }
+              }
+            ]
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "LowerElevatorL4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BottomCoralReturn"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralGrab"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BottomSourceToCoral"
+            "name": "ProportionalAlignLeft"
           }
         },
         {
