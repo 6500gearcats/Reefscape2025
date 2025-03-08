@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -170,13 +171,21 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+      if (alliance.get().equals(Alliance.Blue)) {
+        return autoChooser.getSelected();
+      } else {
+        return new RunCommand(() -> m_robotDrive.drive(1, 0, 0, false), m_robotDrive).withTimeout(1).andThen(new RunCommand(() -> m_robotDrive.drive(0,0,0,false)));
+      }
+    }
+    return new WaitCommand(0.5);
   }
 
   public void resetRobotGyroAndOrientation() {
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if (alliance.isPresent()) {
-      if (alliance.get() == Alliance.Blue) {
+      if (alliance.get().equals(Alliance.Blue)) {
         m_robotDrive.zeroHeading();
         LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
         LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 0, 180);
