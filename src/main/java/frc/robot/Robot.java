@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,6 +20,7 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
     //DriverStationSim.setAllianceStationId(AllianceStationID.Blue1);
+    DataLogManager.start();
     PortForwarder.add(5801, "limelight-gca.local", 5801);
   }
 

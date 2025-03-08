@@ -37,6 +37,7 @@ public class AlgaeIntake extends SubsystemBase {
       SmartDashboard.putNumber("Algae Position", m_fakeAlgaePosition);
       m_fakeAlgaePosition += m_fakeSpeed;
     }
+    SmartDashboard.putBoolean("Is Algae Intake Running", m_running);
   }
 
   public void intakeAlgae(double speed) {

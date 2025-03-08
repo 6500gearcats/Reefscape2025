@@ -119,8 +119,8 @@ public class RobotContainer {
     new Trigger(() -> m_gunner.getLeftTriggerAxis() > 0.3).whileTrue(new IntakeAlgae(m_AlgaeIntake, -0.9));
     new Trigger(() -> m_gunner.getRightTriggerAxis() > 0.3).whileTrue(new OutakeAlgae(m_AlgaeIntake, 1.1));
 
-    new Trigger(() -> m_gunner.getLeftY() > 0.2).whileTrue(new SetArmSpeed(m_arm, () -> m_gunner.getLeftY() * 0.5));
-    new Trigger(() -> m_gunner.getLeftY() < -0.2).whileTrue(new SetArmSpeed(m_arm, () -> m_gunner.getLeftY() * 0.5));
+    new Trigger(() -> m_gunner.getLeftY() > 0.2).whileTrue(new SetArmSpeed(m_arm, () -> m_gunner.getLeftY() * -0.5));
+    new Trigger(() -> m_gunner.getLeftY() < -0.2).whileTrue(new SetArmSpeed(m_arm, () -> m_gunner.getLeftY() * -0.5));
 
     new JoystickButton(m_gunner, XboxController.Button.kStart.value).whileTrue(
         new SetArmAndElevatorPositions(m_elevator, m_arm, 0, 0.168).andThen(new SetClimberSpeed(m_climber, 0.3)));
