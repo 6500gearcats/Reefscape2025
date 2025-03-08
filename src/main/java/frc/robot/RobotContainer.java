@@ -123,8 +123,8 @@ public class RobotContainer {
     new Trigger(() -> m_gunner.getLeftY() < -0.2).whileTrue(new SetArmSpeed(m_arm, () -> m_gunner.getLeftY() * -0.5));
 
     new JoystickButton(m_gunner, XboxController.Button.kStart.value).whileTrue(
-        new SetArmAndElevatorPositions(m_elevator, m_arm, 0, 0.168).andThen(new SetClimberSpeed(m_climber, 0.3)));
-    new JoystickButton(m_gunner, XboxController.Button.kBack.value).whileTrue(new SetClimberSpeed(m_climber, -0.3));
+        new SetArmAndElevatorPositions(m_elevator, m_arm, 0, 0.168).andThen(new SetClimberSpeed(m_climber, 0.6)));
+    new JoystickButton(m_gunner, XboxController.Button.kBack.value).whileTrue(new SetClimberSpeed(m_climber, -0.6));
 
     new JoystickButton(m_gunner, XboxController.Button.kLeftBumper.value)
         .whileTrue(new MoveCoral(m_CoralHolder, 0.5, true));
@@ -182,8 +182,8 @@ public class RobotContainer {
         LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 0, 180);
       } else {
         m_robotDrive.zeroHeading();
-        LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
-        LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", 0.318, -0.177, 0.29, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation("limelight-gcc", 180, 0, 0, 0, 0, 0);
+        LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 0, 180);
       }
     }
   }

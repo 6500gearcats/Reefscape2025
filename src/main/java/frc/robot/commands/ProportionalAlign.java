@@ -42,6 +42,8 @@ public class ProportionalAlign extends Command {
     m_xOffset = xOffset;
     m_yOffset = yOffset;
     m_drive = drive;
+
+    addRequirements(m_drive);
   }
 
   public ProportionalAlign(DriveSubsystem drive, double xOffset, double yOffset, double speedModifier) {
@@ -50,6 +52,8 @@ public class ProportionalAlign extends Command {
     m_xOffset = xOffset;
     m_yOffset = yOffset;
     m_drive = drive;
+
+    addRequirements(m_drive);
   }
 
   // Called when the command is initially scheduled.
