@@ -157,7 +157,7 @@ public class GCPoseEstimator extends SubsystemBase {
 
         if(!doRejectUpdate)
         {
-          m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5,9999999));
+          m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5, Units.degreesToRadians(20)));
           m_poseEstimator.addVisionMeasurement(
               mt1.pose,
               mt1.timestampSeconds);
