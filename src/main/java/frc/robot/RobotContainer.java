@@ -82,6 +82,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("ProportionalAlignLeft", new ProportionalAlign(m_robotDrive, -0.15, .475, 2));
     NamedCommands.registerCommand("ProportionalAlignRight", new ProportionalAlign(m_robotDrive, 0.2, .475, 2));
     NamedCommands.registerCommand("ProportionalAlignAlgae", new ProportionalAlign(m_robotDrive, 0, .475, 2));
+    NamedCommands.registerCommand("MiddleTaxi", new RunCommand(() -> m_robotDrive.drive(-1, 0, 0, false), m_robotDrive).withTimeout(1).andThen(new RunCommand(() -> m_robotDrive.drive(0,0,0,false))));
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     autoChooser = AutoBuilder.buildAutoChooser("3CoralTop");
