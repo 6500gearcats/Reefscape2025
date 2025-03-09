@@ -172,15 +172,15 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    Optional<Alliance> alliance = DriverStation.getAlliance();
-    if (alliance.isPresent()) {
-      if (alliance.get().equals(Alliance.Blue)) {
+    //Optional<Alliance> alliance = DriverStation.getAlliance();
+    //if (alliance.isPresent()) {
+      //if (alliance.get().equals(Alliance.Blue)) {
         return autoChooser.getSelected();
-      } else {
+      /*} else {
         return new RunCommand(() -> m_robotDrive.drive(-1, 0, 0, false), m_robotDrive).withTimeout(1).andThen(new RunCommand(() -> m_robotDrive.drive(0,0,0,false)));
-      }
-    }
-    return new WaitCommand(0.5);
+      }*/
+    //}
+    //return new WaitCommand(0.5);
   }
 
   public void resetRobotGyroAndOrientation() {
