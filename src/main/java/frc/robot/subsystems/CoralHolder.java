@@ -47,7 +47,7 @@ public class CoralHolder extends SubsystemBase {
     SmartDashboard.putNumber("Fake Coral Speed", fake_coral_speed);
     }
     SmartDashboard.putNumber("Coral Holder Speed", getHolderSpeed());
-    SmartDashboard.putBoolean("Coral Holder Up-To-Speed", m_upToSpeed);
+    //SmartDashboard.putBoolean("Coral Holder Up-To-Speed", m_upToSpeed);
   }
 
   //True when coral Present

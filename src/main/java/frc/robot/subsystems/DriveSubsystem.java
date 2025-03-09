@@ -233,20 +233,20 @@ publisher = NetworkTableInstance.getDefault()
     // Update the odometry in the periodic block
     updateOdometry();
 
-    SmartDashboard.putNumber("Alignment Distance X", distanceX);
-    SmartDashboard.putNumber("Alignment Distance Y", distanceY);
-    SmartDashboard.putNumber("Alignment Offset Rotation", distanceR);
+    //SmartDashboard.putNumber("Alignment Distance X", distanceX);
+    //SmartDashboard.putNumber("Alignment Distance Y", distanceY);
+    //SmartDashboard.putNumber("Alignment Offset Rotation", distanceR);
 
     if (Robot.isReal()) {
       m_field.setRobotPose(getPose());
     } else {
       m_field.setRobotPose(m_simOdometryPose);
 
-      Pose2d CurrentPos = m_simOdometryPose;
-      double xPos = CurrentPos.getX();
-      double yPos = CurrentPos.getY();
-      SmartDashboard.putNumber("Position: X", xPos);
-      SmartDashboard.putNumber("Position: Y", yPos);
+      // Pose2d CurrentPos = m_simOdometryPose;
+      // double xPos = CurrentPos.getX();
+      // double yPos = CurrentPos.getY();
+      // SmartDashboard.putNumber("Position: X", xPos);
+      // SmartDashboard.putNumber("Position: Y", yPos);
     }
 
     SmartDashboard.putNumber("Pigeon2 Pitch", m_gyro.getPitch().getValueAsDouble());
