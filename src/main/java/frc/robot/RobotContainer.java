@@ -117,7 +117,7 @@ public class RobotContainer {
         .whileTrue(new SetElevatorSpeed(m_elevator, () -> m_gunner.getRightY() * 0.85));
     new Trigger(() -> m_gunner.getRightY() < -0.5)
         .whileTrue(new SetElevatorSpeed(m_elevator, () -> m_gunner.getRightY() * 0.85));
-    new Trigger(() -> m_gunner.getLeftTriggerAxis() > 0.3).whileTrue(new IntakeAlgae(m_AlgaeIntake, -0.9));
+    new Trigger(() -> m_gunner.getLeftTriggerAxis() > 0.3).whileTrue(new IntakeAlgae(m_AlgaeIntake, -0.7));
     new Trigger(() -> m_gunner.getRightTriggerAxis() > 0.3).whileTrue(new OutakeAlgae(m_AlgaeIntake, 1.1));
 
     new Trigger(() -> m_gunner.getLeftY() > 0.2).whileTrue(new SetArmSpeed(m_arm, () -> m_gunner.getLeftY() * -0.5));
@@ -171,15 +171,15 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    Optional<Alliance> alliance = DriverStation.getAlliance();
-    if (alliance.isPresent()) {
-      if (alliance.get().equals(Alliance.Blue)) {
+    // Optional<Alliance> alliance = DriverStation.getAlliance();
+    // if (alliance.isPresent()) {
+    //   if (alliance.get().equals(Alliance.Blue)) {
         return autoChooser.getSelected();
-      } else {
-        return new RunCommand(() -> m_robotDrive.drive(1, 0, 0, false), m_robotDrive).withTimeout(1).andThen(new RunCommand(() -> m_robotDrive.drive(0,0,0,false)));
-      }
-    }
-    return new WaitCommand(0.5);
+    //   } else {
+    //     return new RunCommand(() -> m_robotDrive.drive(-1, 0, 0, false), m_robotDrive).withTimeout(1).andThen(new RunCommand(() -> m_robotDrive.drive(0,0,0,false)));
+    //   }
+    // }
+    // return new WaitCommand(0.5);
   }
 
   public void resetRobotGyroAndOrientation() {
