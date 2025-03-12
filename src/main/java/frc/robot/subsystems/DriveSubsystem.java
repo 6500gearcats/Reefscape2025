@@ -492,15 +492,17 @@ publisher = NetworkTableInstance.getDefault()
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
-    Optional<Alliance> alliance = DriverStation.getAlliance();
-    if (alliance.isPresent()) {
-      if (alliance.get().equals(Alliance.Blue)) {
-        m_gyro.reset();
+    // Optional<Alliance> alliance = DriverStation.getAlliance();
+    // if (alliance.isPresent()) {
+    //   if (alliance.get().equals(Alliance.Blue)) {
+    //     m_gyro.reset();
         
-      } else {
-        m_gyro.setYaw(180);
-      }
-    }
+    //   } else {
+    //     m_gyro.setYaw(180);
+    //   }
+    // }
+    m_gyro.reset();
+    
   }
   
 
