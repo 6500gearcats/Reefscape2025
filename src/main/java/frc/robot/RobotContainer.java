@@ -175,7 +175,7 @@ public class RobotContainer {
     //Optional<Alliance> alliance = DriverStation.getAlliance();
     //if (alliance.isPresent()) {
       //if (alliance.get().equals(Alliance.Blue)) {
-        return autoChooser.getSelected();
+       return autoChooser.getSelected();
       /*} else {
         return new RunCommand(() -> m_robotDrive.drive(-1, 0, 0, false), m_robotDrive).withTimeout(1).andThen(new RunCommand(() -> m_robotDrive.drive(0,0,0,false)));
       }*/
