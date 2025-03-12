@@ -192,10 +192,9 @@ public class RobotContainer {
         LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 0, 180);
       } else {
         m_robotDrive.zeroHeading();
-        LimelightHelpers.SetRobotOrientation("limelight-gcc", 180, 0, 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle() + 180, 0, 0, 0, 0, 0);
         LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 0, 180);
       }
     }
   }
-
 }
