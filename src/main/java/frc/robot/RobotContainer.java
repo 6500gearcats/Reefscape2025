@@ -42,6 +42,7 @@ import frc.robot.commands.ProportionalAlign;
 import frc.robot.commands.SetArmSpeed;
 import frc.robot.commands.SetClimberSpeed;
 import frc.robot.commands.SetElevatorSpeed;
+import frc.robot.commands.SnailEnable;
 import frc.robot.commands.TurboEnable;
 import frc.robot.commands.SetArmAndElevatorPositions;
 
@@ -110,6 +111,7 @@ public class RobotContainer {
   private void configureBindings() {
 
     new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value).whileTrue(new TurboEnable(m_robotDrive));
+    new JoystickButton(m_driver, XboxController.Button.kRightBumper.value).whileTrue(new SnailEnable(m_robotDrive));
     // TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
     // new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new
     // FlipGroundIntake(m_groundIntake)).onFalse(new
