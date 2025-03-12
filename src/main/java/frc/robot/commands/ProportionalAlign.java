@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.DriveSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -33,6 +34,7 @@ public class ProportionalAlign extends Command {
   double targetY;
   double targetAngle;
   int drModifier = 130;
+  int inverse = 1;
 
   DriveSubsystem m_drive;
 
@@ -63,6 +65,15 @@ public class ProportionalAlign extends Command {
     targetX = targetPose.getX();
     targetY = targetPose.getY();
     targetAngle = targetPose.getRotation().getDegrees();
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+      if (alliance.get().equals(Alliance.Blue)) {
+        inverse = 1;
+      } else {
+        inverse = -1;
+      }
+    }
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -104,12 +115,12 @@ public class ProportionalAlign extends Command {
       dr *= drModifier;
     }
 
-    if (Math.abs(dx) * 2.5 * m_speedModifier  > 3.5 && Math.abs(dy) * 2.5 * m_speedModifier > 3.5) {
-      m_drive.drive(xRat * 3 * m_speedModifier, yRat * 3 * m_speedModifier, dr / drModifier, true);
+    if (Math.abs(dx) * 2.5 * m_speedModifier*inverse  > 3.5*inverse && Math.abs(dy) * 2.5*inverse * m_speedModifier > 3.5*inverse) {
+      m_drive.drive(xRat * 3 * m_speedModifier * inverse, yRat * 3 * m_speedModifier * inverse, dr / drModifier * inverse, true);
     } else if (Math.abs(dx) * 2.5 * m_speedModifier > .4 && Math.abs(dy) * 2.5 * m_speedModifier > .4) {
-      m_drive.drive(dx * 2.5 * m_speedModifier, dy * 2.5 * m_speedModifier, dr / drModifier, true);
+      m_drive.drive(dx * 2.5 * m_speedModifier * inverse, dy * 2.5 * m_speedModifier * inverse, dr / drModifier * inverse, true);
     } else {
-      m_drive.drive(xRat * .4 * m_speedModifier, yRat * .4 * m_speedModifier, dr / drModifier, true);
+      m_drive.drive(xRat * .4 * m_speedModifier * inverse, yRat * .4 * m_speedModifier * inverse, dr / drModifier * inverse, true);
     }
   }
 
