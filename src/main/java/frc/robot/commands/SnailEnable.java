@@ -23,13 +23,13 @@ public class SnailEnable extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drive.turboEnable = true;
+    m_drive.snailEnable = true;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_drive.turboEnable = false;
+    m_drive.snailEnable = false;
   }
 
   // Returns true when the command should end.
