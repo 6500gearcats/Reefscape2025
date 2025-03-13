@@ -34,7 +34,7 @@ public class ProportionalAlign extends Command {
   double targetY;
   double targetAngle;
   int drModifier = 130;
-  int inverse = 1;
+  double baseVelocity = 0.0;
 
   DriveSubsystem m_drive;
 
@@ -68,9 +68,9 @@ public class ProportionalAlign extends Command {
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if (alliance.isPresent()) {
       if (alliance.get().equals(Alliance.Blue)) {
-        inverse = 1;
+        baseVelocity = 1;
       } else {
-        inverse = -1;
+        baseVelocity = -1;
       }
     }
 
@@ -115,12 +115,16 @@ public class ProportionalAlign extends Command {
       dr *= drModifier;
     }
 
-    if (Math.abs(dx) * 2.5 * m_speedModifier*inverse  > 3.5*inverse && Math.abs(dy) * 2.5*inverse * m_speedModifier > 3.5*inverse) {
-      m_drive.drive(xRat * 3 * m_speedModifier * inverse, yRat * 3 * m_speedModifier * inverse, dr / drModifier * inverse, true);
+    double velocityX = dx * 2.5 * m_speedModifier * baseVelocity;
+    double velocityY = dy * 2.5 * m_speedModifier * baseVelocity;
+    double velocityR = dr / drModifier * baseVelocity;
+
+    if (Math.abs(velocityX) > 3.5 && Math.abs(velocityR) > 3.5) {
+      m_drive.drive(xRat * 3 * baseVelocity, yRat * 3 * baseVelocity, dr / drModifier * baseVelocity, true);
     } else if (Math.abs(dx) * 2.5 * m_speedModifier > .4 && Math.abs(dy) * 2.5 * m_speedModifier > .4) {
-      m_drive.drive(dx * 2.5 * m_speedModifier * inverse, dy * 2.5 * m_speedModifier * inverse, dr / drModifier * inverse, true);
+      m_drive.drive(velocityX, velocityY, velocityR, true);
     } else {
-      m_drive.drive(xRat * .4 * m_speedModifier * inverse, yRat * .4 * m_speedModifier * inverse, dr / drModifier * inverse, true);
+      m_drive.drive(xRat * .4 * m_speedModifier * baseVelocity, yRat * .4 * m_speedModifier * baseVelocity, dr / drModifier * baseVelocity, true);
     }
   }
 
