@@ -91,7 +91,7 @@ public class RobotContainer {
     m_robotDrive.zeroHeading();
     LimelightHelpers.SetRobotOrientation(
         "limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
-    LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 0, 180);
+    LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 6, 180);
 
     configureBindings();
 
@@ -158,7 +158,7 @@ public class RobotContainer {
     new POVButton(m_gunner, 90).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.448));
 
     // Net
-    new POVButton(m_gunner, 0).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.73, 0.17));
+    new POVButton(m_gunner, 0).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.73, 0.195));
 
     // Processor
     new POVButton(m_gunner, 180).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4, -2));
@@ -189,11 +189,11 @@ public class RobotContainer {
       if (alliance.get().equals(Alliance.Blue)) {
         m_robotDrive.zeroHeading();
         LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
-        LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 0, 180);
+        LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 6, 180);
       } else {
         m_robotDrive.zeroHeading();
         LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle() + 180, 0, 0, 0, 0, 0);
-        LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 0, 180);
+        LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 6, 180);
       }
     }
   }
