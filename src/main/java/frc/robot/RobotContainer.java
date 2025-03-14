@@ -137,7 +137,6 @@ public class RobotContainer {
     // Coral L3
     new JoystickButton(m_gunner, XboxController.Button.kX.value)
         .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.547));
-
     // Coral L4
     new JoystickButton(m_gunner, XboxController.Button.kY.value)
         .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555));
