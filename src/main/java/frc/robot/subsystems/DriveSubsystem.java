@@ -390,14 +390,14 @@ publisher = NetworkTableInstance.getDefault()
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     int inverse = 1;
-    Optional<Alliance> alliance = DriverStation.getAlliance();
-    if (alliance.isPresent()) {
-      if (alliance.get().equals(Alliance.Blue)) {
-        inverse = 1;
-      } else {
-        inverse = -1;
-      }
-    }
+    // Optional<Alliance> alliance = DriverStation.getAlliance();
+    // if (alliance.isPresent()) {
+    //   if (alliance.get().equals(Alliance.Blue)) {
+    //     inverse = 1;
+    //   } else {
+    //     inverse = -1;
+    //   }
+    //}
     
     xSpeed *= inverse;
     ySpeed *= inverse;
