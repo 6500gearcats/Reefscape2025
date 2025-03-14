@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -22,6 +23,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     //DriverStationSim.setAllianceStationId(AllianceStationID.Blue1);
     //DataLogManager.start();
+    CameraServer.startAutomaticCapture();
     PortForwarder.add(5801, "limelight-gca.local", 5801);
   }
 
@@ -29,6 +31,9 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     //SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
+    //.getInstance().onCommandExecute((command) -> {
+    //  SmartDashboard.putString("Command Current:", command.getName());
+    //});
   }
 
   @Override

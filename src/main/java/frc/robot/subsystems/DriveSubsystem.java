@@ -55,6 +55,7 @@ public class DriveSubsystem extends SubsystemBase {
   // ! Update this to use the pose estimator instead of normal odametry
 
   public boolean turboEnable = false;
+  public boolean snailEnable = false;
   public int aprilTag = 0;
   public int aprilTagDrive = 0;
   public Pose2d aprilTagPose = new Pose2d();
@@ -400,6 +401,7 @@ publisher = NetworkTableInstance.getDefault()
     // ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
 
     double max = m_maxSpeed.getDouble(DriveConstants.kTurboModeModifier);
+    double min = .2;
     
     if(Elevator.elevatorTooHighForTurbo){
       if(Elevator.elevatorTooHighForRegularSpeed){
@@ -412,6 +414,11 @@ publisher = NetworkTableInstance.getDefault()
       xSpeed *= max;
       ySpeed *= max;
       rot *= DriveConstants.kTurboAngularSpeed;
+    }
+    if (snailEnable) {
+      xSpeed *= min;
+      ySpeed *= min;
+      rot *= 0.4;
     }
 
     m_lastSpeeds = (fieldRelative)
