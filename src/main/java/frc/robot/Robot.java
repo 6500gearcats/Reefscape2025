@@ -21,7 +21,7 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
     //DriverStationSim.setAllianceStationId(AllianceStationID.Blue1);
-    DataLogManager.start();
+    //DataLogManager.start();
     PortForwarder.add(5801, "limelight-gca.local", 5801);
   }
 
@@ -29,9 +29,6 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     //SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
-    //.getInstance().onCommandExecute((command) -> {
-    //  SmartDashboard.putString("Command Current:", command.getName());
-    //});
   }
 
   @Override

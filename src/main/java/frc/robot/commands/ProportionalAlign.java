@@ -35,6 +35,7 @@ public class ProportionalAlign extends Command {
   double targetAngle;
   int drModifier = 130;
   double baseVelocity = 0.0;
+  double addAngle = 0.0;
 
   DriveSubsystem m_drive;
 
@@ -69,10 +70,14 @@ public class ProportionalAlign extends Command {
     if (alliance.isPresent()) {
       if (alliance.get().equals(Alliance.Blue)) {
         baseVelocity = 1;
+        addAngle = 0.0;
       } else {
         baseVelocity = -1;
+        addAngle = 180.0;
       }
     }
+
+    targetAngle = targetAngle - (addAngle * Math.abs(targetAngle)/targetAngle);
 
   }
 
@@ -117,20 +122,21 @@ public class ProportionalAlign extends Command {
 
     double velocityX = dx * 2.5 * m_speedModifier * baseVelocity;
     double velocityY = dy * 2.5 * m_speedModifier * baseVelocity;
-    double velocityR = dr / drModifier * baseVelocity;
+    double velocityR = dr / drModifier;
 
-    if (Math.abs(velocityX) > 3.5 && Math.abs(velocityR) > 3.5) {
-      m_drive.drive(xRat * 3 * baseVelocity, yRat * 3 * baseVelocity, dr / drModifier * baseVelocity, true);
+    if (Math.abs(velocityX) > 3.5 && Math.abs(velocityY) > 3.5) {
+      m_drive.drive(xRat * 3 * baseVelocity, yRat * 3 * baseVelocity, dr / drModifier, true);
     } else if (Math.abs(dx) * 2.5 * m_speedModifier > .4 && Math.abs(dy) * 2.5 * m_speedModifier > .4) {
       m_drive.drive(velocityX, velocityY, velocityR, true);
     } else {
-      m_drive.drive(xRat * .4 * m_speedModifier * baseVelocity, yRat * .4 * m_speedModifier * baseVelocity, dr / drModifier * baseVelocity, true);
+      m_drive.drive(xRat * .4 * m_speedModifier * baseVelocity, yRat * .4 * m_speedModifier * baseVelocity, dr / drModifier, true);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_drive.drive(0, 0, 0, false);
   }
 
   // Returns true when the command should end.
