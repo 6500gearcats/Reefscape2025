@@ -129,7 +129,7 @@ public class RobotContainer {
     new JoystickButton(m_gunner, XboxController.Button.kBack.value).whileTrue(new SetClimberSpeed(m_climber, -0.6));
 
     new JoystickButton(m_gunner, XboxController.Button.kLeftBumper.value)
-        .onTrue(new MoveCoral(m_CoralHolder, 0.5, true).andThen(new SetArmSpeed(m_arm, ()->0.4).withTimeout(0.5)));
+        .whileTrue(new MoveCoral(m_CoralHolder, 0.5, true));
     new JoystickButton(m_gunner, XboxController.Button.kRightBumper.value)
         .whileTrue(new MoveCoral(m_CoralHolder, -0.5, false).withTimeout(0.2)
             .andThen(new SetArmSpeed(m_arm, () -> 0.4).withTimeout(0.6)));
