@@ -62,6 +62,8 @@ public class RobotContainer {
   Climber m_climber = new Climber();
   CoralHolder m_CoralHolder = new CoralHolder();
 
+  boolean fieldRelative = true;
+
   PhotonCamera temp_camera = new PhotonCamera("ArducamTwo");
   GCPhotonVision vision = new GCPhotonVision(temp_camera);
   Vision m_vision = new Vision(m_Limelight);
@@ -104,14 +106,16 @@ public class RobotContainer {
                 MathUtil.applyDeadband(-m_driver.getLeftY() * .8, 0.1), // 0.1
                 MathUtil.applyDeadband(-m_driver.getLeftX() * .8, 0.1), // 0.1
                 MathUtil.applyDeadband(-m_driver.getRightX() * .8, 0.1),
-                !m_driver.getRightBumper()),
+                fieldRelative),
             m_robotDrive));
   }
 
   private void configureBindings() {
 
+    new JoystickButton(m_driver, XboxController.Button.kA.value).onTrue(new InstantCommand(() -> fieldRelative = !fieldRelative));
+
     new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value).whileTrue(new TurboEnable(m_robotDrive));
-    new JoystickButton(m_driver, XboxController.Button.kY.value).whileTrue(new SnailEnable(m_robotDrive));
+    new JoystickButton(m_driver, XboxController.Button.kRightBumper.value).whileTrue(new SnailEnable(m_robotDrive));
     // TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
     // new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new
     // FlipGroundIntake(m_groundIntake)).onFalse(new
