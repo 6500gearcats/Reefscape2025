@@ -18,12 +18,12 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.utility.ProportionalAlignHelper;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ProportionalAlign extends Command {
   /** Creates a new ProportionalAlign. */
   Pose2d targetPose;
-  AprilTagFieldLayout field;
   double dx;
   double dy;
   double dr;
@@ -40,7 +40,6 @@ public class ProportionalAlign extends Command {
   DriveSubsystem m_drive;
 
   public ProportionalAlign(DriveSubsystem drive, double xOffset, double yOffset) {
-    // Use addRequirements() here to declare subsystem dependencies.
     m_speedModifier = 1;
     m_xOffset = xOffset;
     m_yOffset = yOffset;
@@ -49,8 +48,8 @@ public class ProportionalAlign extends Command {
     addRequirements(m_drive);
   }
 
+  // Overloaded constructor with a speed modifier to use in autos (we need to align faster)
   public ProportionalAlign(DriveSubsystem drive, double xOffset, double yOffset, double speedModifier) {
-    // Use addRequirements() here to declare subsystem dependencies.
     m_speedModifier = speedModifier;
     m_xOffset = xOffset;
     m_yOffset = yOffset;
@@ -59,48 +58,59 @@ public class ProportionalAlign extends Command {
     addRequirements(m_drive);
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    targetPose = getBestAprilTag(m_drive.getPose());
+    // Gets nearest april tag target position through helper class
+    targetPose = ProportionalAlignHelper.getBestAprilTag(m_drive.getPose(), m_xOffset, m_yOffset);
+
+    // Gets x, y, and rotation values from april tag
     targetX = targetPose.getX();
     targetY = targetPose.getY();
     targetAngle = targetPose.getRotation().getDegrees();
+
+    // Gets the current alliance set in driver station
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if (alliance.isPresent()) {
       if (alliance.get().equals(Alliance.Blue)) {
         baseVelocity = 1;
         addAngle = 0.0;
-      } else {
+      } 
+      // If alliance is red then add 180 to the targetAngle and multiply velociy by -1 (robot just goes backwards without this on red side)
+      else {
         baseVelocity = -1;
         addAngle = 180.0;
       }
     }
 
-    targetAngle = targetAngle - (addAngle * Math.abs(targetAngle)/targetAngle);
+    // Modifies the target angle based on alliance, 
+    //targetAngle = targetAngle - (addAngle * Math.abs(targetAngle)/targetAngle);
 
+    m_drive.targetrotation = targetAngle;
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // Gets the error values of x direction, y direction
     dx = targetX - m_drive.getPose().getX();
     dy = targetY - m_drive.getPose().getY();
+
+    // Logics to mofidy the targetAngle- localizes the angle to between -180 and 180 and take most efficient path in a very complicated way
     dr = targetAngle - (Math.abs((m_drive.getAngle() % 360)) * (m_drive.getAngle()/Math.abs(m_drive.getAngle())) - 180 * (m_drive.getAngle()/Math.abs(m_drive.getAngle())));
+    dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
+
+    // Takes the total sum of errors of x and y direction to use for slowing down the robot
     double total = Math.abs(dx) + Math.abs(dy);
 
+    // Posts these error values to drive subsystem
     m_drive.distanceX = dx;
     m_drive.distanceY = dy;
     m_drive.distanceR = dr;
 
+    // Slows down the error based on the sum of the two errors
     double xRat = dx / total;
     double yRat = dy / total;
 
-    //if (Math.abs(dr) > 180) {
-    //  dr %= 360;
-    //  dr -= 180;
-    //}
-
+    // If errors for x/y positions are too tiny they just become 0
     if (Math.abs(dx) < 0.05) {
       dx = 0;
       xRat = 0;
@@ -111,80 +121,41 @@ public class ProportionalAlign extends Command {
       yRat = 0;
     }
 
-    // if (Math.abs(dr) < 1) {
-    //   dr = 0;
-    // }
-
+    // If rotational speed is less than constant then set it to a minimum speed
     if (Math.abs(dr) / drModifier < 0.05) {
       dr = 0.05 * (dr / Math.abs(dr));
       dr *= drModifier;
     }
 
-    double velocityX = dx * 2.5 * m_speedModifier * baseVelocity;
-    double velocityY = dy * 2.5 * m_speedModifier * baseVelocity;
+    double velocityX = dx * 0.8 * m_speedModifier * baseVelocity;
+    double velocityY = dy * 0.8 * m_speedModifier * baseVelocity;
     double velocityR = dr / drModifier;
 
+    // Run the robot fast when far away
     if (Math.abs(velocityX) > 3.5 && Math.abs(velocityY) > 3.5) {
-      m_drive.drive(xRat * 3 * baseVelocity, yRat * 3 * baseVelocity, dr / drModifier, true);
-    } else if (Math.abs(dx) * 2.5 * m_speedModifier > .4 && Math.abs(dy) * 2.5 * m_speedModifier > .4) {
-      m_drive.drive(velocityX, velocityY, velocityR, true);
-    } else {
-      m_drive.drive(xRat * .4 * m_speedModifier * baseVelocity, yRat * .4 * m_speedModifier * baseVelocity, dr / drModifier, true);
+      m_drive.drive(xRat * 3 * baseVelocity, yRat * 3 * baseVelocity, dr / drModifier, true, "Proportional Alignment 1");
+    } 
+    
+    // If errors are greater than .4 (but less than 3.5, in other words closer to the april tag) run slower
+    else if (Math.abs(dx) * 2.5 * m_speedModifier > .4 && Math.abs(dy) * 2.5 * m_speedModifier > .4) {
+      m_drive.drive(velocityX, velocityY, velocityR, true, "Proportional Alignment 2");
+    } 
+    
+    // If any less than .4 for the errors then drive very slow
+    else {
+      m_drive.drive(xRat * .4 * m_speedModifier * baseVelocity, yRat * .4 * m_speedModifier * baseVelocity, dr / drModifier, true, "Proportional Alignment 3");
     }
   }
 
-  // Called once the command ends or is interrupted.
+  // Stops all driving at the end
   @Override
   public void end(boolean interrupted) {
-    m_drive.drive(0, 0, 0, false);
+    m_drive.drive(0, 0, 0, false, "Proportional Align End");
   }
 
-  // Returns true when the command should end.
+  // If the errors for x, y, and rotation are tiny then the command finishes
   @Override
   public boolean isFinished() {
     return Math.abs(dx) < 0.03 && Math.abs(dy) < 0.03 && Math.abs(dr) < 30;
   }
-
-  private Pose2d getBestAprilTag(Pose2d robotPose) {
-    field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
-    int bestAprilTag = getClosestAprilTagID(robotPose.getTranslation());
-    Pose2d tagPose = field.getTagPose(bestAprilTag).get().toPose2d();
-
-    double tempAngle = tagPose.getRotation().getRadians();
-    double newX = tagPose.getX() + Math.cos(tempAngle) * m_yOffset + Math.cos(tempAngle + Math.PI / 2) * m_xOffset;
-    double newY = tagPose.getY() + Math.sin(tempAngle) * m_yOffset + Math.sin(tempAngle + Math.PI / 2) * m_xOffset;
-
-    return new Pose2d(newX, newY, tagPose.getRotation().plus(new Rotation2d(Math.PI)));
-  }
-
-  private int getClosestAprilTagID(Translation2d robotPose) {
-    int integer = 0;
-    ArrayList<Double> distances = new ArrayList<>();
-    ArrayList<Integer> tags = new ArrayList<>();
-    Optional<Alliance> alliance = DriverStation.getAlliance();
-
-    if (alliance.isPresent()) {
-      int startTag = (alliance.get() == Alliance.Red) ? 6 : 17;
-      int endTag = (alliance.get() == Alliance.Red) ? 12 : 23;
-
-      for (int i = startTag; i < endTag; i++) {
-        Translation2d tagPose = field.getTagPose(i).get().getTranslation().toTranslation2d();
-        double distance = robotPose.getDistance(tagPose);
-        distances.add(distance);
-        tags.add(i);
-      }
-    } else {
-      for (int i = 1; i < 23; i++) {
-        Translation2d tagPose = field.getTagPose(i).get().getTranslation().toTranslation2d();
-        double distance = robotPose.getDistance(tagPose);
-        distances.add(distance);
-        tags.add(i);
-      }
-    }
-
-    double minDistance = Collections.min(distances);
-    integer = distances.indexOf(minDistance);
-    return tags.get(integer);
-  }
-
 }

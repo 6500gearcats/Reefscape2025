@@ -61,6 +61,7 @@ public class DriveSubsystem extends SubsystemBase {
   public int aprilTagDrive = 0;
   public Pose2d aprilTagPose = new Pose2d();
   public Pose2d aprilTagPose2 = new Pose2d();
+  public double targetrotation = 0;
 
   // Proportional alignment logging values
   public double distanceX = 0;
@@ -115,10 +116,15 @@ public class DriveSubsystem extends SubsystemBase {
   private GCPhotonVision m_simVision;
   // ! Temporarily added this to make the pose estimator
   private Vision m_vision;
+  private String systemControlling = "";
 
   private Pose2d m_simOdometryPose;
   private ShuffleboardTab m_driveTab = Shuffleboard.getTab("Drive");
   private GenericEntry m_maxSpeed;
+
+  private double commandedXSpeed = 0.0;
+  private double commandedYSpeed = 0.0;
+  private double commandedRotation = 0.0;
   
   /*public SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, m_gyro.getRotation2d(), new SwerveModulePosition[] {
     m_frontLeft.getPosition(),
@@ -232,12 +238,19 @@ publisher = NetworkTableInstance.getDefault()
 
   @Override
   public void periodic() {
-    // Update the odometry in the periodic block
+    // Update the odometry in te periodic block
     updateOdometry();
 
+    SmartDashboard.putNumber("target rotation", targetrotation);
+
+    SmartDashboard.putString("System Running Drive", systemControlling);
     SmartDashboard.putNumber("Alignment Distance X", distanceX);
     SmartDashboard.putNumber("Alignment Distance Y", distanceY);
     SmartDashboard.putNumber("Alignment Offset Rotation", distanceR);
+
+    SmartDashboard.putNumber("Commanded X Speed", commandedXSpeed);
+    SmartDashboard.putNumber("Commanded Y Speed", commandedYSpeed);
+    SmartDashboard.putNumber("Commanded Rotation", commandedRotation);
 
     if (Robot.isReal()) {
       m_field.setRobotPose(getPose());
@@ -267,6 +280,10 @@ publisher = NetworkTableInstance.getDefault()
     });
 
 
+  }
+
+  public void setYaw(int yaw) {
+    m_gyro.setYaw(180);
   }
 
   @Override
@@ -433,6 +450,55 @@ publisher = NetworkTableInstance.getDefault()
       ySpeed *= min;
       rot *= 0.4;
     }
+  }
+
+    public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, String system) {
+      int inverse = 1;
+      // Optional<Alliance> alliance = DriverStation.getAlliance();
+      // if (alliance.isPresent()) {
+      //   if (alliance.get().equals(Alliance.Blue)) {
+      //     inverse = 1;
+      //   } else {
+      //     inverse = -1;
+      //   }
+      //}
+
+      systemControlling = system;
+      
+      xSpeed *= inverse;
+      ySpeed *= inverse;
+  
+      m_fieldOriented = fieldRelative;
+      // Adjust input based on max speed
+      xSpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
+      ySpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
+  
+      rot *= DriveConstants.kMaxAngularSpeed;
+      // Non linear speed set
+      // xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
+      // ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
+  
+      double max = m_maxSpeed.getDouble(DriveConstants.kTurboModeModifier);
+      double min = .2;
+      
+      if(Elevator.elevatorTooHighForTurbo){
+        if(Elevator.elevatorTooHighForRegularSpeed){
+          xSpeed *= .5;
+          ySpeed *= .5;
+          rot *= .5;
+        }
+      } else if (turboEnable) {
+        
+        xSpeed *= max;
+        ySpeed *= max;
+        rot *= DriveConstants.kTurboAngularSpeed;
+      }
+      if (snailEnable) {
+        xSpeed *= min;
+        ySpeed *= min;
+        rot *= 0.4;
+      }
+  
 
     m_lastSpeeds = (fieldRelative)
         ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(getAngle()))
@@ -448,6 +514,10 @@ publisher = NetworkTableInstance.getDefault()
     m_rearRight.setDesiredState(swerveModuleStates[3]);
 
     fakeYaw += rot;
+
+    commandedXSpeed = xSpeed;
+    commandedYSpeed = ySpeed;
+    commandedRotation = rot;  
 
   }
 
