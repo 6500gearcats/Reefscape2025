@@ -508,11 +508,9 @@ publisher = NetworkTableInstance.getDefault()
 
     fakeYaw += rot;
 
-    if(system.equals("Drive Train - Controller")){
-      commandedXSpeed = xSpeed;
-      commandedYSpeed = ySpeed;
-      commandedRotation = rot;  
-    }
+    commandedXSpeed = xSpeed;
+    commandedYSpeed = ySpeed;
+    commandedRotation = rot;  
 
   }
 

@@ -170,8 +170,8 @@ public class RobotContainer {
     new JoystickButton(m_driver, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> resetRobotGyroAndOrientation()));
     new POVButton(m_driver, 180).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
     // previous yOffset = 0.75
-    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, -0.15, .475));
-    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .475));
+    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).onTrue(new ProportionalAlign(m_robotDrive, -0.15, .475));
+    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).onTrue(new ProportionalAlign(m_robotDrive, 0.2, .475));
     new POVButton(m_driver, 0).whileTrue(new ProportionalAlign(m_robotDrive, 0, .475));
 
     // Auto score L4
