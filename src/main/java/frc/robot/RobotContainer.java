@@ -10,6 +10,7 @@ import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -20,17 +21,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.AlgaeIntake;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.CoralHolder;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Vision;
 import frc.robot.commands.AlgaeGrab;
 import frc.robot.commands.AlgaeSequence;
 import frc.robot.commands.CoralGrab;
@@ -39,12 +32,19 @@ import frc.robot.commands.L4Sequence;
 import frc.robot.commands.MoveCoral;
 import frc.robot.commands.OutakeAlgae;
 import frc.robot.commands.ProportionalAlign;
+import frc.robot.commands.SetArmAndElevatorPositions;
 import frc.robot.commands.SetArmSpeed;
 import frc.robot.commands.SetClimberSpeed;
 import frc.robot.commands.SetElevatorSpeed;
 import frc.robot.commands.SnailEnable;
 import frc.robot.commands.TurboEnable;
-import frc.robot.commands.SetArmAndElevatorPositions;
+import frc.robot.subsystems.AlgaeIntake;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.CoralHolder;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
 
