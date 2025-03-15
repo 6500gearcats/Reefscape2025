@@ -174,6 +174,9 @@ public class RobotContainer {
     new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .475));
     new POVButton(m_driver, 0).whileTrue(new ProportionalAlign(m_robotDrive, 0, .475));
 
+    // Auto score L4
+    new JoystickButton(m_driver, XboxController.Button.kY.value).whileTrue((new ProportionalAlign(m_robotDrive, -0.15, 0.475)).andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555)).andThen(new ProportionalAlign(m_robotDrive, 0.15, 0.465)));
+
   }
 
   public Command getAutonomousCommand() {

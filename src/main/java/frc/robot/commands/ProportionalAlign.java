@@ -142,7 +142,7 @@ public class ProportionalAlign extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1 && Math.abs(dr) < 30;
+    return Math.abs(dx) < 0.03 && Math.abs(dy) < 0.03 && Math.abs(dr) < 30;
   }
 
   private Pose2d getBestAprilTag(Pose2d robotPose) {
