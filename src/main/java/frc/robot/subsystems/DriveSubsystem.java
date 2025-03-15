@@ -48,6 +48,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.GCPhotonVision;
+import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
 import frc.robot.subsystems.Vision;
 
@@ -389,6 +390,18 @@ publisher = NetworkTableInstance.getDefault()
    */
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+    int inverse = 1;
+    // Optional<Alliance> alliance = DriverStation.getAlliance();
+    // if (alliance.isPresent()) {
+    //   if (alliance.get().equals(Alliance.Blue)) {
+    //     inverse = 1;
+    //   } else {
+    //     inverse = -1;
+    //   }
+    //}
+    
+    xSpeed *= inverse;
+    ySpeed *= inverse;
 
     m_fieldOriented = fieldRelative;
     // Adjust input based on max speed
@@ -486,8 +499,19 @@ publisher = NetworkTableInstance.getDefault()
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
+    // Optional<Alliance> alliance = DriverStation.getAlliance();
+    // if (alliance.isPresent()) {
+    //   if (alliance.get().equals(Alliance.Blue)) {
+    //     m_gyro.reset();
+        
+    //   } else {
+    //     m_gyro.setYaw(180);
+    //   }
+    // }
     m_gyro.reset();
+    
   }
+  
 
   /**
    * Returns the heading of the robot.

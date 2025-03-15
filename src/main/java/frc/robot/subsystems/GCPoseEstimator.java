@@ -119,7 +119,7 @@ public class GCPoseEstimator extends SubsystemBase {
   //The following method is limelight integration from LimeLight themselves.
   public void useLimeLight() {
     //TODO: add logic to update useMegaTag2 dynamically based on what limelight sees
-    boolean useMegaTag2 = false; //set to false to use MegaTag1
+    boolean useMegaTag2 = true; //set to false to use MegaTag1
     boolean doRejectUpdate = false;
 
     if(useMegaTag2 == false)
@@ -171,7 +171,15 @@ public class GCPoseEstimator extends SubsystemBase {
       * For 2024 and beyond, the origin of your coordinate system should always be the "blue" origin.
       * FRC teams should always use botpose_wpiblue for pose-related functionality
       */
-      LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
+      Optional<Alliance> alliance = DriverStation.getAlliance();
+      if (alliance.isPresent()) {
+        if (alliance.get().equals(Alliance.Blue)) {
+          LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle(), 0, 0, 0, 0, 0);
+        } else {
+          LimelightHelpers.SetRobotOrientation("limelight-gcc", m_robotDrive.getAngle() + 180, 0, 0, 0, 0, 0);
+        }
+      }
+      LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 0, 180);
       LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-gcc");
       if(Math.abs(DriveSubsystem.m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {
@@ -183,7 +191,7 @@ public class GCPoseEstimator extends SubsystemBase {
       }
       if(!doRejectUpdate)
       {
-        m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+        m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5, Units.degreesToRadians(20)));
         m_poseEstimator.addVisionMeasurement(
             mt2.pose,
             mt2.timestampSeconds);
