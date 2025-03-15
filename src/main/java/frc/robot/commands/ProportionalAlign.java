@@ -120,8 +120,8 @@ public class ProportionalAlign extends Command {
       dr *= drModifier;
     }
 
-    double velocityX = dx * 2.5 * m_speedModifier * baseVelocity;
-    double velocityY = dy * 2.5 * m_speedModifier * baseVelocity;
+    double velocityX = dx * 0.8 * m_speedModifier * baseVelocity;
+    double velocityY = dy * 0.8 * m_speedModifier * baseVelocity;
     double velocityR = dr / drModifier;
 
     if (Math.abs(velocityX) > 3.5 && Math.abs(velocityY) > 3.5) {
