@@ -61,6 +61,7 @@ public class DriveSubsystem extends SubsystemBase {
   public int aprilTagDrive = 0;
   public Pose2d aprilTagPose = new Pose2d();
   public Pose2d aprilTagPose2 = new Pose2d();
+  public double targetrotation = 0;
 
   // Proportional alignment logging values
   public double distanceX = 0;
@@ -237,8 +238,10 @@ publisher = NetworkTableInstance.getDefault()
 
   @Override
   public void periodic() {
-    // Update the odometry in the periodic block
+    // Update the odometry in te periodic block
     updateOdometry();
+
+    SmartDashboard.putNumber("target rotation", targetrotation);
 
     SmartDashboard.putString("System Running Drive", systemControlling);
     SmartDashboard.putNumber("Alignment Distance X", distanceX);
@@ -277,6 +280,10 @@ publisher = NetworkTableInstance.getDefault()
     });
 
 
+  }
+
+  public void setYaw(int yaw) {
+    m_gyro.setYaw(180);
   }
 
   @Override
