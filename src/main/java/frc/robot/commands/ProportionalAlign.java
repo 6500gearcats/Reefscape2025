@@ -125,18 +125,18 @@ public class ProportionalAlign extends Command {
     double velocityR = dr / drModifier;
 
     if (Math.abs(velocityX) > 3.5 && Math.abs(velocityY) > 3.5) {
-      m_drive.drive(xRat * 3 * baseVelocity, yRat * 3 * baseVelocity, dr / drModifier, true);
+      m_drive.drive(xRat * 3 * baseVelocity, yRat * 3 * baseVelocity, dr / drModifier, true, "Proportional Alignment 1");
     } else if (Math.abs(dx) * 2.5 * m_speedModifier > .4 && Math.abs(dy) * 2.5 * m_speedModifier > .4) {
-      m_drive.drive(velocityX, velocityY, velocityR, true);
+      m_drive.drive(velocityX, velocityY, velocityR, true, "Proportional Alignment 2");
     } else {
-      m_drive.drive(xRat * .4 * m_speedModifier * baseVelocity, yRat * .4 * m_speedModifier * baseVelocity, dr / drModifier, true);
+      m_drive.drive(xRat * .4 * m_speedModifier * baseVelocity, yRat * .4 * m_speedModifier * baseVelocity, dr / drModifier, true, "Proportional Alignment 3");
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_drive.drive(0, 0, 0, false);
+    m_drive.drive(0, 0, 0, false, "Proportional Align End");
   }
 
   // Returns true when the command should end.
