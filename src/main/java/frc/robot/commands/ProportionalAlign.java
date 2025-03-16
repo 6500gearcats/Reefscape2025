@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.DriveSubsystem;
@@ -98,11 +99,16 @@ public class ProportionalAlign extends Command {
     // dr = targetAngle - (Math.abs(currentAngle) * (currentAngle/Math.abs(currentAngle)) - 180 * (currentAngle/Math.abs(currentAngle)));
     // dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
 
-    double currentAngle = normalizeAngle(m_drive.getAngle());   
+    double currentAngle = m_drive.getAngle();   
     
-    dr = normalizeAngle(targetAngle - currentAngle);
+    double temp = normalizeAngle(targetAngle - currentAngle);
     
-     
+    dr = sethalizeAngle(currentAngle);
+
+    SmartDashboard.putNumber("Seth Angle", dr);
+    SmartDashboard.putNumber("Norm Angle", temp);
+    
+
     // Takes the total sum of errors of x and y direction to use for slowing down the robot
     double total = Math.abs(dx) + Math.abs(dy);
 
@@ -165,6 +171,12 @@ public class ProportionalAlign extends Command {
     return currentAngle;
   }
 
+  private double sethalizeAngle(double currentAngle) {
+    double dr = targetAngle - (Math.abs(currentAngle) * (currentAngle/Math.abs(currentAngle)) - 180 * (currentAngle/Math.abs(currentAngle)));
+    dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
+    
+    return currentAngle;
+  }
   // Stops all driving at the end
   @Override
   public void end(boolean interrupted) {
