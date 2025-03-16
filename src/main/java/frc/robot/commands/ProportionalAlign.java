@@ -95,9 +95,13 @@ public class ProportionalAlign extends Command {
     dy = targetY - m_drive.getPose().getY();
 
     // Logics to mofidy the targetAngle- localizes the angle to between -180 and 180 and take most efficient path in a very complicated way
-    dr = targetAngle - (Math.abs((m_drive.getAngle() % 360)) * (m_drive.getAngle()/Math.abs(m_drive.getAngle())) - 180 * (m_drive.getAngle()/Math.abs(m_drive.getAngle())));
-    dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
+    // dr = targetAngle - (Math.abs(currentAngle) * (currentAngle/Math.abs(currentAngle)) - 180 * (currentAngle/Math.abs(currentAngle)));
+    // dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
 
+    double currentAngle = m_drive.getAngle();   
+    dr = normalizeAngle(targetAngle - currentAngle);
+    
+     
     // Takes the total sum of errors of x and y direction to use for slowing down the robot
     double total = Math.abs(dx) + Math.abs(dy);
 
@@ -145,6 +149,19 @@ public class ProportionalAlign extends Command {
     else {
       m_drive.drive(xRat * .4 * m_speedModifier * baseVelocity, yRat * .4 * m_speedModifier * baseVelocity, dr / drModifier, true, "Proportional Alignment 3");
     }
+  }
+
+  private double normalizeAngle(double currentAngle) {
+    if (currentAngle > 0) {
+      currentAngle = currentAngle % 360;         // if +ve normalize to 0-360
+    }
+    else {
+      currentAngle = 0 - (360-currentAngle) % 360;   // if -ve normalize to -360 to 0
+    }
+
+    currentAngle = ((currentAngle+180) % 360) - 180;  // shift range up to remodulo, then subtract offset to force -180 to +180
+
+    return currentAngle;
   }
 
   // Stops all driving at the end
