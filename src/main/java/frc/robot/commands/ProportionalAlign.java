@@ -103,8 +103,10 @@ public class ProportionalAlign extends Command {
     
     double temp = normalizeAngle(targetAngle - currentAngle);
     
-    dr = sethalizeAngle(currentAngle);
-
+    //dr = sethalizeAngle(currentAngle);
+    dr = targetAngle - (Math.abs((currentAngle % 360)) * (currentAngle/Math.abs(currentAngle)) - 180 * (currentAngle/Math.abs(currentAngle)));
+    dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
+    
     SmartDashboard.putNumber("Seth Angle", dr);
     SmartDashboard.putNumber("Norm Angle", temp);
     
