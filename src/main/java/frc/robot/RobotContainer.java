@@ -78,7 +78,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("CoralPlace", new L4Sequence(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("CoralGrab", new CoralGrab(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("AlgaeGrab", new AlgaeGrab(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
-    NamedCommands.registerCommand("RaiseElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555, 0.6, 0.4, -5));
+    NamedCommands.registerCommand("RaiseElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.68, .555, 0.6, 0.4, -5));
     NamedCommands.registerCommand("LowerElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.18, 0.1, 0.6, 0.4, -4));
     NamedCommands.registerCommand("LowerElevatorAlgae", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4, -2));
     NamedCommands.registerCommand("AlgaeProcessor", new AlgaeSequence(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
@@ -145,7 +145,7 @@ public class RobotContainer {
         .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.547));
     // Coral L4
     new JoystickButton(m_gunner, XboxController.Button.kY.value)
-        .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555));
+        .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.68, .555));
 
     // Coral L2
     new JoystickButton(m_gunner, XboxController.Button.kB.value)

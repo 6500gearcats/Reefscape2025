@@ -25,7 +25,7 @@ public class SetArmAndElevatorPositions extends ParallelCommandGroup {
   public SetArmAndElevatorPositions(Elevator m_elevator, Arm m_arm, double m_height, double m_angle, double elevatorMinSpeed, double armMinSpeed, double elevatorMaxSpeed) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new SetElevatorHeight(m_elevator, m_height, elevatorMinSpeed, elevatorMaxSpeed), new SetArmPosition(m_arm, m_angle, armMinSpeed), new WaitCommand(0.5));
+    addCommands(new SetElevatorHeight(m_elevator, m_height, elevatorMinSpeed, elevatorMaxSpeed), new SetArmPosition(m_arm, m_angle, armMinSpeed));
 
   }
 }
