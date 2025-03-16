@@ -98,7 +98,8 @@ public class ProportionalAlign extends Command {
     // dr = targetAngle - (Math.abs(currentAngle) * (currentAngle/Math.abs(currentAngle)) - 180 * (currentAngle/Math.abs(currentAngle)));
     // dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
 
-    double currentAngle = m_drive.getAngle();   
+    double currentAngle = normalizeAngle(m_drive.getAngle());   
+    
     dr = normalizeAngle(targetAngle - currentAngle);
     
      
