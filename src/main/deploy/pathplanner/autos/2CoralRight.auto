@@ -61,21 +61,41 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "BottomSourceToCoral"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BottomSourceToCoral"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "SetPreElevator"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "RaiseElevatorL4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ProportionalAlignRight"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ProportionalAlignRight"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RaiseElevatorL4"
+                }
+              }
+            ]
           }
         },
         {
