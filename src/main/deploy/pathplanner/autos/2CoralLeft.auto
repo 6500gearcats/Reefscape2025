@@ -73,16 +73,29 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "RaiseElevatorL4"
+                  "name": "SetPreElevator"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "ProportionalAlignLeft"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ProportionalAlignLeft"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RaiseElevatorL4"
+                }
+              }
+            ]
           }
         },
         {

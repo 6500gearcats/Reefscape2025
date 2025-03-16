@@ -82,6 +82,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("LowerElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.18, 0.1, 0.6, 0.4, -4));
     NamedCommands.registerCommand("LowerElevatorAlgae", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4, -2));
     NamedCommands.registerCommand("AlgaeProcessor", new AlgaeSequence(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
+    NamedCommands.registerCommand("SetPreElevator", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.18, 0.36, 0.6, 0.4, -4));
     NamedCommands.registerCommand("ProportionalAlignLeft", new ProportionalAlign(m_robotDrive, -0.15, .475, 2));
     NamedCommands.registerCommand("ProportionalAlignRight", new ProportionalAlign(m_robotDrive, 0.2, .475, 2));
     NamedCommands.registerCommand("ProportionalAlignAlgae", new ProportionalAlign(m_robotDrive, 0, .475, 2));
