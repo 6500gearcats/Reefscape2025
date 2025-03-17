@@ -96,9 +96,18 @@ public class ProportionalAlign extends Command {
     dy = targetY - m_drive.getPose().getY();
 
     double currentAngle = m_drive.getAngle();
+    double offset = 0.0;
+
+    if (currentAngle != 0) {
+      offset = (Math.abs((currentAngle % 360)) * (currentAngle/Math.abs(currentAngle)) - 180 * (currentAngle/Math.abs(currentAngle)));
+    }
+    
     // Logics to mofidy the targetAngle- localizes the angle to between -180 and 180 and take most efficient path in a very complicated way
-    dr = targetAngle - (Math.abs((currentAngle % 360)) * (currentAngle/Math.abs(currentAngle)) - 180 * (currentAngle/Math.abs(currentAngle)));
+    dr = targetAngle - offset;
+
     //dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
+
+    SmartDashboard.putNumber("Seth Angle", dr);
 
     // Takes the total sum of errors of x and y direction to use for slowing down the robot
     double total = Math.abs(dx) + Math.abs(dy);
@@ -123,9 +132,10 @@ public class ProportionalAlign extends Command {
       yRat = 0;
     }
 
+    double absrot = Math.abs(dr);
     // If rotational speed is less than constant then set it to a minimum speed
-    if (Math.abs(dr) / drModifier < 0.05) {
-      dr = 0.05 * (dr / Math.abs(dr));
+    if (absrot / drModifier < 0.05) {
+      dr = 0.05 * (dr / absrot);
       dr *= drModifier;
     }
 
@@ -135,7 +145,7 @@ public class ProportionalAlign extends Command {
 
     // Run the robot fast when far away
     if (Math.abs(velocityX) > 3.5 && Math.abs(velocityY) > 3.5) {
-      m_drive.drive(xRat * 3 * baseVelocity, yRat * 3 * baseVelocity, dr / drModifier, true, "Proportional Alignment 1");
+      m_drive.drive(xRat * 3 * baseVelocity, yRat * 3 * baseVelocity, velocityR, true, "Proportional Alignment 1");
     } 
     
     // If errors are greater than .4 (but less than 3.5, in other words closer to the april tag) run slower
@@ -145,29 +155,10 @@ public class ProportionalAlign extends Command {
     
     // If any less than .4 for the errors then drive very slow
     else {
-      m_drive.drive(xRat * .4 * m_speedModifier * baseVelocity, yRat * .4 * m_speedModifier * baseVelocity, dr / drModifier, true, "Proportional Alignment 3");
+      m_drive.drive(xRat * .4 * m_speedModifier * baseVelocity, yRat * .4 * m_speedModifier * baseVelocity, velocityR, true, "Proportional Alignment 3");
     }
   }
 
-  private double normalizeAngle(double currentAngle) {
-    if (currentAngle > 0) {
-      currentAngle = currentAngle % 360;         // if +ve normalize to 0-360
-    }
-    else {
-      currentAngle = 0 - (360-currentAngle) % 360;   // if -ve normalize to -360 to 0
-    }
-
-    currentAngle = ((currentAngle+180) % 360) - 180;  // shift range up to remodulo, then subtract offset to force -180 to +180
-
-    return currentAngle;
-  }
-
-  private double sethalizeAngle(double currentAngle) {
-    double dr = targetAngle - (Math.abs(currentAngle) * (currentAngle/Math.abs(currentAngle)) - 180 * (currentAngle/Math.abs(currentAngle)));
-    dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
-    
-    return currentAngle;
-  }
   // Stops all driving at the end
   @Override
   public void end(boolean interrupted) {
