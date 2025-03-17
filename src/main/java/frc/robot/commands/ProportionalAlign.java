@@ -84,7 +84,7 @@ public class ProportionalAlign extends Command {
     }
 
     // Modifies the target angle based on alliance, 
-    //targetAngle = targetAngle - (addAngle * Math.abs(targetAngle)/targetAngle);
+    targetAngle = targetAngle - (addAngle * Math.abs(targetAngle)/targetAngle);
 
     m_drive.targetrotation = targetAngle;
   }
@@ -96,20 +96,8 @@ public class ProportionalAlign extends Command {
     dy = targetY - m_drive.getPose().getY();
 
     // Logics to mofidy the targetAngle- localizes the angle to between -180 and 180 and take most efficient path in a very complicated way
-    // dr = targetAngle - (Math.abs(currentAngle) * (currentAngle/Math.abs(currentAngle)) - 180 * (currentAngle/Math.abs(currentAngle)));
-    // dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
-
-    double currentAngle = m_drive.getAngle();   
-    
-    double temp = normalizeAngle(targetAngle - currentAngle);
-    
-    //dr = sethalizeAngle(currentAngle);
-    dr = targetAngle - (Math.abs((currentAngle % 360)) * (currentAngle/Math.abs(currentAngle)) - 180 * (currentAngle/Math.abs(currentAngle)));
-    dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
-    
-    SmartDashboard.putNumber("Seth Angle", dr);
-    SmartDashboard.putNumber("Norm Angle", temp);
-    
+    dr = targetAngle - (Math.abs((m_drive.getAngle() % 360)) * (m_drive.getAngle()/Math.abs(m_drive.getAngle())) - 180 * (m_drive.getAngle()/Math.abs(m_drive.getAngle())));
+    //dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
 
     // Takes the total sum of errors of x and y direction to use for slowing down the robot
     double total = Math.abs(dx) + Math.abs(dy);
