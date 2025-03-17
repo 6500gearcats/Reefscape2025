@@ -95,8 +95,9 @@ public class ProportionalAlign extends Command {
     dx = targetX - m_drive.getPose().getX();
     dy = targetY - m_drive.getPose().getY();
 
+    double currentAngle = m_drive.getAngle();
     // Logics to mofidy the targetAngle- localizes the angle to between -180 and 180 and take most efficient path in a very complicated way
-    dr = targetAngle - (Math.abs((m_drive.getAngle() % 360)) * (m_drive.getAngle()/Math.abs(m_drive.getAngle())) - 180 * (m_drive.getAngle()/Math.abs(m_drive.getAngle())));
+    dr = targetAngle - (Math.abs((currentAngle % 360)) * (currentAngle/Math.abs(currentAngle)) - 180 * (currentAngle/Math.abs(currentAngle)));
     //dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
 
     // Takes the total sum of errors of x and y direction to use for slowing down the robot
