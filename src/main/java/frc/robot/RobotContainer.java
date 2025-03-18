@@ -48,8 +48,8 @@ import frc.robot.commands.SetArmAndElevatorPositions;
 
 public class RobotContainer {
 
-  // AprilTagFieldLayout field;
-  // Pose2d newPose = new Pose2d();
+  double[] coralHeights = {0.19, 0.36, 0.68};
+  int selectedCoralHeight = 2;
 
   XboxController m_driver = new XboxController(0);
   XboxController m_gunner = new XboxController(1);
@@ -176,11 +176,19 @@ public class RobotContainer {
     new POVButton(m_driver, 0).whileTrue(new ProportionalAlign(m_robotDrive, 0, .475));
     new JoystickButton(m_driver, XboxController.Button.kB.value).onTrue(new InstantCommand(() -> m_robotDrive.setYaw(180)));
 
+    // Select row of coral to score
+    new POVButton(m_driver, 0).onTrue(new InstantCommand(() -> {
+      if(selectedCoralHeight > 0){
+        selectedCoralHeight -= 1;
+      }}));
+    new POVButton(m_driver, 0).onTrue(new InstantCommand(() -> {
+      if(selectedCoralHeight < 2){
+        selectedCoralHeight += 1;
+      }}));
     // Auto score L4 left
-    new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue((new ProportionalAlign(m_robotDrive, -0.15, 0.475)).andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555)).andThen(new ProportionalAlign(m_robotDrive, -0.15, 0.45)).andThen(new MoveCoral(m_CoralHolder, -0.5, false)).withTimeout(0.2).andThen(new SetArmSpeed(m_arm, () -> 0.4)).withTimeout(0.6));
-
+    new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue((new ProportionalAlign(m_robotDrive, -0.15, 0.475)).andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, coralHeights[selectedCoralHeight], .555)).andThen(new ProportionalAlign(m_robotDrive, -0.15, 0.45)).andThen(new MoveCoral(m_CoralHolder, -0.5, false)).withTimeout(0.2).andThen(new SetArmSpeed(m_arm, () -> 0.4)).withTimeout(0.6));
     // Auto score L4 right
-    new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue((new ProportionalAlign(m_robotDrive, 0.2, 0.475)).andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555)).andThen(new ProportionalAlign(m_robotDrive, 0.2, 0.45)).andThen(new MoveCoral(m_CoralHolder, -0.5, false)).withTimeout(0.2).andThen(new SetArmSpeed(m_arm, () -> 0.4)).withTimeout(0.6));
+    new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue((new ProportionalAlign(m_robotDrive, 0.2, 0.475)).andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, coralHeights[selectedCoralHeight], .555)).andThen(new ProportionalAlign(m_robotDrive, 0.2, 0.45)).andThen(new MoveCoral(m_CoralHolder, -0.5, false)).withTimeout(0.2).andThen(new SetArmSpeed(m_arm, () -> 0.4)).withTimeout(0.6));
 
   }
 
