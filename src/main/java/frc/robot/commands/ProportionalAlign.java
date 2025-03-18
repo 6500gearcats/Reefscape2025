@@ -4,20 +4,13 @@
 
 package frc.robot.commands;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Optional;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utility.ProportionalAlignHelper;
 
@@ -86,7 +79,6 @@ public class ProportionalAlign extends Command {
     // Modifies the target angle based on alliance, 
     targetAngle = targetAngle - (addAngle * Math.abs(targetAngle)/targetAngle);
 
-    m_drive.targetrotation = targetAngle;
   }
 
   @Override
@@ -113,9 +105,11 @@ public class ProportionalAlign extends Command {
     double total = Math.abs(dx) + Math.abs(dy);
 
     // Posts these error values to drive subsystem
-    m_drive.distanceX = dx;
-    m_drive.distanceY = dy;
-    m_drive.distanceR = dr;
+    SmartDashboard.putNumber("Alignment Distance X", dx);
+    SmartDashboard.putNumber("Alignment Distance Y", dy);
+    SmartDashboard.putNumber("Alignment Offset Rotation", dr);
+    SmartDashboard.putNumber("Target Angle", targetAngle);
+    
 
     // Slows down the error based on the sum of the two errors
     double xRat = dx / total;
@@ -149,7 +143,7 @@ public class ProportionalAlign extends Command {
     } 
     
     // If errors are greater than .4 (but less than 3.5, in other words closer to the april tag) run slower
-    else if (Math.abs(dx) * 2.5 * m_speedModifier > .4 && Math.abs(dy) * 2.5 * m_speedModifier > .4) {
+    else if (Math.abs(dx) * 2.5 * m_speedModifier > .4 && Math.abs(dy) * 2.5 * m_speedModifier > .4) {      
       m_drive.drive(velocityX, velocityY, velocityR, true, "Proportional Alignment 2");
     } 
     
