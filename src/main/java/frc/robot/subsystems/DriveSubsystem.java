@@ -51,12 +51,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   // public Pose2d aprilTagPose = new Pose2d();
   // public Pose2d aprilTagPose2 = new Pose2d();
-  public double targetrotation = 0;
+ 
 
-  // Proportional alignment logging values
-  private double distanceX = 0;
-  private double distanceY = 0;
-  private double distanceR = 0;
   private double fakeYaw = 0;
   
   // Create MAXSwerveModules
@@ -82,8 +78,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   // private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
-  public static Pigeon2 m_gyro;
-  public static AHRS m_gyro2;
+  private static Pigeon2 m_gyro;
+  //public static AHRS m_gyro;
 
   private int m_gyroSim;
   private SimDouble m_simAngle;
@@ -94,7 +90,7 @@ public class DriveSubsystem extends SubsystemBase {
   private ChassisSpeeds m_lastSpeeds;
 
   // Odometry class for tracking robot pose
-  SwerveDriveOdometry m_odometry;
+  private SwerveDriveOdometry m_odometry;
 
   // The new Pose Estimator
   private GCPoseEstimator m_poseEstimator;
@@ -142,7 +138,7 @@ public class DriveSubsystem extends SubsystemBase {
        * See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for
        * details.
        */
-      m_gyro2 = new AHRS(NavXComType.kMXP_SPI);
+      // m_gyro = new AHRS(NavXComType.kMXP_SPI);
       m_gyro = new Pigeon2(30, "rio");
       System.out.println("Pigeon2 constructed");
     } catch (RuntimeException ex) {
@@ -229,8 +225,6 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     // Update the odometry in te periodic block
     updateOdometry();
-
-    SmartDashboard.putNumber("target rotation", targetrotation);
 
     SmartDashboard.putString("System Running Drive", systemControlling);
 
@@ -541,6 +535,10 @@ public class DriveSubsystem extends SubsystemBase {
     } else {
       return fakeYaw * 1.169;
     }
+  }
+
+  public static double getRate() {
+    return m_gyro.getRate();
   }
 
   public boolean toggleFieldOriented() {
