@@ -42,10 +42,10 @@ public class SetElevatorHeight extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double velocity = maxSpeed * (m_height - m_elevator.getElevatorHeight()) - 0.04;
+    double velocity = maxSpeed * (m_height - m_elevator.getElevatorHeight()) - 0.08;
 
-    if(Math.abs(velocity) < minSpeed - .04){
-      velocity = minSpeed * Math.abs(velocity)/velocity -.04;
+    if(Math.abs(velocity) < minSpeed - .08){
+      velocity = minSpeed * Math.abs(velocity)/velocity -.08;
     }
 
     m_elevator.setElevatorSpeed(velocity);
