@@ -90,6 +90,8 @@ public class ProportionalAlign extends Command {
 
   @Override
   public void execute() {
+
+    try {
     // Gets the error values of x direction, y direction
     dx = targetX - m_drive.getPose().getX();
     dy = targetY - m_drive.getPose().getY();
@@ -145,6 +147,11 @@ public class ProportionalAlign extends Command {
     else {
       m_drive.drive(xRat * .4 * m_speedModifier * baseVelocity, yRat * .4 * m_speedModifier * baseVelocity, dr / drModifier, true, "Proportional Alignment 3");
     }
+  }
+  catch(Exception e)
+  {
+    System.console().writer().println("Exception in ProportionalAlign" + e.getMessage());
+  }
   }
 
   // Stops all driving at the end
