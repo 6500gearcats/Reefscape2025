@@ -48,7 +48,8 @@ public class ProportionalAlign extends Command {
     addRequirements(m_drive);
   }
 
-  // Overloaded constructor with a speed modifier to use in autos (we need to align faster)
+  // Overloaded constructor with a speed modifier to use in autos (we need to
+  // align faster)
   public ProportionalAlign(DriveSubsystem drive, double xOffset, double yOffset, double speedModifier) {
     m_speedModifier = speedModifier;
     m_xOffset = xOffset;
@@ -74,16 +75,17 @@ public class ProportionalAlign extends Command {
       if (alliance.get().equals(Alliance.Blue)) {
         baseVelocity = 1;
         addAngle = 0.0;
-      } 
-      // If alliance is red then add 180 to the targetAngle and multiply velociy by -1 (robot just goes backwards without this on red side)
+      }
+      // If alliance is red then add 180 to the targetAngle and multiply velociy by -1
+      // (robot just goes backwards without this on red side)
       else {
         baseVelocity = -1;
         addAngle = 180.0;
       }
     }
 
-    // Modifies the target angle based on alliance, 
-    targetAngle = targetAngle - (addAngle * Math.abs(targetAngle)/targetAngle);
+    // Modifies the target angle based on alliance,
+    targetAngle = targetAngle - (addAngle * Math.abs(targetAngle) / targetAngle);
 
     m_drive.targetrotation = targetAngle;
   }
@@ -92,66 +94,70 @@ public class ProportionalAlign extends Command {
   public void execute() {
 
     try {
-    // Gets the error values of x direction, y direction
-    dx = targetX - m_drive.getPose().getX();
-    dy = targetY - m_drive.getPose().getY();
+      // Gets the error values of x direction, y direction
+      dx = targetX - m_drive.getPose().getX();
+      dy = targetY - m_drive.getPose().getY();
 
-    // Logics to mofidy the targetAngle- localizes the angle to between -180 and 180 and take most efficient path in a very complicated way
-    dr = targetAngle - (Math.abs((m_drive.getAngle() % 360)) * (m_drive.getAngle()/Math.abs(m_drive.getAngle())) - 180 * (m_drive.getAngle()/Math.abs(m_drive.getAngle())));
-    //dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
+      // Logics to mofidy the targetAngle- localizes the angle to between -180 and 180
+      // and take most efficient path in a very complicated way
+      dr = targetAngle - (Math.abs((m_drive.getAngle() % 360)) * (m_drive.getAngle() / Math.abs(m_drive.getAngle()))
+          - 180 * (m_drive.getAngle() / Math.abs(m_drive.getAngle())));
+      // dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
 
-    // Takes the total sum of errors of x and y direction to use for slowing down the robot
-    double total = Math.abs(dx) + Math.abs(dy);
+      // Takes the total sum of errors of x and y direction to use for slowing down
+      // the robot
+      double total = Math.abs(dx) + Math.abs(dy);
 
-    // Posts these error values to drive subsystem
-    m_drive.distanceX = dx;
-    m_drive.distanceY = dy;
-    m_drive.distanceR = dr;
+      // Posts these error values to drive subsystem
+      m_drive.distanceX = dx;
+      m_drive.distanceY = dy;
+      m_drive.distanceR = dr;
 
-    // Slows down the error based on the sum of the two errors
-    double xRat = dx / total;
-    double yRat = dy / total;
+      // Slows down the error based on the sum of the two errors
+      double xRat = dx / total;
+      double yRat = dy / total;
 
-    // If errors for x/y positions are too tiny they just become 0
-    if (Math.abs(dx) < 0.05) {
-      dx = 0;
-      xRat = 0;
+      // If errors for x/y positions are too tiny they just become 0
+      if (Math.abs(dx) < 0.05) {
+        dx = 0;
+        xRat = 0;
+      }
+
+      if (Math.abs(dy) < 0.05) {
+        dy = 0;
+        yRat = 0;
+      }
+
+      // If rotational speed is less than constant then set it to a minimum speed
+      if (Math.abs(dr) / drModifier < 0.05) {
+        dr = 0.05 * (dr / Math.abs(dr));
+        dr *= drModifier;
+      }
+
+      double velocityX = dx * 0.8 * m_speedModifier * baseVelocity;
+      double velocityY = dy * 0.8 * m_speedModifier * baseVelocity;
+      double velocityR = dr / drModifier;
+
+      // Run the robot fast when far away
+      if (Math.abs(velocityX) > 3.5 && Math.abs(velocityY) > 3.5) {
+        m_drive.drive(xRat * 3 * baseVelocity, yRat * 3 * baseVelocity, dr / drModifier, true,
+            "Proportional Alignment 1");
+      }
+
+      // If errors are greater than .4 (but less than 3.5, in other words closer to
+      // the april tag) run slower
+      else if (Math.abs(dx) * 2.5 * m_speedModifier > .4 && Math.abs(dy) * 2.5 * m_speedModifier > .4) {
+        m_drive.drive(velocityX, velocityY, velocityR, true, "Proportional Alignment 2");
+      }
+
+      // If any less than .4 for the errors then drive very slow
+      else {
+        m_drive.drive(xRat * .4 * m_speedModifier * baseVelocity, yRat * .4 * m_speedModifier * baseVelocity,
+            dr / drModifier, true, "Proportional Alignment 3");
+      }
+    } catch (Exception e) {
+      System.console().writer().println("Exception in ProportionalAlign" + e.getMessage());
     }
-
-    if (Math.abs(dy) < 0.05) {
-      dy = 0;
-      yRat = 0;
-    }
-
-    // If rotational speed is less than constant then set it to a minimum speed
-    if (Math.abs(dr) / drModifier < 0.05) {
-      dr = 0.05 * (dr / Math.abs(dr));
-      dr *= drModifier;
-    }
-
-    double velocityX = dx * 0.8 * m_speedModifier * baseVelocity;
-    double velocityY = dy * 0.8 * m_speedModifier * baseVelocity;
-    double velocityR = dr / drModifier;
-
-    // Run the robot fast when far away
-    if (Math.abs(velocityX) > 3.5 && Math.abs(velocityY) > 3.5) {
-      m_drive.drive(xRat * 3 * baseVelocity, yRat * 3 * baseVelocity, dr / drModifier, true, "Proportional Alignment 1");
-    } 
-    
-    // If errors are greater than .4 (but less than 3.5, in other words closer to the april tag) run slower
-    else if (Math.abs(dx) * 2.5 * m_speedModifier > .4 && Math.abs(dy) * 2.5 * m_speedModifier > .4) {
-      m_drive.drive(velocityX, velocityY, velocityR, true, "Proportional Alignment 2");
-    } 
-    
-    // If any less than .4 for the errors then drive very slow
-    else {
-      m_drive.drive(xRat * .4 * m_speedModifier * baseVelocity, yRat * .4 * m_speedModifier * baseVelocity, dr / drModifier, true, "Proportional Alignment 3");
-    }
-  }
-  catch(Exception e)
-  {
-    System.console().writer().println("Exception in ProportionalAlign" + e.getMessage());
-  }
   }
 
   // Stops all driving at the end
