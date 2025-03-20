@@ -87,12 +87,13 @@ public class ProportionalAlign extends Command {
     dx = targetX - m_drive.getPose().getX();
     dy = targetY - m_drive.getPose().getY();
 
-    double currentAngle = m_drive.getAngle();
+    
     double offset = 0.0;
 
-    if (currentAngle != 0) {
-      offset = (Math.abs((currentAngle % 360)) * (currentAngle/Math.abs(currentAngle)) - 180 * (currentAngle/Math.abs(currentAngle)));
-    }
+    offset = Math.IEEEremainder(m_drive.getAngle(), 360);
+    // if (currentAngle != 0) {
+    //   offset = (Math.abs((currentAngle % 360)) * (currentAngle/Math.abs(currentAngle)) - 180 * (currentAngle/Math.abs(currentAngle)));
+    // }
     
     // Logics to mofidy the targetAngle- localizes the angle to between -180 and 180 and take most efficient path in a very complicated way
     dr = targetAngle - offset;
@@ -128,7 +129,7 @@ public class ProportionalAlign extends Command {
 
     double absrot = Math.abs(dr);
     // If rotational speed is less than constant then set it to a minimum speed
-    if (absrot / drModifier < 0.05) {
+    if ((absrot > 0) && (absrot / drModifier < 0.05)) {
       dr = 0.05 * (dr / absrot);
       dr *= drModifier;
     }
