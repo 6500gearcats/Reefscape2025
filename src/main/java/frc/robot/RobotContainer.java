@@ -78,7 +78,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("CoralPlace", new L4Sequence(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("CoralGrab", new CoralGrab(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("AlgaeGrab", new AlgaeGrab(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
-    NamedCommands.registerCommand("RaiseElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555, 0.6, 0.4, -5));
+    NamedCommands.registerCommand("RaiseElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.738, .555, 0.6, 0.4, -5));
     NamedCommands.registerCommand("LowerElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.18, 0.1, 0.6, 0.4, -4));
     NamedCommands.registerCommand("LowerElevatorAlgae", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4, -2));
     NamedCommands.registerCommand("AlgaeProcessor", new AlgaeSequence(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
@@ -107,16 +107,16 @@ public class RobotContainer {
                 MathUtil.applyDeadband(-m_driver.getLeftY() * .8, 0.1), // 0.1
                 MathUtil.applyDeadband(-m_driver.getLeftX() * .8, 0.1), // 0.1
                 MathUtil.applyDeadband(-m_driver.getRightX() * .8, 0.1),
-                fieldRelative, "Drive Train - Controller"),
+                !m_driver.getRightBumper(), "Drive Train - Controller"),
             m_robotDrive));
   }
 
   private void configureBindings() {
 
-    new JoystickButton(m_driver, XboxController.Button.kA.value).onTrue(new InstantCommand(() -> fieldRelative = !fieldRelative));
+    //new JoystickButton(m_driver, XboxController.Button.kA.value).onTrue(new InstantCommand(() -> fieldRelative = !fieldRelative));
 
     new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value).whileTrue(new TurboEnable(m_robotDrive));
-    new JoystickButton(m_driver, XboxController.Button.kRightBumper.value).whileTrue(new SnailEnable(m_robotDrive));
+    new JoystickButton(m_driver, XboxController.Button.kA.value).whileTrue(new SnailEnable(m_robotDrive));
     // TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
     // new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new
     // FlipGroundIntake(m_groundIntake)).onFalse(new
@@ -171,8 +171,8 @@ public class RobotContainer {
     new JoystickButton(m_driver, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> resetRobotGyroAndOrientation()));
     new POVButton(m_driver, 180).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
     // previous yOffset = 0.75
-    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, -0.15, .475));
-    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .475));
+    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, -0.15, .485, 2));
+    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .485, 2));
     new POVButton(m_driver, 0).whileTrue(new ProportionalAlign(m_robotDrive, 0, .475));
 
     // Auto score L4 left
