@@ -80,22 +80,15 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "ProportionalAlignRight"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "RaiseElevatorL4"
-                }
-              }
-            ]
+            "name": "RaiseElevatorL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ProportionalAlignLeft"
           }
         },
         {

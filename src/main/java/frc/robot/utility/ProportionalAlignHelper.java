@@ -62,6 +62,10 @@ private static int getClosestAprilTagID(Translation2d robotPose) {
 
     // Loops through all of the reef tags
     for (int i = startTag; i < endTag; i++) {
+      // Skip tags 7, 10, and 21
+      if(i == 7 || i == 10 || i == 21){
+        i++;
+      }
       // Gets the position of the reef tag using the field layout provided by WPILib
       Translation2d tagPose = field.getTagPose(i).get().getTranslation().toTranslation2d();
       // Puts the distance between the robot and tag position into distance arrayList

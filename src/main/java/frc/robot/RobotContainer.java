@@ -78,7 +78,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("CoralPlace", new L4Sequence(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("CoralGrab", new CoralGrab(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("AlgaeGrab", new AlgaeGrab(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
-    NamedCommands.registerCommand("RaiseElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.68, .555, 0.6, 0.4, -5));
+    NamedCommands.registerCommand("RaiseElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.738, .555, 0.6, 0.4, -5));
     NamedCommands.registerCommand("LowerElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.18, 0.1, 0.6, 0.4, -4));
     NamedCommands.registerCommand("LowerElevatorAlgae", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4, -2));
     NamedCommands.registerCommand("AlgaeProcessor", new AlgaeSequence(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
@@ -104,19 +104,19 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_robotDrive.drive(
-                MathUtil.applyDeadband(-m_driver.getLeftY() * .8, 0.2), // 0.1
-                MathUtil.applyDeadband(-m_driver.getLeftX() * .8, 0.2), // 0.1
-                MathUtil.applyDeadband(-m_driver.getRightX() * .8, 0.2),
-                fieldRelative, "Drive Train - Controller"),
+                MathUtil.applyDeadband(-m_driver.getLeftY() * .8, 0.1), // 0.1
+                MathUtil.applyDeadband(-m_driver.getLeftX() * .8, 0.1), // 0.1
+                MathUtil.applyDeadband(-m_driver.getRightX() * .8, 0.1),
+                !m_driver.getRightBumper(), "Drive Train - Controller"),
             m_robotDrive));
   }
 
   private void configureBindings() {
 
-    new JoystickButton(m_driver, XboxController.Button.kA.value).onTrue(new InstantCommand(() -> fieldRelative = !fieldRelative));
+    //new JoystickButton(m_driver, XboxController.Button.kA.value).onTrue(new InstantCommand(() -> fieldRelative = !fieldRelative));
 
     new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value).whileTrue(new TurboEnable(m_robotDrive));
-    new JoystickButton(m_driver, XboxController.Button.kRightBumper.value).whileTrue(new SnailEnable(m_robotDrive));
+    new JoystickButton(m_driver, XboxController.Button.kA.value).whileTrue(new SnailEnable(m_robotDrive));
     // TODO: UPDATE BUTTONS BASED ON REQUESTED BUTTONS
     // new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(new
     // FlipGroundIntake(m_groundIntake)).onFalse(new
@@ -146,7 +146,7 @@ public class RobotContainer {
         .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.547));
     // Coral L4
     new JoystickButton(m_gunner, XboxController.Button.kY.value)
-        .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.68, .555));
+        .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555));
 
     // Coral L2
     new JoystickButton(m_gunner, XboxController.Button.kB.value)
@@ -161,23 +161,25 @@ public class RobotContainer {
     new POVButton(m_gunner, 270).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.43, 0.381));
 
     // Algae L2
-    new POVButton(m_gunner, 90).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.448));
+    new POVButton(m_gunner, 90).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.399));
 
     // Net
-    new POVButton(m_gunner, 0).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.73, 0.195));
+    new POVButton(m_gunner, 0).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, 0.195));
 
     // Processor
     new POVButton(m_gunner, 180).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4, -2));
     new JoystickButton(m_driver, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> resetRobotGyroAndOrientation()));
     new POVButton(m_driver, 180).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
     // previous yOffset = 0.75
-    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, -0.15, .475));
-    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .475));
+    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, -0.15, .485, 2));
+    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .485, 2));
     new POVButton(m_driver, 0).whileTrue(new ProportionalAlign(m_robotDrive, 0, .475));
-    new JoystickButton(m_driver, XboxController.Button.kB.value).onTrue(new InstantCommand(() -> m_robotDrive.setYaw(180)));
 
-    // Auto score L4
-    new JoystickButton(m_driver, XboxController.Button.kY.value).whileTrue((new ProportionalAlign(m_robotDrive, -0.15, 0.475)).andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555)).andThen(new ProportionalAlign(m_robotDrive, 0.15, 0.465)));
+    // Auto score L4 left
+    //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue((new ProportionalAlign(m_robotDrive, -0.15, 0.535)));//.andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555)).andThen(new ProportionalAlign(m_robotDrive, -0.15, 0.45)).andThen(new MoveCoral(m_CoralHolder, -0.5, false)).withTimeout(0.2).andThen(new SetArmSpeed(m_arm, () -> 0.4)).withTimeout(0.6));
+
+    // Auto score L4 right
+    //new JoystickButton(m_driver, XboxController.Button.kB.value).whileTrue((new ProportionalAlign(m_robotDrive, 0.2, 0.535)));//.andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555)).andThen(new ProportionalAlign(m_robotDrive, 0.2, 0.45)).andThen(new MoveCoral(m_CoralHolder, -0.5, false)).withTimeout(0.2).andThen(new SetArmSpeed(m_arm, () -> 0.4)).withTimeout(0.6));
 
   }
 
