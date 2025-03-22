@@ -103,6 +103,25 @@
           "data": {
             "name": "CoralPlace"
           }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "LowerElevatorL4"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "TopSourceToCoralBack"
+                }
+              }
+            ]
+          }
         }
       ]
     }

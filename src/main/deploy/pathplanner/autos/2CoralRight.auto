@@ -96,6 +96,25 @@
           "data": {
             "name": "CoralPlace"
           }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "MoveAwayBottom"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "LowerElevatorL4"
+                }
+              }
+            ]
+          }
         }
       ]
     }
