@@ -55,9 +55,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "deadline",
           "data": {
-            "name": "CoralGrab"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "CoralGrab"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "LowerElevatorL4"
+                }
+              }
+            ]
           }
         },
         {

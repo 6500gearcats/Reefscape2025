@@ -171,6 +171,8 @@ public class GCPoseEstimator extends SubsystemBase {
       * For 2024 and beyond, the origin of your coordinate system should always be the "blue" origin.
       * FRC teams should always use botpose_wpiblue for pose-related functionality
       */
+
+      //TODO: Get alliance as an instance variable instead of peroidic
       Optional<Alliance> alliance = DriverStation.getAlliance();
       if (alliance.isPresent()) {
         if (alliance.get().equals(Alliance.Blue)) {
@@ -191,6 +193,7 @@ public class GCPoseEstimator extends SubsystemBase {
       }
       if(!doRejectUpdate)
       {
+        //TODO put this above and remove from periodic
         m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5, Units.degreesToRadians(20)));
         m_poseEstimator.addVisionMeasurement(
             mt2.pose,
