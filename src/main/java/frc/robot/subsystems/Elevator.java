@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.utility.EncoderOdometer;
 import frc.robot.Robot;
 
 public class Elevator extends SubsystemBase {
@@ -26,6 +27,7 @@ public class Elevator extends SubsystemBase {
   //private DigitalInput m_elevatorTopLimitSwitch = new DigitalInput(ElevatorConstants.kElevatorTopSwitchPort);
   private DigitalInput m_elevatorBottomLimitSwitch = new DigitalInput(ElevatorConstants.kElevatordBottomSwitchPort);
   private RelativeEncoder m_encoder = m_elevatorMotor.getEncoder();
+  private EncoderOdometer m_elevatorOdometer = new EncoderOdometer(m_encoder);
   public static boolean elevatorCorrectingPosition = false;
   public static boolean elevatorTooHigh = false;
   public static boolean elevatorTooHighForTurbo = false;
@@ -38,6 +40,7 @@ public class Elevator extends SubsystemBase {
       m_elevatorLidar.setRangingMode(LaserCan.RangingMode.SHORT);
       m_elevatorLidar.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
       m_elevatorLidar.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
+      m_elevatorOdometer.reset();
     } 
     catch(ConfigurationFailedException e){
       System.out.println("So... Uh... The laser didn't work. Seth error." + e);
@@ -50,7 +53,9 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elevator Height (m)", getElevatorHeight());
     SmartDashboard.putBoolean("Elevator At Bottom", ElevatorAtBottom());
     SmartDashboard.putBoolean("No Turbo", elevatorTooHighForTurbo);
-    SmartDashboard.putNumber("Encoder Rotations", m_encoder.getPosition());
+    //SmartDashboard.putNumber("Encoder Rotations", m_encoder.getPosition());
+    SmartDashboard.putNumber("Elevator position", m_elevatorOdometer.getPosition());
+
     //SmartDashboard.putBoolean("Height Malfunctioning", !(m_elevatorLidar.getMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) || m_elevatorLidar.getMeasurement().distance_mm == 0 && !ElevatorAtBottom());
     SmartDashboard.putBoolean("Move Slow", elevatorTooHighForRegularSpeed);
     //SmartDashboard.putBoolean("Elevator Limit Reached", elevatorAtLimit());
