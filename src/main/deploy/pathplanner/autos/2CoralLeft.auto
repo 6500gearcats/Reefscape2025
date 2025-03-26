@@ -82,13 +82,13 @@
         {
           "type": "named",
           "data": {
-            "name": "ProportionalAlignLeft"
+            "name": "RaiseElevatorL4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "RaiseElevatorL4"
+            "name": "ProportionalAlignLeft"
           }
         },
         {
