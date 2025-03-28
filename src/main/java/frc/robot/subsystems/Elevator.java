@@ -12,6 +12,7 @@ import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel;
+import edu.wpi.first.math.controller.PIDController;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,9 +23,11 @@ import frc.robot.Robot;
 
 public class Elevator extends SubsystemBase {
   // TODO add correct ids
-  private SparkMax m_elevatorMotor = new SparkMax(ElevatorConstants.kElevatorMotorPort, SparkLowLevel.MotorType.kBrushless);
+  private SparkMax m_elevatorMotor = new SparkMax(ElevatorConstants.kElevatorMotorPort,
+      SparkLowLevel.MotorType.kBrushless);
   private LaserCan m_elevatorLidar = new LaserCan(ElevatorConstants.kLidarChannel);
-  //private DigitalInput m_elevatorTopLimitSwitch = new DigitalInput(ElevatorConstants.kElevatorTopSwitchPort);
+  // private DigitalInput m_elevatorTopLimitSwitch = new
+  // DigitalInput(ElevatorConstants.kElevatorTopSwitchPort);
   private DigitalInput m_elevatorBottomLimitSwitch = new DigitalInput(ElevatorConstants.kElevatordBottomSwitchPort);
   private RelativeEncoder m_encoder = m_elevatorMotor.getEncoder();
   private EncoderOdometer m_elevatorOdometer = new EncoderOdometer(m_encoder);
@@ -33,7 +36,8 @@ public class Elevator extends SubsystemBase {
   public static boolean elevatorTooHighForTurbo = false;
   public static boolean elevatorTooHighForRegularSpeed = false;
   public String elevatorState = "innactive";
-  
+  private PIDController m_elevatorPIDcontroller;
+
   /** Creates a new Elevator. */
   public Elevator() {
     try {
@@ -41,10 +45,15 @@ public class Elevator extends SubsystemBase {
       m_elevatorLidar.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
       m_elevatorLidar.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
       m_elevatorOdometer.reset();
-    } 
-    catch(ConfigurationFailedException e){
+    } catch (ConfigurationFailedException e) {
       System.out.println("So... Uh... The laser didn't work. Seth error." + e);
+
     }
+    m_elevatorPIDcontroller = new PIDController(
+      ElevatorConstants.kElevatorP, 
+      ElevatorConstants.kElevatorI,
+      ElevatorConstants.kElevatorD);
+
   }
 
   @Override
@@ -53,12 +62,15 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("Elevator Height (m)", getElevatorHeight());
     SmartDashboard.putBoolean("Elevator At Bottom", ElevatorAtBottom());
     SmartDashboard.putBoolean("No Turbo", elevatorTooHighForTurbo);
-    //SmartDashboard.putNumber("Encoder Rotations", m_encoder.getPosition());
+    // SmartDashboard.putNumber("Encoder Rotations", m_encoder.getPosition());
     SmartDashboard.putNumber("Elevator position", m_elevatorOdometer.getPosition());
 
-    //SmartDashboard.putBoolean("Height Malfunctioning", !(m_elevatorLidar.getMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) || m_elevatorLidar.getMeasurement().distance_mm == 0 && !ElevatorAtBottom());
+    // SmartDashboard.putBoolean("Height Malfunctioning",
+    // !(m_elevatorLidar.getMeasurement().status ==
+    // LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) ||
+    // m_elevatorLidar.getMeasurement().distance_mm == 0 && !ElevatorAtBottom());
     SmartDashboard.putBoolean("Move Slow", elevatorTooHighForRegularSpeed);
-    //SmartDashboard.putBoolean("Elevator Limit Reached", elevatorAtLimit());
+    // SmartDashboard.putBoolean("Elevator Limit Reached", elevatorAtLimit());
     elevatorCorrectingPosition = getElevatorHeight() < 0.16;
     elevatorTooHigh = getElevatorHeight() > .3;
     elevatorTooHighForTurbo = getElevatorHeight() > 0.22;
@@ -66,37 +78,50 @@ public class Elevator extends SubsystemBase {
   }
 
   // Return the height of the elevator in meters
-  public double getElevatorHeight(){
-    if(Robot.isSimulation()){
+  public double getElevatorHeight() {
+    if (Robot.isSimulation()) {
       // LaserCan.Measurement measurement = new Measurement(0, 0, 0, false, 0, null);
       return 0;
     }
     LaserCan.Measurement measurement = m_elevatorLidar.getMeasurement();
-    if(measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && !(measurement.distance_mm == 0 && !ElevatorAtBottom()))
-    {
-      return (double)measurement.distance_mm/1000.0;
+    if (measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT
+        && !(measurement.distance_mm == 0 && !ElevatorAtBottom())) {
+      return (double) measurement.distance_mm / 1000.0;
     } else {
       return m_encoder.getPosition() * ElevatorConstants.kRotationsToMeters;
     }
-    //return 0;
+    // return 0;
   }
 
   // Set the elevator speed
-  public void setElevatorSpeed(double speed){
-    if(!(Arm.armCorrectingPosition && elevatorCorrectingPosition)){
+  public void setElevatorSpeed(double speed) {
+    if (!(Arm.armCorrectingPosition && elevatorCorrectingPosition)) {
       m_elevatorMotor.set(speed);
     } else {
       m_elevatorMotor.set(-0.04);
     }
   }
 
-  public boolean ElevatorAtBottom(){
+  public boolean ElevatorAtBottom() {
     return m_elevatorBottomLimitSwitch.get();
   }
 
+  public void moveTo(double m_height, double velocity) {
+    if (this.getElevatorHeight() > m_height) {
+      move(m_elevatorPIDcontroller.calculate(getElevatorHeight(), m_height) * velocity);
+    }
+
+  }
+
+  public void move(double speed) {
+    m_elevatorMotor.set(speed);
+  }
+
   // Check to see if the elevator is too high
-  /*public boolean elevatorAtLimit()
-  {
-    return m_elevatorTopLimitSwitch.get() || m_elevatorBottomLimitSwitch.get();
-  }*/
+  /*
+   * public boolean elevatorAtLimit()
+   * {
+   * return m_elevatorTopLimitSwitch.get() || m_elevatorBottomLimitSwitch.get();
+   * }
+   */
 }
