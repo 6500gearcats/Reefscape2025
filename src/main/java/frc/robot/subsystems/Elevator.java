@@ -59,7 +59,8 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Elevator Height (m)", getElevatorHeight());
+    double currentHeight = getElevatorHeight();
+    SmartDashboard.putNumber("Elevator Height (m)", currentHeight);
     SmartDashboard.putBoolean("Elevator At Bottom", ElevatorAtBottom());
     SmartDashboard.putBoolean("No Turbo", elevatorTooHighForTurbo);
     // SmartDashboard.putNumber("Encoder Rotations", m_encoder.getPosition());
@@ -71,7 +72,6 @@ public class Elevator extends SubsystemBase {
     // m_elevatorLidar.getMeasurement().distance_mm == 0 && !ElevatorAtBottom());
     SmartDashboard.putBoolean("Move Slow", elevatorTooHighForRegularSpeed);
     // SmartDashboard.putBoolean("Elevator Limit Reached", elevatorAtLimit());
-    double currentHeight = getElevatorHeight();
     elevatorCorrectingPosition = currentHeight < 0.16;
     elevatorTooHigh = currentHeight > .3;
     elevatorTooHighForTurbo = currentHeight > 0.22;
