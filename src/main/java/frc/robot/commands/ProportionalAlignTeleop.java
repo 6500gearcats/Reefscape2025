@@ -129,6 +129,10 @@ public class ProportionalAlignTeleop extends Command {
 
     double velocityX = dx * 0.8 * m_speedModifier * baseVelocity;
     double velocityY = dy * 0.8 * m_speedModifier * baseVelocity;
+
+    //double robotOrientedRotation = targetAngle;
+    //double yProportion
+
     double velocityR = dr / drModifier;
 
     // Run the robot fast when far away

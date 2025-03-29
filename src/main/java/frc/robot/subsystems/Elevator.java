@@ -29,6 +29,7 @@ public class Elevator extends SubsystemBase {
   // private DigitalInput m_elevatorTopLimitSwitch = new
   // DigitalInput(ElevatorConstants.kElevatorTopSwitchPort);
   private DigitalInput m_elevatorBottomLimitSwitch = new DigitalInput(ElevatorConstants.kElevatordBottomSwitchPort);
+  private DigitalInput m_elevatorSourcePositionSwitch = new DigitalInput(4);
   private RelativeEncoder m_encoder = m_elevatorMotor.getEncoder();
   private EncoderOdometer m_elevatorOdometer = new EncoderOdometer(m_encoder);
   public static boolean elevatorCorrectingPosition = false;
@@ -69,6 +70,7 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putBoolean("Elevator At Bottom", ElevatorAtBottom());
     SmartDashboard.putBoolean("No Turbo", elevatorTooHighForTurbo);
     // SmartDashboard.putNumber("Encoder Rotations", m_encoder.getPosition());
+    SmartDashboard.putBoolean("Elevator at Source", m_elevatorSourcePositionSwitch.get());
     SmartDashboard.putNumber("Elevator position", m_elevatorOdometer.getPosition());
     SmartDashboard.putNumber("Elevator speed", m_elevatorMotor.get());
     // SmartDashboard.putBoolean("Height Malfunctioning",
@@ -118,6 +120,10 @@ public class Elevator extends SubsystemBase {
 
   public boolean ElevatorAtBottom() {
     return m_elevatorBottomLimitSwitch.get();
+  }
+
+  public boolean ElevatorAtSource(){
+    return m_elevatorSourcePositionSwitch.get();
   }
 
   public void moveTo(double m_height, double velocity) {
