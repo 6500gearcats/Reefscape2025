@@ -76,6 +76,9 @@ public class Elevator extends SubsystemBase {
     elevatorTooHigh = currentHeight > .3;
     elevatorTooHighForTurbo = currentHeight > 0.22;
     elevatorTooHighForRegularSpeed = currentHeight > 0.26;
+
+    if (ElevatorAtBottom()) m_elevatorOdometer.reset();
+
     
   }
 
@@ -97,6 +100,9 @@ public class Elevator extends SubsystemBase {
 
   // Set the elevator speed
   public void setElevatorSpeed(double speed) {
+
+    if (speed < 0 && getElevatorHeight() < 0.1) speed = speed * 0.1;
+
     if (!(Arm.armCorrectingPosition && elevatorCorrectingPosition)) {
       m_elevatorMotor.set(speed);
     } else {
@@ -115,9 +121,6 @@ public class Elevator extends SubsystemBase {
 
   }
 
-  public void move(double speed) {
-    m_elevatorMotor.set(speed);
-  }
 
   // Check to see if the elevator is too high
   /*
