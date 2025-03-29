@@ -47,6 +47,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.ProportionalAlign;
 import frc.robot.GCPhotonVision;
 import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
@@ -68,6 +69,9 @@ public class DriveSubsystem extends SubsystemBase {
   public double distanceY = 0;
   public double distanceR = 0;
   public double fakeYaw = 0;
+  public static double RobotTargetAngle = 0;
+  public static double RobotAngle = 0;
+  public static double RangeAngleOffset = 0;
   private AprilTagFieldLayout field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
 
   // Create MAXSwerveModules 
@@ -125,6 +129,7 @@ public class DriveSubsystem extends SubsystemBase {
   private double commandedXSpeed = 0.0;
   private double commandedYSpeed = 0.0;
   private double commandedRotation = 0.0;
+
   
   /*public SwerveDrivePoseEstimator m_poseEstimator = new SwerveDrivePoseEstimator(DriveConstants.kDriveKinematics, m_gyro.getRotation2d(), new SwerveModulePosition[] {
     m_frontLeft.getPosition(),
@@ -252,6 +257,9 @@ publisher = NetworkTableInstance.getDefault()
     SmartDashboard.putNumber("Commanded Y Speed", commandedYSpeed);
     SmartDashboard.putNumber("Commanded Rotation", commandedRotation);
 
+    SmartDashboard.putNumber("TargetPos", RobotTargetAngle);
+    SmartDashboard.putNumber("RobotAngle", RobotAngle);
+    SmartDashboard.putNumber("RangeAngleOffset", RangeAngleOffset);
     if (Robot.isReal()) {
       m_field.setRobotPose(getPose());
     } else {

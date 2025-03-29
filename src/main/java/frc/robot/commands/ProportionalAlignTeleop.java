@@ -97,6 +97,13 @@ public class ProportionalAlignTeleop extends Command {
     // Logics to mofidy the targetAngle- localizes the angle to between -180 and 180 and take most efficient path in a very complicated way
     dr = targetAngle - (Math.abs((m_drive.getAngle() % 360)) * (m_drive.getAngle()/Math.abs(m_drive.getAngle())) - 180 * (m_drive.getAngle()/Math.abs(m_drive.getAngle())));
     //dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
+    DriveSubsystem.RobotTargetAngle = targetAngle;
+    DriveSubsystem.RobotAngle = Math.abs((m_drive.getAngle() % 360)) * (m_drive.getAngle()/Math.abs(m_drive.getAngle()));
+    DriveSubsystem.RangeAngleOffset = 180 * (m_drive.getAngle()/Math.abs(m_drive.getAngle()));
+
+    // Log (Math.abs((m_drive.getAngle() % 360)) * (m_drive.getAngle()/Math.abs(m_drive.getAngle())) (robot angle)
+
+    // Log 180 * (m_drive.getAngle()/Math.abs(m_drive.getAngle()))) (offset for range of [-180, 180] angle)
 
     // Takes the total sum of errors of x and y direction to use for slowing down the robot
     double total = Math.abs(dx) + Math.abs(dy);
