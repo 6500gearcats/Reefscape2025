@@ -4,9 +4,7 @@
 
 package frc.robot.subsystems;
 
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.Optional;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 // Path Planner Imports
@@ -15,17 +13,15 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
-import com.ctre.phoenix6.hardware.Pigeon2;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
+// import edu.wpi.first.apriltag.AprilTagFieldLayout;
+// import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.hal.SimBoolean;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -36,7 +32,6 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -48,9 +43,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.GCPhotonVision;
-import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
-import frc.robot.subsystems.Vision;
 
 public class DriveSubsystem extends SubsystemBase {
   // ! Update this to use the pose estimator instead of normal odametry
@@ -68,7 +61,7 @@ public class DriveSubsystem extends SubsystemBase {
   public double distanceY = 0;
   public double distanceR = 0;
   public double fakeYaw = 0;
-  private AprilTagFieldLayout field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
+  //private AprilTagFieldLayout field = AprilTagFields.kDefaultField.loadAprilTagLayoutField();
 
   // Create MAXSwerveModules 
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
