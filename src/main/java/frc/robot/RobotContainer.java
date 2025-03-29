@@ -65,8 +65,8 @@ public class RobotContainer {
 
   boolean fieldRelative = true;
 
-  PhotonCamera temp_camera = new PhotonCamera("ArducamTwo");
-  GCPhotonVision vision = new GCPhotonVision(temp_camera);
+  // PhotonCamera temp_camera = new PhotonCamera("ArducamTwo");
+  // GCPhotonVision vision = new GCPhotonVision(temp_camera);
   Vision m_vision = new Vision(m_Limelight);
 
   DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera, m_vision);
