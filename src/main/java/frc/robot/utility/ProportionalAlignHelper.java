@@ -113,7 +113,7 @@ public static Pose2d getBestAprilTagCoral(Pose2d robotPose, double m_xOffset, do
   double newY = tagPose.getY() + Math.sin(tempAngle) * m_yOffset + Math.sin(tempAngle + Math.PI / 2) * m_xOffset;
 
   // Returns all of the values in a pose2d (flips the angle to have the robot align without turning around)
-  return new Pose2d(newX, newY, tagPose.getRotation().plus(new Rotation2d(Math.PI)));
+  return new Pose2d(newX, newY, tagPose.getRotation());
 }
 
   /** 
