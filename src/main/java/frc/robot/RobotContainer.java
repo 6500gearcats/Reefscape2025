@@ -175,8 +175,8 @@ public class RobotContainer {
     // previous yOffset = 0.75
     //new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, -0.15, .485, 2));
     //new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .485, 2));
-    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, -0.15, .500, 2));
-    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0.2, .500, 2));
+    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, -0.15, .650, 2).andThen(new ProportionalAlignTeleop(m_robotDrive, -0.15, .500, 2)));
+    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0.2, .650, 2).andThen(new ProportionalAlignTeleop(m_robotDrive, 0.2, .500, 2)));
     new POVButton(m_driver, 0).whileTrue(new ProportionalAlign(m_robotDrive, 0, .475));
 
     // Auto score L4 left
