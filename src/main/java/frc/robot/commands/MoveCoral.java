@@ -14,7 +14,7 @@ public class MoveCoral extends Command {
   CoralHolder m_CoralHolder;
   Double speed;
   boolean upToSpeed = false;
-  boolean isIntake;
+  boolean isIntake = false;
   public MoveCoral(CoralHolder coralHolder, double speed, boolean isIntake) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_CoralHolder = coralHolder;
@@ -30,7 +30,6 @@ public class MoveCoral extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //TODO: Add real speed
     m_CoralHolder.shootCoral(speed);
 
     if(m_CoralHolder.getHolderSpeed() > 200){
@@ -44,11 +43,12 @@ public class MoveCoral extends Command {
   @Override
   public void end(boolean interrupted) {
     m_CoralHolder.shootCoral(0);
+    upToSpeed = false;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return upToSpeed && m_CoralHolder.getHolderSpeed() < 150;
    }
 }

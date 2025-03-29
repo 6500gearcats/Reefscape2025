@@ -27,8 +27,8 @@ public class L4Sequence extends SequentialCommandGroup {
       //new InstantCommand(()->m_drive.drive(-1, 0, 0, false)).withTimeout(.5),
       // Outtakes coral (hopefully onto L4)
       // TODO: Add an isFinished into MoveCoral so that we don't have to use withTimeout
-      new MoveCoral(m_CoralHolder, -0.5, false).withTimeout(0.5),
-      new SetArmSpeed(m_arm, () -> .4).withTimeout(.2),
+      new MoveCoral(m_CoralHolder, -0.8, false).withTimeout(0.3),
+      new SetArmSpeed(m_arm, () -> .6).withTimeout(.4),
       new WaitCommand(0.25)
       // Runs backward to allow elevator room to go back down
       //new RunCommand(()->m_drive.drive(0.4, 0, 0, false)).withTimeout(.05),

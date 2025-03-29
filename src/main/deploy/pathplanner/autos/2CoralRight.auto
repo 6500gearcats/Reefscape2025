@@ -40,31 +40,24 @@
           "data": {
             "commands": [
               {
-                "type": "named",
-                "data": {
-                  "name": "LowerElevatorL4"
-                }
-              },
-              {
                 "type": "path",
                 "data": {
                   "pathName": "BottomCoralToSource"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "LowerElevatorL4"
                 }
               }
             ]
           }
         },
         {
-          "type": "deadline",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "CoralGrab"
-                }
-              }
-            ]
+            "name": "CoralGrab"
           }
         },
         {
@@ -80,10 +73,16 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "RaiseElevatorL4"
+                  "name": "SetPreElevator"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RaiseElevatorL4"
           }
         },
         {
@@ -96,6 +95,25 @@
           "type": "named",
           "data": {
             "name": "CoralPlace"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "MoveAwayBottom"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "LowerElevatorL4"
+                }
+              }
+            ]
           }
         }
       ]

@@ -57,6 +57,6 @@ public class SetArmPosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(position - m_arm.getArmPosition()) < 0.01;
+    return Math.abs(position - m_arm.getArmPosition()) < 0.005;
   }
 }
