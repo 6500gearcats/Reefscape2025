@@ -25,6 +25,7 @@ public class Elevator extends SubsystemBase {
   private LaserCan m_elevatorLidar = new LaserCan(ElevatorConstants.kLidarChannel);
   //private DigitalInput m_elevatorTopLimitSwitch = new DigitalInput(ElevatorConstants.kElevatorTopSwitchPort);
   private DigitalInput m_elevatorBottomLimitSwitch = new DigitalInput(ElevatorConstants.kElevatordBottomSwitchPort);
+  private DigitalInput m_elevatorSourcePositionSwitch = new DigitalInput(4);
   private RelativeEncoder m_encoder = m_elevatorMotor.getEncoder();
   public static boolean elevatorCorrectingPosition = false;
   public static boolean elevatorTooHigh = false;
@@ -51,6 +52,7 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putBoolean("Elevator At Bottom", ElevatorAtBottom());
     SmartDashboard.putBoolean("No Turbo", elevatorTooHighForTurbo);
     SmartDashboard.putNumber("Encoder Rotations", m_encoder.getPosition());
+    SmartDashboard.putBoolean("Elevator at Source", m_elevatorSourcePositionSwitch.get());
     //SmartDashboard.putBoolean("Height Malfunctioning", !(m_elevatorLidar.getMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) || m_elevatorLidar.getMeasurement().distance_mm == 0 && !ElevatorAtBottom());
     SmartDashboard.putBoolean("Move Slow", elevatorTooHighForRegularSpeed);
     //SmartDashboard.putBoolean("Elevator Limit Reached", elevatorAtLimit());
@@ -87,6 +89,10 @@ public class Elevator extends SubsystemBase {
 
   public boolean ElevatorAtBottom(){
     return m_elevatorBottomLimitSwitch.get();
+  }
+
+  public boolean ElevatorAtSource(){
+    return m_elevatorSourcePositionSwitch.get();
   }
 
   // Check to see if the elevator is too high
