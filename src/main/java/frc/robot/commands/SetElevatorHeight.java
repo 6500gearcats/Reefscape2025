@@ -48,7 +48,7 @@ public class SetElevatorHeight extends Command {
       velocity = minSpeed * Math.abs(velocity)/velocity -.08;
     }
 
-    //m_elevator.setElevatorSpeed(velocity);
+    m_elevator.setElevatorSpeed(velocity);
     m_elevator.moveTo(m_height, velocity);
   }
 

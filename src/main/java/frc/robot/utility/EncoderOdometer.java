@@ -2,6 +2,8 @@ package frc.robot.utility;
 
 import com.revrobotics.RelativeEncoder;
 
+import frc.robot.Constants.ElevatorConstants;
+
 public class EncoderOdometer {
 
     private RelativeEncoder m_encoder;
@@ -16,7 +18,7 @@ public class EncoderOdometer {
 
     public double getPosition() {
         double position=m_encoder.getPosition();
-        return position - m_startPosition;
+        return (position - m_startPosition) * ElevatorConstants.kRotationsToMeters;
     }
 
     public void reset() {
