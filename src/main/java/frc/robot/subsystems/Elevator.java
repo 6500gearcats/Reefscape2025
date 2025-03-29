@@ -101,7 +101,7 @@ public class Elevator extends SubsystemBase {
   // Set the elevator speed
   public void setElevatorSpeed(double speed) {
 
-    if (speed < 0 && getElevatorHeight() < 0.1) speed = speed * 0.1;
+    if (speed > 0 && getElevatorHeight() < 0.1) speed = speed * 0.4;
 
     if (!(Arm.armCorrectingPosition && elevatorCorrectingPosition)) {
       m_elevatorMotor.set(speed);
