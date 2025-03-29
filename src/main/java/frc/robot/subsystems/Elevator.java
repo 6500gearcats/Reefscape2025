@@ -44,7 +44,12 @@ public class Elevator extends SubsystemBase {
       m_elevatorLidar.setRangingMode(LaserCan.RangingMode.SHORT);
       m_elevatorLidar.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
       m_elevatorLidar.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
-      m_elevatorOdometer.reset();
+      if (ElevatorAtBottom()) {
+        m_elevatorOdometer.reset();
+      }
+      else {
+        m_elevatorOdometer.setHeight(getElevatorHeight());
+      }
     } catch (ConfigurationFailedException e) {
       System.out.println("So... Uh... The laser didn't work. Seth error." + e);
 
@@ -101,7 +106,8 @@ public class Elevator extends SubsystemBase {
   // Set the elevator speed
   public void setElevatorSpeed(double speed) {
 
-    if (speed > 0 && getElevatorHeight() < 0.1) speed = speed * 0.4;
+    // // attempt to slow down near bottom of travel
+    // if (speed > 0 && getElevatorHeight() < 0.1) speed = speed * 0.4;
 
     if (!(Arm.armCorrectingPosition && elevatorCorrectingPosition)) {
       m_elevatorMotor.set(speed);

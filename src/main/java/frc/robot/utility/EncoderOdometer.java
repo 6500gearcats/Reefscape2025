@@ -28,5 +28,11 @@ public class EncoderOdometer {
     public RelativeEncoder getEncoder() {
         return m_encoder;
     }
+
+    public void setHeight(double elevatorHeight) {
+        if (elevatorHeight > 0 ) {
+            m_startPosition = m_encoder.getPosition() - elevatorHeight/ElevatorConstants.kRotationsToMeters;
+        }
+    }
     
 }
