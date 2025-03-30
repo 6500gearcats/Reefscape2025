@@ -105,8 +105,8 @@ public class ProportionalAlignTeleop extends Command {
     // Logics to modify the targetAngle- localizes the angle to between -180 and 180 and take most efficient path in a very complicated way
     //double robotYaw = Math.toDegrees(MathUtil.angleModulus(m_drive.getAngleRadians()));
     double robotYaw = m_drive.getAngle();
-    
-    dr = Math.IEEEremainder((targetAngle - robotYaw), 360);
+    dr = targetAngle - robotYaw - 180;
+    dr = Math.IEEEremainder((dr), 360);
 
     SmartDashboard.putNumber("dr", dr);
     //dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
