@@ -63,9 +63,9 @@ private static int getClosestAprilTagID(Translation2d robotPose) {
     // Loops through all of the reef tags
     for (int i = startTag; i < endTag; i++) {
       // Skip tags 7, 10, and 21
-      if(i == 7 || i == 10 || i == 21){
-        i++;
-      }
+      // if(i == 7 || i == 10 || i == 21){
+      //   i++;
+      // }
       // Gets the position of the reef tag using the field layout provided by WPILib
       Translation2d tagPose = field.getTagPose(i).get().getTranslation().toTranslation2d();
       // Puts the distance between the robot and tag position into distance arrayList
@@ -112,8 +112,12 @@ public static Pose2d getBestAprilTagCoral(Pose2d robotPose, double m_xOffset, do
   double newX = tagPose.getX() + Math.cos(tempAngle) * m_yOffset + Math.cos(tempAngle + Math.PI / 2) * m_xOffset;
   double newY = tagPose.getY() + Math.sin(tempAngle) * m_yOffset + Math.sin(tempAngle + Math.PI / 2) * m_xOffset;
 
+  Rotation2d rot = tagPose.getRotation();
+  if (bestAprilTag == 7 || bestAprilTag == 10 || bestAprilTag == 21) {
+    rot.plus(new Rotation2d(Math.PI/60));
+  }
   // Returns all of the values in a pose2d (flips the angle to have the robot align without turning around)
-  return new Pose2d(newX, newY, tagPose.getRotation());
+  return new Pose2d(newX, newY, rot);
 }
 
   /** 
