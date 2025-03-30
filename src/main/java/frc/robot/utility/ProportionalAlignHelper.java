@@ -86,6 +86,78 @@ private static int getClosestAprilTagID(Translation2d robotPose) {
     }
   }
 
+  
+
+  // Takes the minimum of the distances arraylist
+  double minDistance = Collections.min(distances);
+  // Gets the index of that least distance
+  integer = distances.indexOf(minDistance);
+  // Returns the tag id using the index of least distance in parallel tag arraylist
+  return tags.get(integer);
+  }
+
+  /** 
+ * Takes the robot position with cooresponding 
+ * x/y offsets from the april tag position, returns a pose2d for where robot should go
+*/
+public static Pose2d getBestAprilTagCoral(Pose2d robotPose, double m_xOffset, double m_yOffset) {
+  // Gets the tag of least distance through below helper method
+  int bestAprilTag = getClosestAprilTagIDCoral(robotPose.getTranslation());
+  // Gets the tag pose for tag of least distance int using wpilib field
+  Pose2d tagPose = field.getTagPose(bestAprilTag).get().toPose2d();
+
+  // Gets the angle of tag pose
+  double tempAngle = tagPose.getRotation().getRadians();
+  // Gets the tag's x and y position and multiplies them by offsets so that it's more backwards and to either side
+  double newX = tagPose.getX() + Math.cos(tempAngle) * m_yOffset + Math.cos(tempAngle + Math.PI / 2) * m_xOffset;
+  double newY = tagPose.getY() + Math.sin(tempAngle) * m_yOffset + Math.sin(tempAngle + Math.PI / 2) * m_xOffset;
+
+  // Returns all of the values in a pose2d (flips the angle to have the robot align without turning around)
+  return new Pose2d(newX, newY, tagPose.getRotation());
+}
+
+  /** 
+ * Helper method for getting the best april tag's offset for the coral station april tags: 
+ * Takes robot pose and outputs integer of best april tag
+*/
+private static int getClosestAprilTagIDCoral(Translation2d robotPose) {
+
+  // Initializing integer of best april tag that will be returned
+  int integer = 0;
+
+  // Parallel ArrayList - one for the double distance and one for the tag int
+  ArrayList<Double> distances = new ArrayList<>();
+  ArrayList<Integer> tags = new ArrayList<>();
+
+  // Logic for getting the reef tag ids based on the alliance
+  Optional<Alliance> alliance = DriverStation.getAlliance();
+  if (alliance.isPresent()) {
+    // Tags 1 & 2 for red alliance coral station and tags 12 & 13 for blue alliance coral station
+    int startTag = (alliance.get() == Alliance.Red) ? 1 : 12;
+    int endTag = (alliance.get() == Alliance.Red) ? 3 : 14;
+
+    // Loops through all of the reef tags
+    for (int i = startTag; i < endTag; i++) {
+      // Gets the position of the reef tag using the field layout provided by WPILib
+      Translation2d tagPose = field.getTagPose(i).get().getTranslation().toTranslation2d();
+      // Puts the distance between the robot and tag position into distance arrayList
+      double distance = robotPose.getDistance(tagPose);
+      distances.add(distance);
+      // Stores the tag id into the parallel arraylist
+      tags.add(i);
+    }
+  } 
+
+  // If alliance isn't present for whatever reason just go to the nearest april tag (shouldn't ever really happen) - same logic as above
+  else {
+    for (int i = 1; i < 23; i++) {
+      Translation2d tagPose = field.getTagPose(i).get().getTranslation().toTranslation2d();
+      double distance = robotPose.getDistance(tagPose);
+      distances.add(distance);
+      tags.add(i);
+    }
+  }
+
   // Takes the minimum of the distances arraylist
   double minDistance = Collections.min(distances);
   // Gets the index of that least distance
