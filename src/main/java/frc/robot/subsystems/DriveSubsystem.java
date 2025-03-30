@@ -611,6 +611,16 @@ publisher = NetworkTableInstance.getDefault()
     }
   }
 
+  /* Return the NavX yaw angle */
+  public double getAngleRadians() {
+    // return -m_gyro.getYaw();
+    if (Robot.isReal()) {
+      return Math.toRadians( m_gyro.getYaw().getValueAsDouble());
+    } else {
+      return Math.toRadians(fakeYaw * 1.169);
+    }
+  }
+
   public boolean toggleFieldOriented() {
     m_fieldOriented = !m_fieldOriented;
     return m_fieldOriented;
