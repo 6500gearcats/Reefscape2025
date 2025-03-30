@@ -30,7 +30,6 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CoralHolder;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Vision;
 import frc.robot.utility.GCLimelight;
 import frc.robot.utility.GCPhotonVision;
 import frc.robot.utility.LimelightHelpers;
@@ -71,9 +70,9 @@ public class RobotContainer {
 
   PhotonCamera temp_camera = new PhotonCamera("ArducamTwo");
   GCPhotonVision vision = new GCPhotonVision(temp_camera);
-  Vision m_vision = new Vision(m_Limelight);
+  //Vision m_vision = new Vision(m_Limelight);
 
-  DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera, m_vision);
+  DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera, m_Limelight);
 
   Elevator m_elevator = new Elevator();
 

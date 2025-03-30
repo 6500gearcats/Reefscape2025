@@ -23,8 +23,8 @@ import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.utility.LimelightHelpers;
 
-//TODO: Remove this suppress warnings after finishing
-@SuppressWarnings("unused")
+
+//@SuppressWarnings("unused")
 
 public class GCPoseEstimator extends SubsystemBase {
 
@@ -64,7 +64,7 @@ public class GCPoseEstimator extends SubsystemBase {
   private boolean m_useLimeLight;
   private DriveSubsystem m_robotDrive;
 
-  private Vision m_vision;
+  //private Vision m_vision;
 
 
   /** Creates a new PoseEstimator. */
@@ -85,11 +85,10 @@ public class GCPoseEstimator extends SubsystemBase {
   }
 
   // * Uses PhotonVision
-  public GCPoseEstimator(Supplier<Rotation2d> rotationSupplier, Supplier<SwerveModulePosition[]> swerveModulePositionSupplier, Vision vision) {
+  public GCPoseEstimator(Supplier<Rotation2d> rotationSupplier, Supplier<SwerveModulePosition[]> swerveModulePositionSupplier) {
     m_rotationSupplier = rotationSupplier;
     m_swerveModulePositionSupplier = swerveModulePositionSupplier;
     m_useLimeLight = false;
-    m_vision = vision;
 
     m_poseEstimator = new SwerveDrivePoseEstimator(
       DriveConstants.kDriveKinematics,

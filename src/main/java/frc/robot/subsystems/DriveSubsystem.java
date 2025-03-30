@@ -48,7 +48,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Robot;
-import frc.robot.subsystems.Vision;
+import frc.robot.utility.GCLimelight;
 import frc.robot.utility.GCPhotonVision;
 import frc.robot.utility.LimelightHelpers;
 
@@ -114,8 +114,9 @@ public class DriveSubsystem extends SubsystemBase {
   private final Field2d m_field = new Field2d();
 
   private GCPhotonVision m_simVision;
+  private GCLimelight m_vision;
   // ! Temporarily added this to make the pose estimator
-  private Vision m_vision;
+  //private Vision m_vision;
   private String systemControlling = "";
 
   private Pose2d m_simOdometryPose;
@@ -136,7 +137,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final StructArrayPublisher<SwerveModuleState> publisher;  
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem(GCPhotonVision simVision, Vision vision) {
+  public DriveSubsystem(GCPhotonVision simVision, GCLimelight vision) {
     m_simVision = simVision;
     // ! Temporarily added this to make the pose estimator
     m_vision = vision;
@@ -172,13 +173,7 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber(getName(), getPitch());
     }
 
-    // * Create a new PoseEstimator
-    if(m_vision.usingLimelight()){
-      m_poseEstimator = new GCPoseEstimator(this, this::getRotation2d, this::getWheelPositions);
-    }
-    else{
-      m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions, m_vision);
-    }
+    m_poseEstimator = new GCPoseEstimator(this, this::getRotation2d, this::getWheelPositions);
 
 
     m_odometry = new SwerveDriveOdometry(
