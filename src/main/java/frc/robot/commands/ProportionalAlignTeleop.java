@@ -10,11 +10,13 @@ import java.util.Optional;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utility.LimelightHelpers;
@@ -33,7 +35,7 @@ public class ProportionalAlignTeleop extends Command {
   double targetX;
   double targetY;
   double targetAngle;
-  int drModifier = 50;
+  int drModifier = 130;
   double baseVelocity = 0.0;
   double addAngle = 0.0;
 
@@ -66,7 +68,9 @@ public class ProportionalAlignTeleop extends Command {
     // Gets x, y, and rotation values from april tag
     targetX = targetPose.getX();
     targetY = targetPose.getY();
-    targetAngle = targetPose.getRotation().getDegrees();
+    targetAngle = MathUtil.angleModulus((targetPose.getRotation().getRadians()));
+    targetAngle = Math.toDegrees(targetAngle);
+    
 
     // Gets the current alliance set in driver station
     Optional<Alliance> alliance = DriverStation.getAlliance();
@@ -85,6 +89,9 @@ public class ProportionalAlignTeleop extends Command {
     // Modifies the target angle based on alliance, 
     targetAngle = targetAngle - (addAngle * Math.abs(targetAngle)/targetAngle);
 
+    //targetAngle = targetAngle + addAngle;
+
+    Math.IEEEremainder((targetAngle), 360);
     m_drive.targetrotation = targetAngle;
   }
 
@@ -95,7 +102,9 @@ public class ProportionalAlignTeleop extends Command {
     dy = targetY - m_drive.getPose().getY();
 
     // Logics to mofidy the targetAngle- localizes the angle to between -180 and 180 and take most efficient path in a very complicated way
-    dr = targetAngle - (Math.abs((m_drive.getAngle() % 360)) * (m_drive.getAngle()/Math.abs(m_drive.getAngle())) - 180 * (m_drive.getAngle()/Math.abs(m_drive.getAngle())));
+    double robotYaw = Math.toDegrees(MathUtil.angleModulus(m_drive.getAngleRadians()));
+    dr = Math.IEEEremainder((targetAngle - robotYaw), 360);
+    SmartDashboard.putNumber("dr", dr);
     //dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
 
     // Takes the total sum of errors of x and y direction to use for slowing down the robot
@@ -122,17 +131,14 @@ public class ProportionalAlignTeleop extends Command {
     }
 
     // If rotational speed is less than constant then set it to a minimum speed
-    if (Math.abs(dr) / drModifier < 0.05) {
+    
+    if ((Math.abs(dr)) > 0 && (Math.abs(dr) / drModifier < 0.05)) {
       dr = 0.05 * (dr / Math.abs(dr));
       dr *= drModifier;
     }
 
     double velocityX = dx * 0.8 * m_speedModifier * baseVelocity;
     double velocityY = dy * 0.8 * m_speedModifier * baseVelocity;
-
-    //double robotOrientedRotation = targetAngle;
-    //double yProportion
-
     double velocityR = dr / drModifier;
 
     // Run the robot fast when far away
@@ -160,6 +166,6 @@ public class ProportionalAlignTeleop extends Command {
   // If the errors for x, y, and rotation are tiny then the command finishes
   @Override
   public boolean isFinished() {
-    return Math.abs(dx) < 0.03 && Math.abs(dy) < 0.03 && Math.abs(dr) < 15;
+    return Math.abs(dx) < 0.03 && Math.abs(dy) < 0.03 && Math.abs(dr) < 30;
   }
 }
