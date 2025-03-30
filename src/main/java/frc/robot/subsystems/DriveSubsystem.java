@@ -395,55 +395,10 @@ publisher = NetworkTableInstance.getDefault()
    * @param xSpeed        Speed of the robot in the x direction (forward).
    * @param ySpeed        Speed of the robot in the y direction (sideways).
    * @param rot           Angular rate of the robot.
-   * @param fieldRelative Whether the provided x and y speeds are relative to the
-   *                      field.
+   * @param fieldRelative Whether the provided x and y speeds are relative to the field.
+   * @param system        The calling command
+   *
    */
-
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    int inverse = 1;
-    // Optional<Alliance> alliance = DriverStation.getAlliance();
-    // if (alliance.isPresent()) {
-    //   if (alliance.get().equals(Alliance.Blue)) {
-    //     inverse = 1;
-    //   } else {
-    //     inverse = -1;
-    //   }
-    //}
-    
-    xSpeed *= inverse;
-    ySpeed *= inverse;
-
-    m_fieldOriented = fieldRelative;
-    // Adjust input based on max speed
-    xSpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
-    ySpeed *= DriveConstants.kNormalSpeedMetersPerSecond;
-
-    rot *= DriveConstants.kMaxAngularSpeed;
-    // Non linear speed set
-    // xSpeed *= Math.signum(xSpeed)*Math.pow(xSpeed,3);
-    // ySpeed *= Math.signum(ySpeed)*Math.pow(ySpeed,3);
-
-    double max = m_maxSpeed.getDouble(DriveConstants.kTurboModeModifier);
-    double min = .2;
-    
-    if(Elevator.elevatorTooHighForTurbo){
-      if(Elevator.elevatorTooHighForRegularSpeed){
-        xSpeed *= .5;
-        ySpeed *= .5;
-        rot *= .5;
-      }
-    } else if (turboEnable) {
-      
-      xSpeed *= max;
-      ySpeed *= max;
-      rot *= DriveConstants.kTurboAngularSpeed;
-    }
-    if (snailEnable) {
-      xSpeed *= min;
-      ySpeed *= min;
-      rot *= 0.4;
-    }
-  }
 
     public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, String system) {
       int inverse = 1;
