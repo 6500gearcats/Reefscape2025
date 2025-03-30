@@ -23,6 +23,7 @@ import frc.robot.utility.ProportionalAlignHelper;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ProportionalAlignTeleop extends Command {
   /** Creates a new ProportionalAlign. */
+  int bestTag;
   Pose2d targetPose;
   double dx;
   double dy;
@@ -61,6 +62,8 @@ public class ProportionalAlignTeleop extends Command {
   @Override
   public void initialize() {
     // Gets nearest april tag target position through helper class
+    bestTag = ProportionalAlignHelper.getClosestAprilTagID(m_drive.getPose().getTranslation());
+    
     targetPose = ProportionalAlignHelper.getBestAprilTag(m_drive.getPose(), m_xOffset, m_yOffset);
 
     // Gets x, y, and rotation values from april tag
@@ -82,8 +85,8 @@ public class ProportionalAlignTeleop extends Command {
       }
     }
 
+      targetAngle = targetAngle - (addAngle * Math.abs(targetAngle)/targetAngle);
     // Modifies the target angle based on alliance, 
-    targetAngle = targetAngle - (addAngle * Math.abs(targetAngle)/targetAngle);
 
     m_drive.targetrotation = targetAngle;
   }
@@ -93,9 +96,15 @@ public class ProportionalAlignTeleop extends Command {
     // Gets the error values of x direction, y direction
     dx = targetX - m_drive.getPose().getX();
     dy = targetY - m_drive.getPose().getY();
+    double angle = m_drive.getAngle();
 
     // Logics to mofidy the targetAngle- localizes the angle to between -180 and 180 and take most efficient path in a very complicated way
-    dr = targetAngle - (Math.abs((m_drive.getAngle() % 360)) * (m_drive.getAngle()/Math.abs(m_drive.getAngle())) - 180 * (m_drive.getAngle()/Math.abs(m_drive.getAngle())));
+    /*if (!(bestTag == 10 || bestTag == 21)) {*/
+      dr = targetAngle - (Math.abs((angle % 360)) * (angle/Math.abs(angle)) - 180 * (angle/Math.abs(angle)));
+    /* } else {
+      dr = targetAngle * Math.abs(angle)/angle - Math.abs((angle % 360)) * angle/Math.abs(angle);// - 180 * (m_drive.getAngle()/Math.abs(m_drive.getAngle())));
+    }*/
+    
     //dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
 
     // Takes the total sum of errors of x and y direction to use for slowing down the robot

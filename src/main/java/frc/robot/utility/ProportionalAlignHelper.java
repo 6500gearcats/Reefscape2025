@@ -36,7 +36,7 @@ public static Pose2d getBestAprilTag(Pose2d robotPose, double m_xOffset, double 
   double newY = tagPose.getY() + Math.sin(tempAngle) * m_yOffset + Math.sin(tempAngle + Math.PI / 2) * m_xOffset;
   Rotation2d rot = tagPose.getRotation();
   if (bestAprilTag == 7 || bestAprilTag == 10 || bestAprilTag == 21) {
-    rot = rot.plus(new Rotation2d(Math.PI/60));
+    rot = rot.plus(new Rotation2d(Math.PI/180));
   }
   // Returns all of the values in a pose2d (flips the angle to have the robot align without turning around)
   return new Pose2d(newX, newY, rot.plus(new Rotation2d(Math.PI)));
@@ -47,7 +47,7 @@ public static Pose2d getBestAprilTag(Pose2d robotPose, double m_xOffset, double 
  * Helper method for getting the best april tag's offset: 
  * Takes robot pose and outputs integer of best april tag
 */
-private static int getClosestAprilTagID(Translation2d robotPose) {
+public static int getClosestAprilTagID(Translation2d robotPose) {
 
   // Initializing integer of best april tag that will be returned
   int integer = 0;
