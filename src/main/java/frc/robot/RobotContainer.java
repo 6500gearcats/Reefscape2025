@@ -46,6 +46,7 @@ import frc.robot.commands.SetElevatorSpeed;
 import frc.robot.commands.SnailEnable;
 import frc.robot.commands.TurboEnable;
 import frc.robot.commands.SetArmAndElevatorPositions;
+import frc.robot.commands.SetArmAndElevatorPositionsSource;
 
 public class RobotContainer {
 
@@ -139,8 +140,8 @@ public class RobotContainer {
     new JoystickButton(m_gunner, XboxController.Button.kLeftBumper.value)
         .whileTrue(new MoveCoral(m_CoralHolder, 0.5, true));
     new JoystickButton(m_gunner, XboxController.Button.kRightBumper.value)
-        .whileTrue(new MoveCoral(m_CoralHolder, -0.5, false).withTimeout(0.2)
-            .andThen(new SetArmSpeed(m_arm, () -> 0.4).withTimeout(0.6)));
+        .whileTrue(new MoveCoral(m_CoralHolder, -0.8, false).withTimeout(0.2)
+            .andThen(new SetArmSpeed(m_arm, () -> 0.6).withTimeout(0.6)));
 
     // Coral L3
     new JoystickButton(m_gunner, XboxController.Button.kX.value)
@@ -156,7 +157,7 @@ public class RobotContainer {
 
     // Source
     new JoystickButton(m_gunner, XboxController.Button.kA.value)
-        .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.18, 0.1, 0.4, 0.4, -2));
+        .whileTrue(new SetArmAndElevatorPositionsSource(m_elevator, m_arm, 0.18, 0.1, 0.4, 0.4, -2));
 
     // Algae L3
     new POVButton(m_gunner, 270).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.43, 0.381));
@@ -174,8 +175,8 @@ public class RobotContainer {
     // previous yOffset = 0.75
     //new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, -0.15, .485, 2));
     //new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .485, 2));
-    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, -0.15, .485, 2));
-    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0.2, .485, 2));
+    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, -0.15, .650, 2).andThen(new ProportionalAlignTeleop(m_robotDrive, -0.15, .500, 2)));
+    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0.2, .650, 2).andThen(new ProportionalAlignTeleop(m_robotDrive, 0.2, .500, 2)));
     new POVButton(m_driver, 0).whileTrue(new ProportionalAlign(m_robotDrive, 0, .475));
 
     // Auto score L4 left
