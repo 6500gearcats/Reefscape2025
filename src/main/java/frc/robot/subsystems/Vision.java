@@ -15,9 +15,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.numbers.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.GCLimelight;
-import frc.robot.GCPhotonVision;
-import frc.robot.LimelightHelpers;
+import frc.robot.utility.GCLimelight;
+import frc.robot.utility.GCPhotonVision;
+import frc.robot.utility.LimelightHelpers;
 
 public class Vision extends SubsystemBase {
   private boolean isLimelight;

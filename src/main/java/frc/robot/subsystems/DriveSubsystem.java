@@ -47,10 +47,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.GCPhotonVision;
-import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
 import frc.robot.subsystems.Vision;
+import frc.robot.utility.GCPhotonVision;
+import frc.robot.utility.LimelightHelpers;
 
 public class DriveSubsystem extends SubsystemBase {
   // ! Update this to use the pose estimator instead of normal odametry
