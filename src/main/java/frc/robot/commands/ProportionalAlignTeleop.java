@@ -99,11 +99,11 @@ public class ProportionalAlignTeleop extends Command {
     double angle = m_drive.getAngle();
 
     // Logics to mofidy the targetAngle- localizes the angle to between -180 and 180 and take most efficient path in a very complicated way
-    /*if (!(bestTag == 10 || bestTag == 21)) {*/
+    //if (!(bestTag == 10 || bestTag == 21)) {
       dr = targetAngle - (Math.abs((angle % 360)) * (angle/Math.abs(angle)) - 180 * (angle/Math.abs(angle)));
-    /* } else {
-      dr = targetAngle * Math.abs(angle)/angle - Math.abs((angle % 360)) * angle/Math.abs(angle);// - 180 * (m_drive.getAngle()/Math.abs(m_drive.getAngle())));
-    }*/
+    // } else {
+     // dr = (targetAngle * Math.abs(angle)/angle - Math.abs((angle % 360)) * angle/Math.abs(angle) - 180 * (m_drive.getAngle()/Math.abs(m_drive.getAngle())))/360;
+    //}
     
     //dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
 
