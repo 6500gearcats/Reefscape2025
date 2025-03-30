@@ -47,9 +47,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.GCPhotonVision;
 import frc.robot.Robot;
-import frc.robot.subsystems.Vision;
 
 public class DriveSubsystem extends SubsystemBase {
   // ! Update this to use the pose estimator instead of normal odametry
@@ -98,15 +96,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
-
-  //The new Pose Estimator
-  private GCPoseEstimator m_poseEstimator;
-
   private final Field2d m_field = new Field2d();
-
-  private GCPhotonVision m_simVision;
-  // ! Temporarily added this to make the pose estimator
-  private Vision m_vision;
 
   private Pose2d m_simOdometryPose;
   private ShuffleboardTab m_driveTab = Shuffleboard.getTab("Drive");
@@ -122,10 +112,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final StructArrayPublisher<SwerveModuleState> publisher;  
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem(GCPhotonVision simVision, Vision vision) {
-    m_simVision = simVision;
-    // ! Temporarily added this to make the pose estimator
-    m_vision = vision;
+  public DriveSubsystem() {
     try {
       /*
        * Communicate w/navX-MXP via theimport com.kauailabs.navx.frc.AHRS;A MXP SPI
@@ -137,7 +124,7 @@ public class DriveSubsystem extends SubsystemBase {
        * details.
        */
       m_gyro2 = new AHRS(NavXComType.kMXP_SPI);
-      m_gyro = new Pigeon2(30, "rio");
+      m_gyro = new Pigeon2(0, "rio");
       System.out.println("Pigeon2 constructed");
     } catch (RuntimeException ex) {
       System.out.println("Pigeon2 not constructed");
@@ -157,15 +144,6 @@ public class DriveSubsystem extends SubsystemBase {
       m_calibrating.set(false);
       SmartDashboard.putNumber(getName(), getPitch());
     }
-
-    // * Create a new PoseEstimator
-    if(m_vision.usingLimelight()){
-      m_poseEstimator = new GCPoseEstimator(this, this::getRotation2d, this::getWheelPositions);
-    }
-    else{
-      m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions, m_vision);
-    }
-
 
     m_odometry = new SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
@@ -269,12 +247,6 @@ publisher = NetworkTableInstance.getDefault()
     //SparkSim.iterate();
 
     
-    
-    // Update camera simulation
-    m_simVision.simulationPeriodic(this.getPose());
-
-    var debugField = m_simVision.getSimDebugField();
-    debugField.getObject("EstimatedRobot").setPose(this.getPose());
     // debugField.getObject("EstimatedRobotModules").setPoses(this.getModulePoses());
 
     // angle.set(5.0);
@@ -304,11 +276,7 @@ publisher = NetworkTableInstance.getDefault()
    * @return The pose.
    */
   public Pose2d getPose() {
-    if (Robot.isReal()) {
-      return m_poseEstimator.getEstimatedPosition();
-    } else {
       return m_simOdometryPose;
-    }
   }
 
   /**
@@ -396,13 +364,7 @@ publisher = NetworkTableInstance.getDefault()
 
     double max = m_maxSpeed.getDouble(DriveConstants.kTurboModeModifier);
     
-    if(Elevator.elevatorTooHighForTurbo){
-      if(Elevator.elevatorTooHighForRegularSpeed){
-        xSpeed *= .5;
-        ySpeed *= .5;
-        rot *= .5;
-      }
-    } else if (turboEnable) {
+    if (turboEnable) {
       
       xSpeed *= max;
       ySpeed *= max;
