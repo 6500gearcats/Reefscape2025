@@ -34,9 +34,12 @@ public static Pose2d getBestAprilTag(Pose2d robotPose, double m_xOffset, double 
   // Gets the tag's x and y position and multiplies them by offsets so that it's more backwards and to either side
   double newX = tagPose.getX() + Math.cos(tempAngle) * m_yOffset + Math.cos(tempAngle + Math.PI / 2) * m_xOffset;
   double newY = tagPose.getY() + Math.sin(tempAngle) * m_yOffset + Math.sin(tempAngle + Math.PI / 2) * m_xOffset;
-
+  Rotation2d rot = tagPose.getRotation();
+  if (bestAprilTag == 7 || bestAprilTag == 10 || bestAprilTag == 21) {
+    rot = rot.plus(new Rotation2d(Math.PI/60));
+  }
   // Returns all of the values in a pose2d (flips the angle to have the robot align without turning around)
-  return new Pose2d(newX, newY, tagPose.getRotation().plus(new Rotation2d(Math.PI)));
+  return new Pose2d(newX, newY, rot.plus(new Rotation2d(Math.PI)));
 }
 
 
@@ -111,13 +114,8 @@ public static Pose2d getBestAprilTagCoral(Pose2d robotPose, double m_xOffset, do
   // Gets the tag's x and y position and multiplies them by offsets so that it's more backwards and to either side
   double newX = tagPose.getX() + Math.cos(tempAngle) * m_yOffset + Math.cos(tempAngle + Math.PI / 2) * m_xOffset;
   double newY = tagPose.getY() + Math.sin(tempAngle) * m_yOffset + Math.sin(tempAngle + Math.PI / 2) * m_xOffset;
-
-  Rotation2d rot = tagPose.getRotation();
-  if (bestAprilTag == 7 || bestAprilTag == 10 || bestAprilTag == 21) {
-    rot.plus(new Rotation2d(Math.PI/60));
-  }
   // Returns all of the values in a pose2d (flips the angle to have the robot align without turning around)
-  return new Pose2d(newX, newY, rot);
+  return new Pose2d(newX, newY, tagPose.getRotation());
 }
 
   /** 
