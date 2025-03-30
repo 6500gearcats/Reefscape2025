@@ -19,6 +19,7 @@ public class SetElevatorSpeed extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     m_elevator = elevator;
     m_speed = speed;
+    addRequirements(elevator);
   }
 
   // Called when the command is initially scheduled.

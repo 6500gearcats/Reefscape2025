@@ -49,6 +49,7 @@ public class SetElevatorHeight extends Command {
     }
 
     m_elevator.setElevatorSpeed(velocity);
+    m_elevator.moveTo(m_height, velocity);
   }
 
   // Called once the command ends or is interrupted.
