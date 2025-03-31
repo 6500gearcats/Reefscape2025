@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utility.LimelightHelpers;
 import frc.robot.subsystems.DriveSubsystem;
@@ -83,21 +84,31 @@ public class ProportionalAlign extends Command {
     }
 
     // Modifies the target angle based on alliance, 
-    targetAngle = targetAngle - (addAngle * Math.abs(targetAngle)/targetAngle);
-
+    //targetAngle = targetAngle - (addAngle * Math.abs(targetAngle)/targetAngle);
+    SmartDashboard.putNumber("targetAngle", targetAngle);
+    targetAngle = targetAngle + addAngle;
+    SmartDashboard.putNumber("targetAngle corrected", targetAngle);
+    targetAngle = Math.IEEEremainder((targetAngle), 360);
+    SmartDashboard.putNumber("targetAngle normalized", targetAngle);
     m_drive.targetrotation = targetAngle;
   }
 
   @Override
   public void execute() {
     // Gets the error values of x direction, y direction
-    dx = targetX - m_drive.getPose().getX();
-    dy = targetY - m_drive.getPose().getY();
+    Pose2d currentPose = m_drive.getPose();
+    dx = targetX - currentPose.getX();
+    dy = targetY - currentPose.getY();
 
-    // Logics to mofidy the targetAngle- localizes the angle to between -180 and 180 and take most efficient path in a very complicated way
-    dr = targetAngle - (Math.abs((m_drive.getAngle() % 360)) * (m_drive.getAngle()/Math.abs(m_drive.getAngle())) - 180 * (m_drive.getAngle()/Math.abs(m_drive.getAngle())));
-    //dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
+    // Logics to modify the targetAngle- localizes the angle to between -180 and 180 and take most efficient path in a very complicated way
+    //double robotYaw = Math.toDegrees(MathUtil.angleModulus(m_drive.getAngleRadians()));
+    double robotYaw = m_drive.getAngle();
+    dr = targetAngle - robotYaw - 180;
+    dr = Math.IEEEremainder((dr), 360);
 
+    SmartDashboard.putNumber("dr", dr);
+    //dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);    
+    
     // Takes the total sum of errors of x and y direction to use for slowing down the robot
     double total = Math.abs(dx) + Math.abs(dy);
 
@@ -122,7 +133,8 @@ public class ProportionalAlign extends Command {
     }
 
     // If rotational speed is less than constant then set it to a minimum speed
-    if (Math.abs(dr) / drModifier < 0.05) {
+
+    if ((Math.abs(dr)) > 0 && (Math.abs(dr) / drModifier < 0.05)) {
       dr = 0.05 * (dr / Math.abs(dr));
       dr *= drModifier;
     }
