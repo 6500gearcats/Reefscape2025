@@ -10,16 +10,14 @@ import java.util.Optional;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utility.LimelightHelpers;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utility.ProportionalAlignHelper;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -68,9 +66,7 @@ public class ProportionalAlign extends Command {
     // Gets x, y, and rotation values from april tag
     targetX = targetPose.getX();
     targetY = targetPose.getY();
-    targetAngle = MathUtil.angleModulus((targetPose.getRotation().getRadians()));
-    targetAngle = Math.toDegrees(targetAngle);
-    
+    targetAngle = targetPose.getRotation().getDegrees();
 
     // Gets the current alliance set in driver station
     Optional<Alliance> alliance = DriverStation.getAlliance();
@@ -87,11 +83,8 @@ public class ProportionalAlign extends Command {
     }
 
     // Modifies the target angle based on alliance, 
-    //targetAngle = targetAngle - (addAngle * Math.abs(targetAngle)/targetAngle);
+    targetAngle = targetAngle - (addAngle * Math.abs(targetAngle)/targetAngle);
 
-    targetAngle = targetAngle + addAngle;
-
-    Math.IEEEremainder((targetAngle), 360);
     m_drive.targetrotation = targetAngle;
   }
 
@@ -102,9 +95,7 @@ public class ProportionalAlign extends Command {
     dy = targetY - m_drive.getPose().getY();
 
     // Logics to mofidy the targetAngle- localizes the angle to between -180 and 180 and take most efficient path in a very complicated way
-    double robotYaw = Math.toDegrees(MathUtil.angleModulus(m_drive.getAngleRadians()));
-    dr = Math.IEEEremainder((targetAngle - robotYaw), 360);
-    SmartDashboard.putNumber("dr", dr);
+    dr = targetAngle - (Math.abs((m_drive.getAngle() % 360)) * (m_drive.getAngle()/Math.abs(m_drive.getAngle())) - 180 * (m_drive.getAngle()/Math.abs(m_drive.getAngle())));
     //dr = (Math.abs(dr) -180) * (Math.abs(dr)/dr);
 
     // Takes the total sum of errors of x and y direction to use for slowing down the robot
@@ -131,8 +122,7 @@ public class ProportionalAlign extends Command {
     }
 
     // If rotational speed is less than constant then set it to a minimum speed
-    
-    if ((Math.abs(dr)) > 0 && (Math.abs(dr) / drModifier < 0.05)) {
+    if (Math.abs(dr) / drModifier < 0.05) {
       dr = 0.05 * (dr / Math.abs(dr));
       dr *= drModifier;
     }
