@@ -30,7 +30,9 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CoralHolder;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Vision;
+import frc.robot.utility.GCLimelight;
+import frc.robot.utility.GCPhotonVision;
+import frc.robot.utility.LimelightHelpers;
 import frc.robot.commands.AlgaeGrab;
 import frc.robot.commands.AlgaeSequence;
 import frc.robot.commands.CoralGrab;
@@ -39,6 +41,7 @@ import frc.robot.commands.L4Sequence;
 import frc.robot.commands.MoveCoral;
 import frc.robot.commands.OutakeAlgae;
 import frc.robot.commands.ProportionalAlign;
+import frc.robot.commands.ProportionalAlignCoralStation;
 import frc.robot.commands.ProportionalAlignTeleop;
 import frc.robot.commands.SetArmSpeed;
 import frc.robot.commands.SetClimberSpeed;
@@ -68,9 +71,9 @@ public class RobotContainer {
 
   PhotonCamera temp_camera = new PhotonCamera("ArducamTwo");
   GCPhotonVision vision = new GCPhotonVision(temp_camera);
-  Vision m_vision = new Vision(m_Limelight);
+  //Vision m_vision = new Vision(m_Limelight);
 
-  DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera, m_vision);
+  DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera, m_Limelight);
 
   Elevator m_elevator = new Elevator();
 
@@ -106,9 +109,9 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_robotDrive.drive(
-                MathUtil.applyDeadband(-m_driver.getLeftY() * .8, 0.1), // 0.1
-                MathUtil.applyDeadband(-m_driver.getLeftX() * .8, 0.1), // 0.1
-                MathUtil.applyDeadband(-m_driver.getRightX() * .8, 0.1),
+                MathUtil.applyDeadband(-m_driver.getLeftY(), 0.1) * 0.8, // 0.1
+                MathUtil.applyDeadband(-m_driver.getLeftX(), 0.1) * 0.8, // 0.1
+                MathUtil.applyDeadband(-m_driver.getRightX(), 0.1) * 0.8,
                 !m_driver.getRightBumper(), "Drive Train - Controller"),
             m_robotDrive));
   }
@@ -184,6 +187,15 @@ public class RobotContainer {
 
     // Auto score L4 right
     //new JoystickButton(m_driver, XboxController.Button.kB.value).whileTrue((new ProportionalAlign(m_robotDrive, 0.2, 0.535)));//.andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555)).andThen(new ProportionalAlign(m_robotDrive, 0.2, 0.45)).andThen(new MoveCoral(m_CoralHolder, -0.5, false)).withTimeout(0.2).andThen(new SetArmSpeed(m_arm, () -> 0.4)).withTimeout(0.6));
+    
+    // Driver right coral station
+    new POVButton(m_driver, 90).whileTrue(new ProportionalAlignCoralStation(m_robotDrive, 0.4, .800, 3).andThen(new ProportionalAlignCoralStation(m_robotDrive, 0.4, .480, 2)));
+
+    // Driver middle coral station
+    new POVButton(m_driver, 0).whileTrue(new ProportionalAlignCoralStation(m_robotDrive, 0, .800, 3).andThen(new ProportionalAlignCoralStation(m_robotDrive, 0, .480, 2)));
+
+    // Driver left coral station
+    new POVButton(m_driver, 270).whileTrue(new ProportionalAlignCoralStation(m_robotDrive, -0.4, .800, 3).andThen(new ProportionalAlignCoralStation(m_robotDrive, -0.4, .480, 2)));
 
   }
 
