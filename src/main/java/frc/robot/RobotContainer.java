@@ -160,7 +160,7 @@ public class RobotContainer {
 
     // Source
     new JoystickButton(m_gunner, XboxController.Button.kA.value)
-        .whileTrue(new SetArmAndElevatorPositionsSource(m_elevator, m_arm, 0.18, 0.1, 0.4, 0.4, -2));
+        .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.18, 0.1, 0.4, 0.4, -2));
 
     // Algae L3
     new POVButton(m_gunner, 270).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.43, 0.381));
@@ -178,8 +178,8 @@ public class RobotContainer {
     // previous yOffset = 0.75
     //new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, -0.15, .485, 2));
     //new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .485, 2));
-    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, -0.15, .650, 2).andThen(new ProportionalAlignTeleop(m_robotDrive, -0.15, .500, 2)));
-    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0.2, .650, 2).andThen(new ProportionalAlignTeleop(m_robotDrive, 0.2, .500, 2)));
+    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, -0.15, .650, 3).andThen(new ProportionalAlignTeleop(m_robotDrive, -0.15, .460, 2)));
+    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0.2, .650, 3).andThen(new ProportionalAlignTeleop(m_robotDrive, 0.2, .460, 2)));
     new POVButton(m_driver, 0).whileTrue(new ProportionalAlign(m_robotDrive, 0, .475));
 
     // Auto score L4 left
@@ -192,7 +192,7 @@ public class RobotContainer {
     new POVButton(m_driver, 90).whileTrue(new ProportionalAlignCoralStation(m_robotDrive, 0.4, .800, 3).andThen(new ProportionalAlignCoralStation(m_robotDrive, 0.4, .480, 2)));
 
     // Driver middle coral station
-    new POVButton(m_driver, 0).whileTrue(new ProportionalAlignCoralStation(m_robotDrive, 0, .800, 3).andThen(new ProportionalAlignCoralStation(m_robotDrive, 0, .480, 2)));
+    //new POVButton(m_driver, 0).whileTrue(new ProportionalAlignCoralStation(m_robotDrive, 0, .800, 3).andThen(new ProportionalAlignCoralStation(m_robotDrive, 0, .480, 2)));
 
     // Driver left coral station
     new POVButton(m_driver, 270).whileTrue(new ProportionalAlignCoralStation(m_robotDrive, -0.4, .800, 3).andThen(new ProportionalAlignCoralStation(m_robotDrive, -0.4, .480, 2)));
