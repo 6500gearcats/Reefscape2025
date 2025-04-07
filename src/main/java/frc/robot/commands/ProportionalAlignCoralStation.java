@@ -21,7 +21,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utility.ProportionalAlignHelper;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ProportionalAlign extends Command {
+public class ProportionalAlignCoralStation extends Command {
   /** Creates a new ProportionalAlign. */
   Pose2d targetPose;
   double dx;
@@ -39,7 +39,7 @@ public class ProportionalAlign extends Command {
 
   DriveSubsystem m_drive;
 
-  public ProportionalAlign(DriveSubsystem drive, double xOffset, double yOffset) {
+  public ProportionalAlignCoralStation(DriveSubsystem drive, double xOffset, double yOffset) {
     m_speedModifier = 1;
     m_xOffset = xOffset;
     m_yOffset = yOffset;
@@ -49,7 +49,7 @@ public class ProportionalAlign extends Command {
   }
 
   // Overloaded constructor with a speed modifier to use in autos (we need to align faster)
-  public ProportionalAlign(DriveSubsystem drive, double xOffset, double yOffset, double speedModifier) {
+  public ProportionalAlignCoralStation(DriveSubsystem drive, double xOffset, double yOffset, double speedModifier) {
     m_speedModifier = speedModifier;
     m_xOffset = xOffset;
     m_yOffset = yOffset;
@@ -61,7 +61,7 @@ public class ProportionalAlign extends Command {
   @Override
   public void initialize() {
     // Gets nearest april tag target position through helper class
-    targetPose = ProportionalAlignHelper.getBestAprilTag(m_drive.getPose(), m_xOffset, m_yOffset);
+    targetPose = ProportionalAlignHelper.getBestAprilTagCoral(m_drive.getPose(), m_xOffset, m_yOffset);
 
     // Gets x, y, and rotation values from april tag
     targetX = targetPose.getX();

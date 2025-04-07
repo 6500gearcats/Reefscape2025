@@ -244,7 +244,7 @@ public static class VisionConstants {
     public static final int kElevatorTopSwitchPort = 0;
     public static final int kElevatordBottomSwitchPort = 0;
     public static final int kLidarChannel = 0;
-    public static final double kRotationsToMeters = -1.0 * Units.inchesToMeters(11);
+    public static final double kRotationsToMeters = -1.0 * Units.inchesToMeters(7.5);
   }
 
 /*   public static class IntakeConstants {

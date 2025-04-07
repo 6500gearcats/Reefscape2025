@@ -22,7 +22,7 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
     //DriverStationSim.setAllianceStationId(AllianceStationID.Blue1);
-    DataLogManager.start();
+    //DataLogManager.start();
     CameraServer.startAutomaticCapture();
     PortForwarder.add(5801, "limelight-gca.local", 5801);
   }

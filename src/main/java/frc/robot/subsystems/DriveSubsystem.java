@@ -47,10 +47,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.GCPhotonVision;
-import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
-import frc.robot.subsystems.Vision;
+import frc.robot.utility.GCLimelight;
+import frc.robot.utility.GCPhotonVision;
+import frc.robot.utility.LimelightHelpers;
 
 public class DriveSubsystem extends SubsystemBase {
   // ! Update this to use the pose estimator instead of normal odametry
@@ -114,8 +114,9 @@ public class DriveSubsystem extends SubsystemBase {
   private final Field2d m_field = new Field2d();
 
   private GCPhotonVision m_simVision;
+  private GCLimelight m_vision;
   // ! Temporarily added this to make the pose estimator
-  private Vision m_vision;
+  //private Vision m_vision;
   private String systemControlling = "";
 
   private Pose2d m_simOdometryPose;
@@ -136,7 +137,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final StructArrayPublisher<SwerveModuleState> publisher;  
 
   /** Creates a new DriveSubsystem. */
-  public DriveSubsystem(GCPhotonVision simVision, Vision vision) {
+  public DriveSubsystem(GCPhotonVision simVision, GCLimelight vision) {
     m_simVision = simVision;
     // ! Temporarily added this to make the pose estimator
     m_vision = vision;
@@ -172,13 +173,7 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber(getName(), getPitch());
     }
 
-    // * Create a new PoseEstimator
-    if(m_vision.usingLimelight()){
-      m_poseEstimator = new GCPoseEstimator(this, this::getRotation2d, this::getWheelPositions);
-    }
-    else{
-      m_poseEstimator = new GCPoseEstimator(this::getRotation2d, this::getWheelPositions, m_vision);
-    }
+    m_poseEstimator = new GCPoseEstimator(this, this::getRotation2d, this::getWheelPositions);
 
 
     m_odometry = new SwerveDriveOdometry(
@@ -613,6 +608,16 @@ publisher = NetworkTableInstance.getDefault()
       return m_gyro.getYaw().getValueAsDouble();
     } else {
       return fakeYaw * 1.169;
+    }
+  }
+
+  /* Return the NavX yaw angle */
+  public double getAngleRadians() {
+    // return -m_gyro.getYaw();
+    if (Robot.isReal()) {
+      return Math.toRadians( m_gyro.getYaw().getValueAsDouble());
+    } else {
+      return Math.toRadians(fakeYaw * 1.169);
     }
   }
 
