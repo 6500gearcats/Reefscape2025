@@ -35,6 +35,7 @@ import frc.robot.utility.GCPhotonVision;
 import frc.robot.utility.LimelightHelpers;
 import frc.robot.commands.AlgaeGrab;
 import frc.robot.commands.AlgaeSequence;
+import frc.robot.commands.ControllerRumble;
 import frc.robot.commands.CoralGrab;
 import frc.robot.commands.IntakeAlgae;
 import frc.robot.commands.L4Sequence;
@@ -83,7 +84,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("CoralPlace", new L4Sequence(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("CoralGrab", new CoralGrab(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("AlgaeGrab", new AlgaeGrab(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
-    NamedCommands.registerCommand("RaiseElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.734, .555, 0.6, 0.4, -5).andThen(new SetElevatorSpeed(m_elevator, () -> -0.6).withTimeout(0.1)));
+    NamedCommands.registerCommand("RaiseElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.728, .555, 0.6, 0.4, -5).withTimeout(3).andThen(new SetElevatorSpeed(m_elevator, () -> -0.6).withTimeout(0.1)));
     NamedCommands.registerCommand("LowerElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.18, 0.1, 0.6, 0.4, -4));
     NamedCommands.registerCommand("LowerElevatorAlgae", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4, -2));
     NamedCommands.registerCommand("AlgaeProcessor", new AlgaeSequence(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
@@ -148,7 +149,7 @@ public class RobotContainer {
 
     // Coral L3
     new JoystickButton(m_gunner, XboxController.Button.kX.value)
-        .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.547));
+        .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.53));
     // Coral L4
     new JoystickButton(m_gunner, XboxController.Button.kY.value)
         .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.738, .555).andThen(new SetElevatorSpeed(m_elevator, () -> -0.3).withTimeout(0.1)));//.withTimeout(.1));
@@ -169,7 +170,7 @@ public class RobotContainer {
     new POVButton(m_gunner, 90).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.399));
 
     // Net
-    new POVButton(m_gunner, 0).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.738, 0.195));
+    new POVButton(m_gunner, 0).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.738, 0.214));
 
     // Processor
     new POVButton(m_gunner, 180).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4, -2));
@@ -178,8 +179,8 @@ public class RobotContainer {
     // previous yOffset = 0.75
     //new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, -0.15, .485, 2));
     //new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .485, 2));
-    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, -0.15, .650, 3).andThen(new ProportionalAlignTeleop(m_robotDrive, -0.15, .460, 2)));
-    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0.2, .650, 3).andThen(new ProportionalAlignTeleop(m_robotDrive, 0.2, .460, 2)));
+    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, -0.18, .750, 5).andThen(new ProportionalAlignTeleop(m_robotDrive, -0.17, .50, 3).andThen(new ControllerRumble(m_driver))));
+    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0.15, .750, 5).andThen(new ProportionalAlignTeleop(m_robotDrive, 0.2, .50, 3).andThen(new ControllerRumble(m_driver))));
     new POVButton(m_driver, 0).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0, .475, 2.5));
 
     // Auto score L4 left
