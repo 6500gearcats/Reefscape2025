@@ -39,7 +39,11 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.EnableTurbo;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.Shoot;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 public class RobotContainer {
 
   AprilTagFieldLayout field;
@@ -53,6 +57,8 @@ public class RobotContainer {
   
   //Temporarily adding this to
   DriveSubsystem m_robotDrive = new DriveSubsystem();
+  Intake m_intake = new Intake();
+  Shooter m_shooter = new Shooter();
 
 
   public RobotContainer() {
@@ -78,6 +84,8 @@ public class RobotContainer {
   private void configureBindings() {
     // Configure your button bindings here
     new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value).whileTrue(new EnableTurbo(m_robotDrive));
+    new JoystickButton(m_gunner, XboxController.Button.kA.value).whileTrue(new IntakeCommand(m_intake));
+    new JoystickButton(m_gunner, XboxController.Button.kX.value).whileTrue(new Shoot(m_shooter));
   }
 
   public Command getAutonomousCommand() {
