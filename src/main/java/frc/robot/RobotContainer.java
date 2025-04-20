@@ -35,7 +35,6 @@ import frc.robot.utility.GCPhotonVision;
 import frc.robot.utility.LimelightHelpers;
 import frc.robot.commands.AlgaeGrab;
 import frc.robot.commands.AlgaeSequence;
-import frc.robot.commands.ControllerRumble;
 import frc.robot.commands.CoralGrab;
 import frc.robot.commands.IntakeAlgae;
 import frc.robot.commands.L4Sequence;
@@ -46,11 +45,13 @@ import frc.robot.commands.ProportionalAlignCoralStation;
 import frc.robot.commands.ProportionalAlignTeleop;
 import frc.robot.commands.SetArmSpeed;
 import frc.robot.commands.SetClimberSpeed;
+import frc.robot.commands.SetElevatorHeight;
 import frc.robot.commands.SetElevatorSpeed;
 import frc.robot.commands.SnailEnable;
 import frc.robot.commands.TurboEnable;
 import frc.robot.commands.SetArmAndElevatorPositions;
 import frc.robot.commands.SetArmAndElevatorPositionsSource;
+import frc.robot.commands.SetArmPosition;
 
 public class RobotContainer {
 
@@ -115,6 +116,10 @@ public class RobotContainer {
                 MathUtil.applyDeadband(-m_driver.getRightX(), 0.1) * 0.8,
                 !m_driver.getRightBumper(), "Drive Train - Controller"),
             m_robotDrive));
+    
+        // Rotate arm to pizza-serving position
+        m_elevator.setDefaultCommand(new SetElevatorHeight(m_elevator, 0.4));
+        m_arm.setDefaultCommand(new SetArmPosition(m_arm, 0.4, 0.1));
   }
 
   private void configureBindings() {
@@ -179,8 +184,8 @@ public class RobotContainer {
     // previous yOffset = 0.75
     //new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, -0.15, .485, 2));
     //new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .485, 2));
-    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, -0.18, .750, 5).andThen(new ProportionalAlignTeleop(m_robotDrive, -0.17, .50, 3).andThen(new ControllerRumble(m_driver))));
-    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0.15, .750, 5).andThen(new ProportionalAlignTeleop(m_robotDrive, 0.2, .50, 3).andThen(new ControllerRumble(m_driver))));
+    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, -0.18, .750, 5).andThen(new ProportionalAlignTeleop(m_robotDrive, -0.17, .50, 3)));
+    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0.15, .750, 5).andThen(new ProportionalAlignTeleop(m_robotDrive, 0.2, .50, 3)));
     new POVButton(m_driver, 0).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0, .475, 2.5));
 
     // Auto score L4 left
