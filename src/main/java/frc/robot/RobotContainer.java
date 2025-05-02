@@ -35,7 +35,7 @@ import frc.robot.utility.GCPhotonVision;
 import frc.robot.utility.LimelightHelpers;
 import frc.robot.commands.AlgaeGrab;
 import frc.robot.commands.AlgaeSequence;
-import frc.robot.commands.ControllerRumble;
+//import frc.robot.commands.ControllerRumble;
 import frc.robot.commands.CoralGrab;
 import frc.robot.commands.IntakeAlgae;
 import frc.robot.commands.L4Sequence;
@@ -179,8 +179,8 @@ public class RobotContainer {
     // previous yOffset = 0.75
     //new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, -0.15, .485, 2));
     //new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .485, 2));
-    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, -0.18, .750, 5).andThen(new ProportionalAlignTeleop(m_robotDrive, -0.17, .50, 3).andThen(new ControllerRumble(m_driver))));
-    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0.15, .750, 5).andThen(new ProportionalAlignTeleop(m_robotDrive, 0.2, .50, 3).andThen(new ControllerRumble(m_driver))));
+    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, -0.18, .750, 5).andThen(new ProportionalAlignTeleop(m_robotDrive, -0.17, .50, 3)));//.andThen(new ControllerRumble(m_driver))));
+    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0.15, .750, 5).andThen(new ProportionalAlignTeleop(m_robotDrive, 0.2, .50, 3)));//.andThen(new ControllerRumble(m_driver))));
     new POVButton(m_driver, 0).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0, .475, 2.5));
 
     // Auto score L4 left
