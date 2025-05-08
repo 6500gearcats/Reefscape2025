@@ -31,6 +31,7 @@ import frc.robot.subsystems.CoralHolder;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Vision;
+import frc.robot.subsystems.LedManager;
 import frc.robot.commands.AlgaeGrab;
 import frc.robot.commands.AlgaeSequence;
 import frc.robot.commands.CoralGrab;
@@ -63,6 +64,9 @@ public class RobotContainer {
   Arm m_arm = new Arm();
   Climber m_climber = new Climber();
   CoralHolder m_CoralHolder = new CoralHolder();
+
+  // Change first param to the display you want, as described in frc/robot/leds/ledConstants
+  LedManager m_LedManager = new LedManager("pongBlueWin", 8);
 
   boolean fieldRelative = true;
 
