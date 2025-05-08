@@ -21,7 +21,7 @@ import frc.robot.ledConstants;
 public class LedManager extends SubsystemBase {
   Timer timer = new Timer();
   int fps;
-  int currentFrame = 0;
+  int currentFrame = -1;
   double lastTimestamp;
   AddressableLED m_led = new AddressableLED(ledConstants.kLedPort); //REPLACE WITH PORT
   AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(ledConstants.kLedLength);
@@ -31,7 +31,7 @@ public class LedManager extends SubsystemBase {
 
   /** Initializes the LED board. 
   @param displayChoice The animation you would like the screen to cycle through. See frc\robot\leds\ledConstants for more details.
-  @param fps The amount frames to display each second; the speed. Slower framerate recommended for animations with less frames.
+  @param fps The amount frames to cycle per second. Alternatively, enter 0 to stay on the first frame.
   **/
   public LedManager(String displayChoice, int fps) {
     try {
@@ -50,7 +50,13 @@ public class LedManager extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // hello whoever is reading this!!! - joseph
-    if(currentTime >= lastTimestamp + (1.0 / fps)) {
+    if(fps == 0) {
+        if(currentFrame == -1) {
+          nextFrame();
+        }
+    }
+    
+    else if(currentTime >= lastTimestamp + (1.0 / fps)\) {
         nextFrame();
         lastTimestamp = timer.getTimestamp();
     }
