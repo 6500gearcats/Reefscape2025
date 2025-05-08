@@ -19,6 +19,9 @@ public class ledConstants {
      * setherror --> displays setherror, one frame, used to denote an error
      * pongBlueWin --> depicts blue team winning in pong, ~60 frames
      * pranavCreeper --> pranav blowing up to a creeper LOL, ~30 frames
+     * 6500Blue --> Resembles the blue bumpers
+     * 6500Red --> ^^^ but red
+     * 6500Teal --> ^^^ but teal (same color as the gear in the logo)
      */
 
 
