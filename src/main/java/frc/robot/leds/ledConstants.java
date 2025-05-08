@@ -17,6 +17,7 @@ public class ledConstants {
      * List of display options:
      * test --> displays hello world, two frames
      * setherror --> displays setherror, one frame, used to denote an error
+     * pongBlueWin --> depicts blue team winning in pong, ~60 frames
      */
 
 
@@ -32,15 +33,15 @@ public class ledConstants {
         int[][][][] display = new int[frames][][][];
 
         for(int i = 0; i < frames; i++) {
-            BufferedImage img = ImageIO.read(new File("frc/robot/leds/images/" + choice + (i + 1) + ".png"));
+            BufferedImage img = ImageIO.read(new File("frc/robot/leds/images/" + choice + i + ".png"));
             int[][][] pixels = new int[8][32][3];
 
-            for (int x = 0; x < 8; x++) {
-                for (int y = 0; y < 32; y++) {
-                    int rgb = img.getRGB(y, x);
-                    pixels[x][y][0] = (rgb >> 16) & 0xFF; // Red
-                    pixels[x][y][1] = (rgb >> 8) & 0xFF;  // Green
-                    pixels[x][y][2] = rgb & 0xFF;         // Blue
+            for (int row = 0; row < 8; row++) {
+                for (int col = 0; col < 32; col++) {
+                    int rgb = img.getRGB(row, col);
+                    pixels[row][col][0] = (rgb >> 16) & 0xFF; // Red
+                    pixels[row][col][1] = (rgb >> 8) & 0xFF;  // Green
+                    pixels[row][col][2] = rgb & 0xFF;         // Blue
                 }
             }
             /* 
