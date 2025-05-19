@@ -76,16 +76,17 @@ public class RobotContainer {
         // Turning is controlled by the X axis of the right stick.
         new RunCommand(
             () -> m_robotDrive.drive(
-                MathUtil.applyDeadband(-m_driver.getLeftY() *.8, 0.1), //0.1
-                MathUtil.applyDeadband(-m_driver.getLeftX() *.8, 0.1), //0.1
-                MathUtil.applyDeadband(-m_driver.getRightX() *.8, 0.1),
+                MathUtil.applyDeadband(-m_driver.getLeftY() *.5, 0.1), //0.1
+                MathUtil.applyDeadband(-m_driver.getLeftX() *.5, 0.1), //0.1
+                MathUtil.applyDeadband(-m_driver.getRightX() *.5, 0.1),
                 !m_driver.getRightBumper()),
             m_robotDrive));
   }
 
   private void configureBindings() {
     // Configure your button bindings here
-    new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value).whileTrue(new EnableTurbo(m_robotDrive));
+    new JoystickButton(m_driver, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> resetRobotGyroAndOrientation()));
+    //new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value).whileTrue(new EnableTurbo(m_robotDrive));
     new JoystickButton(m_gunner, XboxController.Button.kA.value).whileTrue(new IntakeNote(m_intake).andThen(new IntakeCommand(m_intake, -0.2).withTimeout(0.2)));
     new JoystickButton(m_gunner, XboxController.Button.kX.value).whileTrue(new Shoot(m_shooter));
     new JoystickButton(m_gunner, XboxController.Button.kY.value).whileTrue(new Shoot(m_shooter).withTimeout(1.2).andThen((new ShootNote(m_intake, m_shooter))));
