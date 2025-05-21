@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -21,11 +22,12 @@ import frc.robot.leds.ledConstants;
 public class LedPanel extends SubsystemBase {
   Timer timer = new Timer();
   int fps;
-  int currentFrame = -1;
+  int currentFrame;
   double lastTimestamp;
   AddressableLED m_led = new AddressableLED(ledConstants.kLedPort); //REPLACE WITH PORT
   AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(ledConstants.kLedLength);
   int[][][][] displayChoice;
+  String currentOption;
   
 
   /** Initializes the LED board. 
@@ -33,6 +35,8 @@ public class LedPanel extends SubsystemBase {
   @param fps The amount frames to cycle per second. Alternatively, enter 0 to stay on the first frame.
   **/
   public LedPanel(String choice, int fps) {
+    this.currentOption = choice;
+    currentFrame = 0;
     try {
         this.displayChoice = ledConstants.makeDisplayArray(choice);
     } catch(Exception e) {
@@ -50,26 +54,31 @@ public class LedPanel extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    // hello whoever is reading this!!! - joseph
-    double currentTime = timer.get();
-    if(fps == 0) {
-        if(currentFrame == -1) {
-          nextFrame();
+    if(displayChoice != null) {
+        if(this.currentOption != RobotContainer.LedChooser.getSelected()) {
+            this.displayChoice = ledConstants.makeDisplayArray(RobotContainer.LedChooser.getSelected());
         }
-    }
-    
-    else if(currentTime >= lastTimestamp + (1.0 / fps)) {
-        nextFrame();
-        lastTimestamp = currentTime;
+
+        double currentTime = timer.get();
+        if(fps == 0) {
+            if(currentFrame == -1) {
+            nextFrame();
+            }
+        }
+        
+        else if(currentTime >= lastTimestamp + (1.0 / fps)) {
+            nextFrame();
+            lastTimestamp = currentTime;
+        }
     }
   }
   
   public void nextFrame() {
       currentFrame++;
-      if(currentFrame >= displayChoice.length) { 
+      if(currentFrame == displayChoice.length) { 
           currentFrame = 0;
       }
+      
       // Might not work with the panel, will have to see how it considers indexes
       for(int row = 0; row < 8; row++) {
           for(int col = 0; col < 32; col++) {

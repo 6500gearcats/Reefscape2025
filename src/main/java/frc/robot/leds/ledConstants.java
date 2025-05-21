@@ -1,30 +1,30 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-
+package frc.robot.leds;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 
-public class ledConstants {
-    public static final int kLedPort = 99;
+public class ledConstants { //TODO: correct kLedPort
+    public static final int kLedPort = 8;
     public static final int kLedLength = 256;
 
-    private String[] files = new File("frc/robot/leds/images/").list();
+    private static String[] files = new File("src\\main\\java\\frc\\robot\\leds\\images").list();
 
     /*
      * List of display options:
-     * test --> displays hello world, two frames
-     * setherror --> displays setherror, one frame, used to denote an error
-     * pongBlueWin --> depicts blue team winning in pong, ~60 frames
-     * pranavCreeper --> pranav blowing up to a creeper LOL, ~30 frames
-     * 6500Blue --> Resembles the blue bumpers
-     * 6500Red --> ^^^ but red
-     * 6500Teal --> ^^^ but teal (same color as the gear in the logo)
+     * { name } { [#frames] } --> { desc }
+     * test [2] --> displays hello world
+     * setherror [1] --> displays setherror, displayed if an error occurs
+     * pongBlueWin [64] --> depicts blue team winning in pong
+     * pranavCreeper [29] --> pranav blowing up to a creeper (LOL)
+     * 6500Blue [1] --> Resembles the blue bumpers
+     * 6500Red [1] --> ^^^ but red
+     * 6500Teal [1] --> ^^^ but teal from our logo
      */
 
+     public static String[] LedOptions = {"test", "setherror", "pongBlueWin", "pranavCreeper", "6500Blue", "6500Red", "6500Teal"};
 
+    
     public static int[][][][] makeDisplayArray(String choice) {
 
         int frames = 0;
@@ -35,14 +35,22 @@ public class ledConstants {
         }
 
         int[][][][] display = new int[frames][][][];
+        System.out.println(frames);
 
         for(int i = 0; i < frames; i++) {
-            BufferedImage img = ImageIO.read(new File("frc/robot/leds/images/" + choice + i + ".png"));
+            BufferedImage img = null;
+            try {
+                img = ImageIO.read(new File("src\\main\\java\\frc\\robot\\leds\\images\\" + choice + i + ".png"));
+            } catch (IOException e) {
+                System.out.println("Error with image in ledConstants: " + e);
+                break;
+            }
+            
             int[][][] pixels = new int[8][32][3];
 
             for (int row = 0; row < 8; row++) {
                 for (int col = 0; col < 32; col++) {
-                    int rgb = img.getRGB(row, col);
+                    int rgb = img.getRGB(col, row);
                     pixels[row][col][0] = (rgb >> 16) & 0xFF; // Red
                     pixels[row][col][1] = (rgb >> 8) & 0xFF;  // Green
                     pixels[row][col][2] = rgb & 0xFF;         // Blue
@@ -55,6 +63,7 @@ public class ledConstants {
                 }
             } */
             display[i] = pixels;
+            //System.out.println(pixels);
         }
 
         return display;
