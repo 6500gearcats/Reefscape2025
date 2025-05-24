@@ -66,8 +66,9 @@ public class RobotContainer {
   Climber m_climber = new Climber();
   CoralHolder m_CoralHolder = new CoralHolder();
 
-  LedPanel m_LedPanel = new LedPanel("test", 2); 
-  public static SendableChooser<String> LedChooser;
+  LedPanel m_LedPanel = new LedPanel("test", 1); 
+  //public static SendableChooser<String> LedChooser;
+  //boolean robotIsHappy = true;
 
   boolean fieldRelative = true;
 
@@ -117,12 +118,14 @@ public class RobotContainer {
                 !m_driver.getRightBumper(), "Drive Train - Controller"),
             m_robotDrive));
     
+    /*
     LedChooser = new SendableChooser<>();
     LedChooser.setDefaultOption("Hello World", "test");
-    for(String option : ledConstants.LedOptions) {
+    for(String option : ledConstants.ledOptions) {
       LedChooser.addOption(option, option);
     }
-    SmartDashboard.putData("Led Options", LedChooser);
+    SmartDashboard.putData("Led Options", LedChooser); */
+    SmartDashboard.putString("Led Choice", "6500Teal");
   }
 
   private void configureBindings() {

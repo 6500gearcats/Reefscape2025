@@ -1,4 +1,5 @@
 package frc.robot.leds;
+import frc.robot.leds.ledLetters;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,10 +23,10 @@ public class ledConstants { //TODO: correct kLedPort
      * 6500Teal [1] --> ^^^ but teal from our logo
      */
 
-     public static String[] LedOptions = {"test", "setherror", "pongBlueWin", "pranavCreeper", "6500Blue", "6500Red", "6500Teal"};
+     public static final String[] ledOptions = {"test", "setherror", "pongBlueWin", "pranavCreeper", "6500Blue", "6500Red", "6500Teal"};
 
     
-    public static int[][][][] makeDisplayArray(String choice) {
+    public static int[][][][] makeDisplayArrayFromImages(String choice) {
 
         int frames = 0;
         for (int i = 0; i < files.length; i++) {
@@ -35,7 +36,6 @@ public class ledConstants { //TODO: correct kLedPort
         }
 
         int[][][][] display = new int[frames][][][];
-        System.out.println(frames);
 
         for(int i = 0; i < frames; i++) {
             BufferedImage img = null;
@@ -66,6 +66,91 @@ public class ledConstants { //TODO: correct kLedPort
             //System.out.println(pixels);
         }
 
+        return display;
+    }
+
+    /** Turns the parameter into an int[][][][] display for the LED board.
+    @param text The String to be put on the array. Screen seperation marked by @. To use colors, begin the string with (r, g, b). Long words may have issues.
+    **/
+    public static int[][][][] makeDisplayArrayFromString(String text) {
+        int r, g, b;
+        if(text.indexOf("(") != -1) { // (red, green, blue)
+            try {
+                text = text.substring(1);
+                // Red
+                r = Integer.parseInt(text.substring(0, text.indexOf(",")), 10);
+
+                // Green
+                text = text.substring(text.indexOf(",") + 2);
+                g = Integer.parseInt(text.substring(0, text.indexOf(",")), 10);
+
+                // Blue
+                text = text.substring(text.indexOf(",") + 2);
+                b = Integer.parseInt(text.substring((0), text.indexOf(")")), 10);
+                
+                text = text.substring(text.indexOf(")") + 1);
+            } catch(Exception e) {
+                System.out.println("Error with custom text input. Check your RGB notation. " + e);
+                return makeDisplayArrayFromImages("setherror");
+            }
+        } else {
+            r = 255;
+            g = 255;
+            b = 255;
+        }
+
+        // Count number of frames
+        int frames = 0;
+        text += "@";
+        for(int i = 0; i < text.length(); i++) {
+            if(text.substring(i, i + 1).equals("@")) {
+                frames++;
+            }
+        }
+
+        int[][][][] display = new int[frames][8][32][3];
+
+        int frame = 0;
+        while(text.indexOf("@") != -1) {
+            String currentWindow = text.substring(0, text.indexOf("@"));
+
+            // Values automatically 0
+            int[][][] pixels = new int[8][32][3];
+            
+            // Turn the input text into display array
+            // Starting at [1] not [0]
+            int nextLetterCol = 1;
+            for(int i = 0; i < currentWindow.length(); i++) {
+                int[][] letter = ledLetters.letterMap.get(currentWindow.substring(i, i + 1));
+                
+                // Stop if letter would be out of bounds
+                for(int row = 0; row < 8; row++) {
+                    // Add letter in
+                    for(int col = 0; col < letter[0].length; col++) {
+                        if(nextLetterCol + col > 31) {
+                            break;
+                        }
+                        pixels[row][col + nextLetterCol][0] = r * letter[row][col];
+                        pixels[row][col + nextLetterCol][1] = g * letter[row][col];
+                        pixels[row][col + nextLetterCol][2] = b * letter[row][col];
+                    }
+                    //nextLetterCol++;
+                }
+                nextLetterCol += letter[0].length + 1;
+            }
+            nextLetterCol++;
+            
+            //System.out.println(frame);
+            //System.out.println(text);
+            display[frame] = pixels;
+            frame++;
+
+            if(text.length() != text.indexOf("@") + 1) {
+                text = text.substring(text.indexOf("@") + 1);
+            } else {
+                text =  "";
+            }
+        }
         return display;
     }
 }

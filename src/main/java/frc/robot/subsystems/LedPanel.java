@@ -28,42 +28,86 @@ public class LedPanel extends SubsystemBase {
   AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(ledConstants.kLedLength);
   int[][][][] displayChoice;
   String currentOption;
+  String ledSimOutput;
   
 
   /** Initializes the LED board. 
-  @param displayChoice The name of the animation you would like the screen to cycle through. Options above.
+  @param displayChoice The name of the animation you would like the screen to cycle through or the custom input.
   @param fps The amount frames to cycle per second. Alternatively, enter 0 to stay on the first frame.
   **/
   public LedPanel(String choice, int fps) {
     this.currentOption = choice;
-    currentFrame = 0;
-    try {
-        this.displayChoice = ledConstants.makeDisplayArray(choice);
-    } catch(Exception e) {
-        System.out.println("Failed to find LED display option. " + e);
-        this.displayChoice = ledConstants.makeDisplayArray("setherror");
-    } 
     this.fps = fps;
+    currentFrame = 0;
+    ledSimOutput = "";
+
+    if(isAnimation(choice)) {
+        try {
+            this.displayChoice = ledConstants.makeDisplayArrayFromImages(choice);
+        } catch(Exception e) {
+            System.out.println("Error creating LED animation. " + e);
+            this.displayChoice = ledConstants.makeDisplayArrayFromImages("setherror");
+        }
+    }
+
+    else {
+        try { 
+            this.displayChoice = ledConstants.makeDisplayArrayFromString(choice);
+        } catch (Exception e) {
+            System.out.println("Error creating custom LED output. " + e);
+            this.displayChoice = ledConstants.makeDisplayArrayFromImages("setherror");
+        }
+    }
 
     m_led.setLength(ledConstants.kLedLength);
     m_led.start();
-
     timer.start();
     lastTimestamp = timer.get();
+
+    if(displayChoice == null) {
+        System.out.println("DisplayChoice is Null");
+    }
+
+    System.out.println("LEDs set to " + currentOption);
+  }
+
+  private boolean isAnimation(String choice) {
+    for(int i = 0; i < ledConstants.ledOptions.length; i++)
+    if(ledConstants.ledOptions[i].equals(choice)) {
+        return true;
+    }
+    return false;
   }
 
   @Override
   public void periodic() {
     if(displayChoice != null) {
-        if(this.currentOption != RobotContainer.LedChooser.getSelected()) {
-            this.displayChoice = ledConstants.makeDisplayArray(RobotContainer.LedChooser.getSelected());
+        String dashboardInput;
+        try {
+            dashboardInput = SmartDashboard.getString("Led Choice", "6500Teal");
+            currentFrame = -1;
+        } catch (Exception e) {
+            System.out.println("Error with Led Choice" + e);
+            dashboardInput = "setherror";
+        }
+        if(!(this.currentOption.equals(dashboardInput))) {
+            if(isAnimation(dashboardInput)) {
+                this.displayChoice = ledConstants.makeDisplayArrayFromImages(dashboardInput);
+            } else {
+                try { 
+                    displayChoice = ledConstants.makeDisplayArrayFromString(dashboardInput);
+                } catch (Exception e) {
+                    System.out.println("Error creating custom LED output; " + e);
+                    this.displayChoice = ledConstants.makeDisplayArrayFromImages("setherror");
+                }
+            }
+            this.currentOption = dashboardInput;
+            System.out.println("LEDs set to " + currentOption);
         }
 
         double currentTime = timer.get();
-        if(fps == 0) {
-            if(currentFrame == -1) {
+        if(fps == 0 && currentFrame == -1) {
             nextFrame();
-            }
         }
         
         else if(currentTime >= lastTimestamp + (1.0 / fps)) {
@@ -80,17 +124,37 @@ public class LedPanel extends SubsystemBase {
       }
       
       // Might not work with the panel, will have to see how it considers indexes
-      for(int row = 0; row < 8; row++) {
-          for(int col = 0; col < 32; col++) {
-              m_ledBuffer.setRGB(
-                  col + (row * 32), // Index
-                  displayChoice[currentFrame][row][col][0], // Red
-                  displayChoice[currentFrame][row][col][1], // Green
-                  displayChoice[currentFrame][row][col][2]  // Blue
-              );
-          }
+      if(Robot.isReal()) {
+        for(int row = 0; row < 8; row++) {
+            for(int col = 0; col < 32; col++) {
+                m_ledBuffer.setRGB(
+                    col + (row * 32), // Index
+                    displayChoice[currentFrame][row][col][0], // Red
+                    displayChoice[currentFrame][row][col][1], // Green
+                    displayChoice[currentFrame][row][col][2]  // Blue
+                );
+            }
+        }
       }
 
+      if(Robot.isSimulation()) {
+        //System.out.println("Current LED Frame: ");
+        ledSimOutput = "";
+        for(int row = 0; row < 8; row++) {
+            for(int col = 0; col < 32; col++){
+                if(displayChoice[currentFrame][row][col][0] != 0) {
+                    ledSimOutput += "0" + " ";
+                } else {
+                    ledSimOutput += "_" + " ";
+                }
+            }
+            ledSimOutput += "\n";
+        }
+        SmartDashboard.putString("Led Sim Output", ledSimOutput);
+      }
+      
       m_led.setData(m_ledBuffer);
+      System.out.println("Updated LEDs");
+      System.out.println(currentFrame);
   }
 }

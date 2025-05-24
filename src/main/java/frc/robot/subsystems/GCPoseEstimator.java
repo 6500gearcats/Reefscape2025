@@ -187,17 +187,20 @@ public class GCPoseEstimator extends SubsystemBase {
       {
         doRejectUpdate = true;
       }
-      if(mt2.tagCount == 0)
-      {
-        doRejectUpdate = true;
-      }
-      if(!doRejectUpdate)
-      {
-        //TODO put this above and remove from periodic
-        m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5, Units.degreesToRadians(20)));
-        m_poseEstimator.addVisionMeasurement(
-            mt2.pose,
-            mt2.timestampSeconds);
+
+      if(mt2 != null) {
+        if(mt2.tagCount == 0)
+        {
+          doRejectUpdate = true;
+        }
+        if(!doRejectUpdate)
+        {
+          //TODO put this above and remove from periodic
+          m_poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.5,.5, Units.degreesToRadians(20)));
+          m_poseEstimator.addVisionMeasurement(
+              mt2.pose,
+              mt2.timestampSeconds);
+        }
       }
     }
   }
