@@ -85,12 +85,13 @@ public class LedPanel extends SubsystemBase {
         String dashboardInput;
         try {
             dashboardInput = SmartDashboard.getString("Led Choice", "6500Teal");
-            currentFrame = -1;
         } catch (Exception e) {
             System.out.println("Error with Led Choice" + e);
             dashboardInput = "setherror";
         }
         if(!(this.currentOption.equals(dashboardInput))) {
+            currentFrame = -1;
+            
             if(isAnimation(dashboardInput)) {
                 this.displayChoice = ledConstants.makeDisplayArrayFromImages(dashboardInput);
             } else {
@@ -143,9 +144,9 @@ public class LedPanel extends SubsystemBase {
         for(int row = 0; row < 8; row++) {
             for(int col = 0; col < 32; col++){
                 if(displayChoice[currentFrame][row][col][0] != 0) {
-                    ledSimOutput += "0" + " ";
+                    ledSimOutput += "▓" + " ";
                 } else {
-                    ledSimOutput += "_" + " ";
+                    ledSimOutput += "░" + " ";
                 }
             }
             ledSimOutput += "\n";
@@ -154,7 +155,5 @@ public class LedPanel extends SubsystemBase {
       }
       
       m_led.setData(m_ledBuffer);
-      System.out.println("Updated LEDs");
-      System.out.println(currentFrame);
   }
 }
