@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.RobotContainer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -21,7 +20,7 @@ import frc.robot.leds.ledConstants;
 
 public class LedPanel extends SubsystemBase {
   Timer timer = new Timer();
-  int fps;
+  double fps;
   int currentFrame;
   double lastTimestamp;
   AddressableLED m_led = new AddressableLED(ledConstants.kLedPort); //REPLACE WITH PORT
@@ -35,7 +34,7 @@ public class LedPanel extends SubsystemBase {
   @param displayChoice The name of the animation you would like the screen to cycle through or the custom input.
   @param fps The amount frames to cycle per second. Alternatively, enter 0 to stay on the first frame.
   **/
-  public LedPanel(String choice, int fps) {
+  public LedPanel(String choice, double fps) {
     this.currentOption = choice;
     this.fps = fps;
     currentFrame = 0;
@@ -69,6 +68,9 @@ public class LedPanel extends SubsystemBase {
     }
 
     System.out.println("LEDs set to " + currentOption);
+    SmartDashboard.putString("Led Choice", "6500Teal");
+    SmartDashboard.putNumber("Led Frames Per Second", fps);
+    SmartDashboard.putStringArray("Led Options", ledConstants.ledOptions);
   }
 
   private boolean isAnimation(String choice) {
@@ -82,16 +84,9 @@ public class LedPanel extends SubsystemBase {
   @Override
   public void periodic() {
     if(displayChoice != null) {
-        String dashboardInput;
-        try {
-            dashboardInput = SmartDashboard.getString("Led Choice", "6500Teal");
-        } catch (Exception e) {
-            System.out.println("Error with Led Choice" + e);
-            dashboardInput = "setherror";
-        }
+        String dashboardInput = SmartDashboard.getString("Led Choice", "6500Teal");
         if(!(this.currentOption.equals(dashboardInput))) {
             currentFrame = -1;
-            
             if(isAnimation(dashboardInput)) {
                 this.displayChoice = ledConstants.makeDisplayArrayFromImages(dashboardInput);
             } else {
@@ -104,6 +99,10 @@ public class LedPanel extends SubsystemBase {
             }
             this.currentOption = dashboardInput;
             System.out.println("LEDs set to " + currentOption);
+        }
+
+        if(SmartDashboard.getNumber("Led Frames Per Second", 1.0) != this.fps) {
+            this.fps = SmartDashboard.getNumber("Led Frames Per Second", 1.0);
         }
 
         double currentTime = timer.get();
@@ -143,10 +142,16 @@ public class LedPanel extends SubsystemBase {
         ledSimOutput = "";
         for(int row = 0; row < 8; row++) {
             for(int col = 0; col < 32; col++){
-                if(displayChoice[currentFrame][row][col][0] != 0) {
+                int colorAvg = (displayChoice[currentFrame][row][col][0] + displayChoice[currentFrame][row][col][1] + displayChoice[currentFrame][row][col][2]) / 3;
+                // Check if white
+                if(colorAvg == 255) 
+                {
                     ledSimOutput += "▓" + " ";
-                } else {
+                // Check if black
+                } else if(colorAvg == 0) {
                     ledSimOutput += "░" + " ";
+                } else {
+                    ledSimOutput += "▒" + " ";
                 }
             }
             ledSimOutput += "\n";

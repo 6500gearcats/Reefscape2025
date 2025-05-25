@@ -117,15 +117,6 @@ public class RobotContainer {
                 MathUtil.applyDeadband(-m_driver.getRightX() * .8, 0.1),
                 !m_driver.getRightBumper(), "Drive Train - Controller"),
             m_robotDrive));
-    
-    /*
-    LedChooser = new SendableChooser<>();
-    LedChooser.setDefaultOption("Hello World", "test");
-    for(String option : ledConstants.ledOptions) {
-      LedChooser.addOption(option, option);
-    }
-    SmartDashboard.putData("Led Options", LedChooser); */
-    SmartDashboard.putString("Led Choice", "6500Teal");
   }
 
   private void configureBindings() {
