@@ -43,7 +43,6 @@ import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.IntakeNote;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.ShootNote;
-import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 public class RobotContainer {
@@ -58,29 +57,21 @@ public class RobotContainer {
 
   
   //Temporarily adding this to
-  DriveSubsystem m_robotDrive = new DriveSubsystem();
+ 
   Intake m_intake = new Intake();
   Shooter m_shooter = new Shooter();
 
 
   public RobotContainer() {
-    m_robotDrive.zeroHeading();
+    //* zero heading
+   
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     autoChooser = AutoBuilder.buildAutoChooser();
 
     configureBindings();
-
-    m_robotDrive.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        new RunCommand(
-            () -> m_robotDrive.drive(
-                MathUtil.applyDeadband(-m_driver.getLeftY() *.8, 0.1), //0.1
-                MathUtil.applyDeadband(-m_driver.getLeftX() *.8, 0.1), //0.1
-                MathUtil.applyDeadband(-m_driver.getRightX() *.8, 0.1),
-                !m_driver.getRightBumper()),
-            m_robotDrive));
+    // *default command
+    
   }
 
   private void configureBindings() {
@@ -96,7 +87,7 @@ public class RobotContainer {
   }
 
   public void resetRobotGyroAndOrientation() {
-    m_robotDrive.zeroHeading();
+    //* Zero heading
   }
   
 }
