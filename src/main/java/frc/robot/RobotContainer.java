@@ -38,7 +38,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.EnableTurbo;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.IntakeNote;
 import frc.robot.commands.Shoot;
@@ -76,7 +75,6 @@ public class RobotContainer {
 
   private void configureBindings() {
     // Configure your button bindings here
-    new JoystickButton(m_driver, XboxController.Button.kLeftBumper.value).whileTrue(new EnableTurbo(m_robotDrive));
     new JoystickButton(m_gunner, XboxController.Button.kA.value).whileTrue(new IntakeNote(m_intake).andThen(new IntakeCommand(m_intake, -0.2).withTimeout(0.2)));
     new JoystickButton(m_gunner, XboxController.Button.kX.value).whileTrue(new Shoot(m_shooter));
     new JoystickButton(m_gunner, XboxController.Button.kY.value).whileTrue(new Shoot(m_shooter).withTimeout(1.2).andThen((new ShootNote(m_intake, m_shooter))));
