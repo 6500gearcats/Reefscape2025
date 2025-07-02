@@ -6,17 +6,15 @@ package frc.robot;
 
 import java.io.File;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveSubsystem;
 import swervelib.SwerveInputStream;
-import frc.robot.subsystems.Shooter;
 public class RobotContainer {
 
   AprilTagFieldLayout field;
@@ -27,7 +25,13 @@ public class RobotContainer {
   XboxController m_driver = new XboxController(0);
   XboxController m_gunner = new XboxController(1);
 
+  
+ 
+  Intake m_intake = new Intake();
+  Shooter m_shooter = new Shooter();
+
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
+
   //Temporarily adding this to
     /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
@@ -39,25 +43,28 @@ public class RobotContainer {
                                                             .deadband(0.1)
                                                             .scaleTranslation(0.8)
                                                             .allianceRelativeControl(true);
- 
-  Intake m_intake = new Intake();
-  Shooter m_shooter = new Shooter();
 
+ /**
+   * Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
+   */
+  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(m_driver::getRightX,
+  m_driver::getRightY)
+                                                           .headingWhile(true);
 
   public RobotContainer() {
    
-
     // Build an auto chooser. This will use Commands.none() as the default option.
     //autoChooser = AutoBuilder.buildAutoChooser();
 
     configureBindings();
     // *default command
-    
+    // 
     
   }
 
   private void configureBindings() {
 
+    Command driveFieldOrientedDirectAngle      = drivebase.driveFieldOriented(driveDirectAngle);
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
 
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
