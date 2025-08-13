@@ -47,7 +47,7 @@
   "reversed": false,
   "folder": "Pathplanning paths",
   "idealStartingState": {
-    "velocity": 0.1,
+    "velocity": 0,
     "rotation": 129.66365112537954
   },
   "useDefaultConstraints": true

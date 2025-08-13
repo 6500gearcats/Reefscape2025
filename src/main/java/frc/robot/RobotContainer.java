@@ -204,7 +204,7 @@ public class RobotContainer {
 
 
     // * PathFind to left coral station
-    new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(pathfindThenFollowPath("coralLeft", new PathConstraints(1, 1, Units.degreesToRadians(180), Units.degreesToRadians(180))));
+    new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(pathfind_then_follow_path("coralLeft", new PathConstraints(1, 1, Units.degreesToRadians(180), Units.degreesToRadians(180))));
   }
 
   public Command getAutonomousCommand() {
@@ -234,8 +234,9 @@ public class RobotContainer {
     }
   }
 
-  public Command pathfindThenFollowPath(String pathName, PathConstraints constraints) {
+  public Command pathfind_then_follow_path(String pathName, PathConstraints constraints) {
     try {
+      System.gc();
       return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile(pathName), constraints);
     } catch (FileVersionException | IOException | ParseException e) {
     }
