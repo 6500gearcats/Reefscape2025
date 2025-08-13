@@ -203,7 +203,7 @@ public class RobotContainer {
     new POVButton(m_driver, 270).whileTrue(new ProportionalAlignCoralStation(m_robotDrive, -0.4, .800, 3).andThen(new ProportionalAlignCoralStation(m_robotDrive, -0.4, .480, 2)));
 
 
-    // PathFind to left coral station
+    // * PathFind to left coral station
     new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(pathfindThenFollowPath("coralLeft", new PathConstraints(1, 1, Units.degreesToRadians(180), Units.degreesToRadians(180))));
   }
 
@@ -241,6 +241,6 @@ public class RobotContainer {
     }
     return new InstantCommand(() -> {
       System.out.println("Error loading path");
-    }, m_robotDrive);
+    });
   }
 }
