@@ -4,13 +4,20 @@
 
 package frc.robot;
 
+import java.io.IOException;
 import java.util.Optional;
 
+import org.json.simple.parser.ParseException;
 import org.photonvision.PhotonCamera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.FileVersionException;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController;
@@ -20,10 +27,25 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.AlgaeGrab;
+import frc.robot.commands.AlgaeSequence;
+import frc.robot.commands.CoralGrab;
+import frc.robot.commands.IntakeAlgae;
+import frc.robot.commands.L4Sequence;
+import frc.robot.commands.MoveCoral;
+import frc.robot.commands.OutakeAlgae;
+import frc.robot.commands.ProportionalAlign;
+import frc.robot.commands.ProportionalAlignCoralStation;
+import frc.robot.commands.ProportionalAlignTeleop;
+import frc.robot.commands.SetArmAndElevatorPositions;
+import frc.robot.commands.SetArmSpeed;
+import frc.robot.commands.SetClimberSpeed;
+import frc.robot.commands.SetElevatorSpeed;
+import frc.robot.commands.SnailEnable;
+import frc.robot.commands.TurboEnable;
 import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Climber;
@@ -33,24 +55,6 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.utility.GCLimelight;
 import frc.robot.utility.GCPhotonVision;
 import frc.robot.utility.LimelightHelpers;
-import frc.robot.commands.AlgaeGrab;
-import frc.robot.commands.AlgaeSequence;
-import frc.robot.commands.ControllerRumble;
-import frc.robot.commands.CoralGrab;
-import frc.robot.commands.IntakeAlgae;
-import frc.robot.commands.L4Sequence;
-import frc.robot.commands.MoveCoral;
-import frc.robot.commands.OutakeAlgae;
-import frc.robot.commands.ProportionalAlign;
-import frc.robot.commands.ProportionalAlignCoralStation;
-import frc.robot.commands.ProportionalAlignTeleop;
-import frc.robot.commands.SetArmSpeed;
-import frc.robot.commands.SetClimberSpeed;
-import frc.robot.commands.SetElevatorSpeed;
-import frc.robot.commands.SnailEnable;
-import frc.robot.commands.TurboEnable;
-import frc.robot.commands.SetArmAndElevatorPositions;
-import frc.robot.commands.SetArmAndElevatorPositionsSource;
 
 public class RobotContainer {
 
@@ -179,8 +183,8 @@ public class RobotContainer {
     // previous yOffset = 0.75
     //new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, -0.15, .485, 2));
     //new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .485, 2));
-    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, -0.18, .750, 5).andThen(new ProportionalAlignTeleop(m_robotDrive, -0.17, .50, 3).andThen(new ControllerRumble(m_driver))));
-    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0.15, .750, 5).andThen(new ProportionalAlignTeleop(m_robotDrive, 0.2, .50, 3).andThen(new ControllerRumble(m_driver))));
+    new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, -0.18, .750, 5).andThen(new ProportionalAlignTeleop(m_robotDrive, -0.17, .50, 3)));
+    new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0.15, .750, 5).andThen(new ProportionalAlignTeleop(m_robotDrive, 0.2, .50, 3)));
     new POVButton(m_driver, 0).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0, .475, 2.5));
 
     // Auto score L4 left
@@ -198,6 +202,9 @@ public class RobotContainer {
     // Driver left coral station
     new POVButton(m_driver, 270).whileTrue(new ProportionalAlignCoralStation(m_robotDrive, -0.4, .800, 3).andThen(new ProportionalAlignCoralStation(m_robotDrive, -0.4, .480, 2)));
 
+
+    // PathFind to left coral station
+    new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(pathfindThenFollowPath("coralLeft", new PathConstraints(1, 1, Units.degreesToRadians(180), Units.degreesToRadians(180))));
   }
 
   public Command getAutonomousCommand() {
@@ -225,5 +232,15 @@ public class RobotContainer {
         LimelightHelpers.setCameraPose_RobotSpace("limelight-gcc", -0.318, 0.177, 0.29, 0, 6, 180);
       }
     }
+  }
+
+  public Command pathfindThenFollowPath(String pathName, PathConstraints constraints) {
+    try {
+      return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile(pathName), constraints);
+    } catch (FileVersionException | IOException | ParseException e) {
+    }
+    return new InstantCommand(() -> {
+      System.out.println("Error loading path");
+    }, m_robotDrive);
   }
 }
