@@ -39,20 +39,20 @@ public class SetElevatorHeightSource extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    initialSign = Math.abs((maxSpeed * (m_height - m_elevator.getElevatorHeight()) - 0.08))/(maxSpeed * (m_height - m_elevator.getElevatorHeight()) - 0.08);
+    //initialSign = Math.abs((maxSpeed * (m_height - m_elevator.getElevatorHeight()) - 0.08))/(maxSpeed * (m_height - m_elevator.getElevatorHeight()) - 0.08);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
-    double velocity = maxSpeed * (m_height - m_elevator.getElevatorHeight()) - 0.08;
+    // double velocity = maxSpeed * (m_height - m_elevator.getElevatorHeight()) - 0.08;
 
-    if(Math.abs(velocity) < minSpeed - .08){
-      velocity = minSpeed * initialSign -.08;
-    }
+    // if(Math.abs(velocity) < minSpeed - .08){
+    //   velocity = minSpeed * initialSign -.08;
+    // }
 
-    m_elevator.setElevatorSpeed(velocity);
+    // m_elevator.setElevatorSpeed(velocity);
   }
   // Called once the command ends or is interrupted.
   @Override
@@ -63,6 +63,7 @@ public class SetElevatorHeightSource extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (m_elevator.ElevatorAtBottom() && -2 * (m_height - m_elevator.getElevatorHeight()) - 0.1 > 0) || m_elevator.ElevatorAtSource();
+   // return (m_elevator.ElevatorAtBottom() && -2 * (m_height - m_elevator.getElevatorHeight()) - 0.1 > 0) || m_elevator.ElevatorAtSource();
+    return true;
   }
 }

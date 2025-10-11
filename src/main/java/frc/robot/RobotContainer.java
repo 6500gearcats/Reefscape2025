@@ -204,7 +204,7 @@ public class RobotContainer {
 
 
     // * PathFind to left coral station
-    new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(pathfind_then_follow_path("coralLeft", new PathConstraints(1, 1, Units.degreesToRadians(180), Units.degreesToRadians(180))));
+    // new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(pathfind_then_follow_path("coralLeft", new PathConstraints(1, 1, Units.degreesToRadians(180), Units.degreesToRadians(180))));
   }
 
   public Command getAutonomousCommand() {

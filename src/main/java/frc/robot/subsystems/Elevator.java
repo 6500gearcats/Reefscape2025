@@ -13,20 +13,28 @@ import au.grapplerobotics.interfaces.LaserCanInterface.Measurement;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel;
 
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants;
 import frc.robot.Robot;
+
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.hardware.TalonFX;
 
 public class Elevator extends SubsystemBase {
   // TODO add correct ids
-  private SparkMax m_elevatorMotor = new SparkMax(ElevatorConstants.kElevatorMotorPort, SparkLowLevel.MotorType.kBrushless);
+  private TalonFX m_elevatorMotor = new TalonFX(Constants.ElevatorConstants.kElevatorMotorPort);
+
+
+  //private SparkMax m_elevatorMotor = new SparkMax(ElevatorConstants.kElevatorMotorPort, SparkLowLevel.MotorType.kBrushless);
   private LaserCan m_elevatorLidar = new LaserCan(ElevatorConstants.kLidarChannel);
   //private DigitalInput m_elevatorTopLimitSwitch = new DigitalInput(ElevatorConstants.kElevatorTopSwitchPort);
   private DigitalInput m_elevatorBottomLimitSwitch = new DigitalInput(ElevatorConstants.kElevatordBottomSwitchPort);
   private DigitalInput m_elevatorSourcePositionSwitch = new DigitalInput(4);
-  private RelativeEncoder m_encoder = m_elevatorMotor.getEncoder();
+  //private StatusSignal<Angle> m_encoder = m_elevatorMotor.getPosition();
   public static boolean elevatorCorrectingPosition = false;
   public static boolean elevatorTooHigh = false;
   public static boolean elevatorTooHighForTurbo = false;
@@ -48,35 +56,36 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putNumber("Elevator Height (m)", getElevatorHeight());
+    //SmartDashboard.putNumber("Elevator Height (m)", getElevatorHeight());
+    SmartDashboard.putNumber("ElevatorPositionValues",m_elevatorMotor.getPosition().getValueAsDouble());
     SmartDashboard.putBoolean("Elevator At Bottom", ElevatorAtBottom());
     SmartDashboard.putBoolean("No Turbo", elevatorTooHighForTurbo);
-    SmartDashboard.putNumber("Encoder Rotations", m_encoder.getPosition()* ElevatorConstants.kRotationsToMeters);
+    SmartDashboard.putNumber("Encoder Rotations", m_elevatorMotor.getPosition().getValueAsDouble());
     SmartDashboard.putBoolean("Elevator at Source", m_elevatorSourcePositionSwitch.get());
     //SmartDashboard.putBoolean("Height Malfunctioning", !(m_elevatorLidar.getMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) || m_elevatorLidar.getMeasurement().distance_mm == 0 && !ElevatorAtBottom());
     SmartDashboard.putBoolean("Move Slow", elevatorTooHighForRegularSpeed);
     //SmartDashboard.putBoolean("Elevator Limit Reached", elevatorAtLimit());
-    elevatorCorrectingPosition = getElevatorHeight() < 0.16;
-    elevatorTooHigh = getElevatorHeight() > .3;
-    elevatorTooHighForTurbo = getElevatorHeight() > 0.22;
-    elevatorTooHighForRegularSpeed = getElevatorHeight() > 0.26;
+    // elevatorCorrectingPosition = getElevatorHeight() < 0.16;
+    // elevatorTooHigh = getElevatorHeight() > .3;
+    // elevatorTooHighForTurbo = getElevatorHeight() > 0.22;
+    // elevatorTooHighForRegularSpeed = getElevatorHeight() > 0.26;
   }
 
   // Return the height of the elevator in meters
-  public double getElevatorHeight(){
-    if(Robot.isSimulation()){
-      // LaserCan.Measurement measurement = new Measurement(0, 0, 0, false, 0, null);
-      return 0;
-    }
-    LaserCan.Measurement measurement = m_elevatorLidar.getMeasurement();
-    if(measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && !(measurement.distance_mm == 0 && !ElevatorAtBottom()))
-    {
-      return (double)measurement.distance_mm/1000.0;
-    } else {
-      return m_encoder.getPosition() * ElevatorConstants.kRotationsToMeters;
-    }
-    //return 0;
-  }
+  // public double getElevatorHeight(){
+  //   if(Robot.isSimulation()){
+  //     // LaserCan.Measurement measurement = new Measurement(0, 0, 0, false, 0, null);
+  //     return 0;
+  //   }
+  //   LaserCan.Measurement measurement = m_elevatorLidar.getMeasurement();
+  //   if(measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && !(measurement.distance_mm == 0 && !ElevatorAtBottom()))
+  //   {
+  //     return (double)measurement.distance_mm/1000.0;
+  //   } else {
+  //     return m_encoder.getPosition() * ElevatorConstants.kRotationsToMeters;
+  //   }
+  //   //return 0;
+  // }
 
   // Set the elevator speed
   public void setElevatorSpeed(double speed){
