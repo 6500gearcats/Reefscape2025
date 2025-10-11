@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.json.simple.parser.ParseException;
 import org.photonvision.PhotonCamera;
 
+import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
@@ -43,6 +44,7 @@ import frc.robot.commands.ProportionalAlignTeleop;
 import frc.robot.commands.SetArmAndElevatorPositions;
 import frc.robot.commands.SetArmSpeed;
 import frc.robot.commands.SetClimberSpeed;
+import frc.robot.commands.SetElevatorHeight;
 import frc.robot.commands.SetElevatorSpeed;
 import frc.robot.commands.SnailEnable;
 import frc.robot.commands.TurboEnable;
@@ -63,6 +65,10 @@ public class RobotContainer {
 
   XboxController m_driver = new XboxController(0);
   XboxController m_gunner = new XboxController(1);
+
+  // create a Motion Magic Expo request, voltage output
+
+
 
   GCPhotonVision m_PhotonCamera = new GCPhotonVision(new PhotonCamera("ArducamTwo"));
   GCLimelight m_Limelight = new GCLimelight("limelight-gcc");
@@ -151,33 +157,37 @@ public class RobotContainer {
         .whileTrue(new MoveCoral(m_CoralHolder, -0.8, false).withTimeout(0.2)
             .andThen(new SetArmSpeed(m_arm, () -> 0.6).withTimeout(0.6)));
 
-    // Coral L3
-    new JoystickButton(m_gunner, XboxController.Button.kX.value)
-        .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.53));
-    // Coral L4
+    // // Coral L3
+    // new JoystickButton(m_gunner, XboxController.Button.kX.value)
+    //     .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.53));
+    // // Coral L4
+    // new JoystickButton(m_gunner, XboxController.Button.kY.value)
+    //     .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.738, .555).andThen(new SetElevatorSpeed(m_elevator, () -> -0.3).withTimeout(0.1)));//.withTimeout(.1));
+
+    // // Coral L2
+    // new JoystickButton(m_gunner, XboxController.Button.kB.value)
+    //     .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.3, 0.1)
+    //         .andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.19, 0.56, 0.2, 0.4, -2)));
+
+    // // Source
+    // new JoystickButton(m_gunner, XboxController.Button.kA.value)
+    //     .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.18, 0.1, 0.4, 0.4, -2));
+
+    // // Algae L3
+    // new POVButton(m_gunner, 270).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.43, 0.381));
+
+    // // Algae L2
+    // new POVButton(m_gunner, 90).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.399));
+
+    // // Net
+    // new POVButton(m_gunner, 0).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.738, 0.214));
+
+    // // Processor
+    // new POVButton(m_gunner, 180).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4, -2));
+
     new JoystickButton(m_gunner, XboxController.Button.kY.value)
-        .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.738, .555).andThen(new SetElevatorSpeed(m_elevator, () -> -0.3).withTimeout(0.1)));//.withTimeout(.1));
-
-    // Coral L2
-    new JoystickButton(m_gunner, XboxController.Button.kB.value)
-        .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.3, 0.1)
-            .andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.19, 0.56, 0.2, 0.4, -2)));
-
-    // Source
-    new JoystickButton(m_gunner, XboxController.Button.kA.value)
-        .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.18, 0.1, 0.4, 0.4, -2));
-
-    // Algae L3
-    new POVButton(m_gunner, 270).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.43, 0.381));
-
-    // Algae L2
-    new POVButton(m_gunner, 90).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.399));
-
-    // Net
-    new POVButton(m_gunner, 0).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.738, 0.214));
-
-    // Processor
-    new POVButton(m_gunner, 180).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4, -2));
+         .onTrue(new SetElevatorHeight(m_elevator,-24));
+    
     new JoystickButton(m_driver, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> resetRobotGyroAndOrientation()));
     new POVButton(m_driver, 180).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
     // previous yOffset = 0.75

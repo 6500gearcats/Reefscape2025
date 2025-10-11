@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator;
 
@@ -15,15 +17,15 @@ public class SetElevatorHeight extends Command {
   private double maxSpeed;
 
   /** Creates a new SetElevatorHeight. */
-  public SetElevatorHeight(Elevator elevator, double height) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    minSpeed = 0.6;
-    m_elevator = elevator;
-    m_height = height;
-    maxSpeed = -2;
+  // public SetElevatorHeight(Elevator elevator, double height) {
+  //   // Use addRequirements() here to declare subsystem dependencies.
+  //   minSpeed = 0.6;
+  //   m_elevator = elevator;
+  //   m_height = height;
+  //   maxSpeed = -2;
 
-    addRequirements(m_elevator);
-  }
+  //   addRequirements(m_elevator);
+  //}
 
   /** Creates a new SetElevatorHeight. */
   public SetElevatorHeight(Elevator elevator, double height, double minSpeed, double maxSpeed) {
@@ -35,9 +37,16 @@ public class SetElevatorHeight extends Command {
     addRequirements(m_elevator);
   }
 
+  public SetElevatorHeight(Elevator elevator, double height) {
+    m_elevator = elevator;
+    m_height = height;
+  }
+
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_elevator.setPosition(-24);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -54,13 +63,13 @@ public class SetElevatorHeight extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_elevator.setElevatorSpeed(-0.04);
+    //m_elevator.setElevatorSpeed(-0.04);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     //return (m_elevator.ElevatorAtBottom() && -2 * (m_height - m_elevator.getElevatorHeight()) - 0.1 > 0) || Math.abs(m_height - m_elevator.getElevatorHeight()) <0.034;//m_elevator.elevatorAtLimit();
-    return true;
+    return false;
   }
 }

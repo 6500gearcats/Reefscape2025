@@ -29,7 +29,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 public class Elevator extends SubsystemBase {
   // TODO add correct ids
   private TalonFX m_elevatorMotor = new TalonFX(Constants.ElevatorConstants.kElevatorMotorPort);
-
+  final MotionMagicExpoVoltage m_request = new MotionMagicExpoVoltage(0);
 
   //private SparkMax m_elevatorMotor = new SparkMax(ElevatorConstants.kElevatorMotorPort, SparkLowLevel.MotorType.kBrushless);
   private LaserCan m_elevatorLidar = new LaserCan(ElevatorConstants.kLidarChannel);
@@ -73,11 +73,7 @@ motionMagicConfigs.MotionMagicExpo_kA = 0.1; // Use a slower kA of 0.1 V/(rps/s)
 
 m_elevatorMotor.getConfigurator().apply(talonFXConfigs);
 
-// create a Motion Magic Expo request, voltage output
-final MotionMagicExpoVoltage m_request = new MotionMagicExpoVoltage(0);
 
-// set target position to 100 rotations
-m_elevatorMotor.setControl(m_request.withPosition(-24));
   }
 
   @Override
@@ -121,6 +117,10 @@ m_elevatorMotor.setControl(m_request.withPosition(-24));
     } else {
       m_elevatorMotor.set(-0.04);
     }
+  }
+
+  public void setPosition(double pos) {
+    m_elevatorMotor.setControl(m_request.withPosition(pos));
   }
 
   public boolean ElevatorAtBottom(){
