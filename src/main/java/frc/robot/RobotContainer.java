@@ -186,7 +186,7 @@ public class RobotContainer {
     // new POVButton(m_gunner, 180).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4, -2));
 
     new JoystickButton(m_gunner, XboxController.Button.kY.value)
-         .onTrue(new SetElevatorHeight(m_elevator,-24));
+         .whileTrue(new SetElevatorHeight(m_elevator,-24));
     
     new JoystickButton(m_driver, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> resetRobotGyroAndOrientation()));
     new POVButton(m_driver, 180).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));

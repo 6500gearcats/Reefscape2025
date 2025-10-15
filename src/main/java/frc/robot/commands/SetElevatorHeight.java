@@ -45,7 +45,7 @@ public class SetElevatorHeight extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_elevator.setPosition(-24);
+    m_elevator.setPosition(m_height);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
