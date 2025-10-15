@@ -36,7 +36,6 @@ public class Elevator extends SubsystemBase {
   //private DigitalInput m_elevatorTopLimitSwitch = new DigitalInput(ElevatorConstants.kElevatorTopSwitchPort);
   private DigitalInput m_elevatorBottomLimitSwitch = new DigitalInput(ElevatorConstants.kElevatordBottomSwitchPort);
   private DigitalInput m_elevatorSourcePositionSwitch = new DigitalInput(4);
-  //private StatusSignal<Angle> m_encoder = m_elevatorMotor.getPosition();
   public static boolean elevatorCorrectingPosition = false;
   public static boolean elevatorTooHigh = false;
   public static boolean elevatorTooHighForTurbo = false;
@@ -88,10 +87,13 @@ m_elevatorMotor.getConfigurator().apply(talonFXConfigs);
     //SmartDashboard.putBoolean("Height Malfunctioning", !(m_elevatorLidar.getMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) || m_elevatorLidar.getMeasurement().distance_mm == 0 && !ElevatorAtBottom());
     SmartDashboard.putBoolean("Move Slow", elevatorTooHighForRegularSpeed);
     //SmartDashboard.putBoolean("Elevator Limit Reached", elevatorAtLimit());
-    // elevatorCorrectingPosition = getElevatorHeight() < 0.16;
-    // elevatorTooHigh = getElevatorHeight() > .3;
-    // elevatorTooHighForTurbo = getElevatorHeight() > 0.22;
-    // elevatorTooHighForRegularSpeed = getElevatorHeight() > 0.26;
+     elevatorCorrectingPosition = m_elevatorMotor.getPosition().getValueAsDouble() > -16.8;
+     if (ElevatorAtBottom()) {
+      m_elevatorMotor.setPosition(0);
+     }
+    elevatorTooHigh = m_elevatorMotor.getPosition().getValueAsDouble() < -81;
+    elevatorTooHighForTurbo = m_elevatorMotor.getPosition().getValueAsDouble() < -36;
+    elevatorTooHighForRegularSpeed = m_elevatorMotor.getPosition().getValueAsDouble() < -65;
   }
 
   // Return the height of the elevator in meters

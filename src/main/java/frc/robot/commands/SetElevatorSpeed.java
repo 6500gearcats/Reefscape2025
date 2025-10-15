@@ -19,6 +19,8 @@ public class SetElevatorSpeed extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     m_elevator = elevator;
     m_speed = speed;
+
+    addRequirements(m_elevator);
   }
 
   // Called when the command is initially scheduled.
@@ -28,7 +30,9 @@ public class SetElevatorSpeed extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_elevator.setElevatorSpeed(m_speed.getAsDouble());
+    if (!(Elevator.elevatorTooHigh && m_speed.getAsDouble()>0)) {
+      m_elevator.setElevatorSpeed(m_speed.getAsDouble());
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -41,6 +45,6 @@ public class SetElevatorSpeed extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_elevator.ElevatorAtBottom() && m_speed.getAsDouble() > 0;//m_elevator.elevatorAtLimit();
+    return m_elevator.ElevatorAtBottom() && m_speed.getAsDouble() > 0;
   }
 }
