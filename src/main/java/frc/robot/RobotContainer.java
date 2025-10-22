@@ -176,17 +176,17 @@ public class RobotContainer {
      new JoystickButton(m_gunner, XboxController.Button.kA.value)
          .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, -18, 0.1, 0.4, 0.4, -2));
 
-    // // Algae L3
-    // new POVButton(m_gunner, 270).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.43, 0.381));
+     // Algae L3
+    new POVButton(m_gunner, 270).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, -48, 0.381));
 
      // Algae L2
-     //new POVButton(m_gunner, 90).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.36, 0.399));
+  new POVButton(m_gunner, 90).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, -33, 0.399));
 
-    // // Net
-    // new POVButton(m_gunner, 0).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.738, 0.214));
+    // Net
+    new POVButton(m_gunner, 0).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, -81.1, 0.214));
 
-    // // Processor
-    // new POVButton(m_gunner, 180).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4, -2));
+     // Processor
+    new POVButton(m_gunner, 180).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, -1, 0.361, 0.3, 0.4, -2));
     
     new JoystickButton(m_driver, XboxController.Button.kStart.value).onTrue(new InstantCommand(() -> resetRobotGyroAndOrientation()));
     new POVButton(m_driver, 180).onTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
