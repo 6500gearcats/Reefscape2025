@@ -79,38 +79,26 @@ m_elevatorMotor.getConfigurator().apply(talonFXConfigs);
   public void periodic() {
     // This method will be called once per scheduler run
     //SmartDashboard.putNumber("Elevator Height (m)", getElevatorHeight());
-    SmartDashboard.putNumber("ElevatorPositionValues",m_elevatorMotor.getPosition().getValueAsDouble());
+    SmartDashboard.putNumber("ElevatorPositionValues", getElevatorHeight());
     SmartDashboard.putBoolean("Elevator At Bottom", ElevatorAtBottom());
     SmartDashboard.putBoolean("No Turbo", elevatorTooHighForTurbo);
-    SmartDashboard.putNumber("Encoder Rotations", m_elevatorMotor.getPosition().getValueAsDouble());
+    SmartDashboard.putNumber("Encoder Rotations", getElevatorHeight());
     SmartDashboard.putBoolean("Elevator at Source", m_elevatorSourcePositionSwitch.get());
     //SmartDashboard.putBoolean("Height Malfunctioning", !(m_elevatorLidar.getMeasurement().status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) || m_elevatorLidar.getMeasurement().distance_mm == 0 && !ElevatorAtBottom());
     SmartDashboard.putBoolean("Move Slow", elevatorTooHighForRegularSpeed);
     //SmartDashboard.putBoolean("Elevator Limit Reached", elevatorAtLimit());
-     elevatorCorrectingPosition = m_elevatorMotor.getPosition().getValueAsDouble() > -16.8;
+     elevatorCorrectingPosition = getElevatorHeight() > -16.8;
      if (ElevatorAtBottom()) {
       m_elevatorMotor.setPosition(0);
      }
-    elevatorTooHigh = m_elevatorMotor.getPosition().getValueAsDouble() < -81;
-    elevatorTooHighForTurbo = m_elevatorMotor.getPosition().getValueAsDouble() < -36;
-    elevatorTooHighForRegularSpeed = m_elevatorMotor.getPosition().getValueAsDouble() < -65;
+    elevatorTooHigh = getElevatorHeight() < -81;
+    elevatorTooHighForTurbo = getElevatorHeight() < -36;
+    elevatorTooHighForRegularSpeed = getElevatorHeight() < -65;
   }
 
-  // Return the height of the elevator in meters
-  // public double getElevatorHeight(){
-  //   if(Robot.isSimulation()){
-  //     // LaserCan.Measurement measurement = new Measurement(0, 0, 0, false, 0, null);
-  //     return 0;
-  //   }
-  //   LaserCan.Measurement measurement = m_elevatorLidar.getMeasurement();
-  //   if(measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && !(measurement.distance_mm == 0 && !ElevatorAtBottom()))
-  //   {
-  //     return (double)measurement.distance_mm/1000.0;
-  //   } else {
-  //     return m_encoder.getPosition() * ElevatorConstants.kRotationsToMeters;
-  //   }
-  //   //return 0;
-  // }
+  public double getElevatorHeight() {
+    return m_elevatorMotor.getPosition().getValueAsDouble();
+  }
 
   // Set the elevator speed
   public void setElevatorSpeed(double speed){
