@@ -18,6 +18,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FileVersionException;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -57,6 +58,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.utility.GCLimelight;
 import frc.robot.utility.GCPhotonVision;
 import frc.robot.utility.LimelightHelpers;
+import frc.robot.utility.ProportionalAlignHelper;
 
 public class RobotContainer {
 
@@ -94,11 +96,11 @@ public class RobotContainer {
     NamedCommands.registerCommand("CoralPlace", new L4Sequence(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("CoralGrab", new CoralGrab(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("AlgaeGrab", new AlgaeGrab(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
-    NamedCommands.registerCommand("RaiseElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, -81.1, .56, 0.6, 0.4, -5).withTimeout(3).andThen(new SetElevatorSpeed(m_elevator, () -> -0.6).withTimeout(0.1)));
-    NamedCommands.registerCommand("LowerElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, -22.5, 0.1, 0.6, 0.4, -4).withTimeout(2));
+    NamedCommands.registerCommand("RaiseElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, -81.1, .56, 0.6, 0.4, -5).andThen(new SetElevatorSpeed(m_elevator, () -> -0.6).withTimeout(0.1)));
+    NamedCommands.registerCommand("LowerElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, -22.5, 0.1, 0.6, 0.4, -4));
     NamedCommands.registerCommand("LowerElevatorAlgae", new SetArmAndElevatorPositions(m_elevator, m_arm, -1, 0.361, 0.3, 0.4, -2));
     NamedCommands.registerCommand("AlgaeProcessor", new AlgaeSequence(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
-    NamedCommands.registerCommand("SetPreElevator", new SetArmAndElevatorPositions(m_elevator, m_arm, -18, 0.36, 0.6, 0.4, -4).withTimeout(1.5));
+    NamedCommands.registerCommand("SetPreElevator", new SetArmAndElevatorPositions(m_elevator, m_arm, -18, 0.36, 0.6, 0.4, -4));
     NamedCommands.registerCommand("ProportionalAlignLeft", new ProportionalAlign(m_robotDrive, -0.15, .475, 2));
     NamedCommands.registerCommand("ProportionalAlignRight", new ProportionalAlign(m_robotDrive, 0.15, .475, 2));
     NamedCommands.registerCommand("ProportionalAlignAlgae", new ProportionalAlign(m_robotDrive, 0, .475, 2));
@@ -195,7 +197,7 @@ public class RobotContainer {
     //new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlign(m_robotDrive, 0.2, .485, 2));
     new Trigger((() -> m_driver.getLeftTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, -0.18, .750, 5).andThen(new ProportionalAlignTeleop(m_robotDrive, -0.17, .50, 3)));
     new Trigger((() ->  m_driver.getRightTriggerAxis() > 0.2)).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0.15, .750, 5).andThen(new ProportionalAlignTeleop(m_robotDrive, 0.2, .50, 3)));
-    new POVButton(m_driver, 0).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0, .475, 2.5));
+    //new POVButton(m_driver, 0).whileTrue(new ProportionalAlignTeleop(m_robotDrive, 0, .475, 2.5));
 
     // Auto score L4 left
     //new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue((new ProportionalAlign(m_robotDrive, -0.15, 0.535)));//.andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555)).andThen(new ProportionalAlign(m_robotDrive, -0.15, 0.45)).andThen(new MoveCoral(m_CoralHolder, -0.5, false)).withTimeout(0.2).andThen(new SetArmSpeed(m_arm, () -> 0.4)).withTimeout(0.6));
@@ -204,17 +206,18 @@ public class RobotContainer {
     //new JoystickButton(m_driver, XboxController.Button.kB.value).whileTrue((new ProportionalAlign(m_robotDrive, 0.2, 0.535)));//.andThen(new SetArmAndElevatorPositions(m_elevator, m_arm, 0.735, .555)).andThen(new ProportionalAlign(m_robotDrive, 0.2, 0.45)).andThen(new MoveCoral(m_CoralHolder, -0.5, false)).withTimeout(0.2).andThen(new SetArmSpeed(m_arm, () -> 0.4)).withTimeout(0.6));
     
     // Driver right coral station
-    new POVButton(m_driver, 90).whileTrue(new ProportionalAlignCoralStation(m_robotDrive, 0.4, .800, 3).andThen(new ProportionalAlignCoralStation(m_robotDrive, 0.4, .480, 2)));
+    //new POVButton(m_driver, 90).whileTrue(new ProportionalAlignCoralStation(m_robotDrive, 0.4, .800, 3).andThen(new ProportionalAlignCoralStation(m_robotDrive, 0.4, .480, 2)));
 
     // Driver middle coral station
     //new POVButton(m_driver, 0).whileTrue(new ProportionalAlignCoralStation(m_robotDrive, 0, .800, 3).andThen(new ProportionalAlignCoralStation(m_robotDrive, 0, .480, 2)));
 
     // Driver left coral station
-    new POVButton(m_driver, 270).whileTrue(new ProportionalAlignCoralStation(m_robotDrive, -0.4, .800, 3).andThen(new ProportionalAlignCoralStation(m_robotDrive, -0.4, .480, 2)));
+    //new POVButton(m_driver, 270).whileTrue(new ProportionalAlignCoralStation(m_robotDrive, -0.4, .800, 3).andThen(new ProportionalAlignCoralStation(m_robotDrive, -0.4, .480, 2)));
 
 
     // * PathFind to left coral station
     // new JoystickButton(m_driver, XboxController.Button.kX.value).whileTrue(pathfind_then_follow_path("coralLeft", new PathConstraints(1, 1, Units.degreesToRadians(180), Units.degreesToRadians(180))));
+    new POVButton(m_driver, 90).whileTrue(coolerProportionalAlign(new PathConstraints(1, 1, Units.degreesToRadians(180), Units.degreesToRadians(180))));
   }
 
   public Command getAutonomousCommand() {
@@ -245,6 +248,7 @@ public class RobotContainer {
   }
 
   public Command pathfind_then_follow_path(String pathName, PathConstraints constraints) {
+
     try {
       System.gc();
       return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile(pathName), constraints);
@@ -253,5 +257,11 @@ public class RobotContainer {
     return new InstantCommand(() -> {
       System.out.println("Error loading path");
     });
+  }
+
+  public Command coolerProportionalAlign(PathConstraints constraints) {
+    Pose2d tagPose = ProportionalAlignHelper.getBestAprilTag(m_robotDrive.getPose(), -0.18,3);
+    System.gc();
+    return AutoBuilder.pathfindToPose(tagPose, constraints);
   }
 }
