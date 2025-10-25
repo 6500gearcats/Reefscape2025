@@ -94,11 +94,11 @@ public class RobotContainer {
     NamedCommands.registerCommand("CoralPlace", new L4Sequence(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("CoralGrab", new CoralGrab(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("AlgaeGrab", new AlgaeGrab(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
-    NamedCommands.registerCommand("RaiseElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.728, .555, 0.6, 0.4, -5).withTimeout(3).andThen(new SetElevatorSpeed(m_elevator, () -> -0.6).withTimeout(0.1)));
-    NamedCommands.registerCommand("LowerElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.18, 0.1, 0.6, 0.4, -4));
-    NamedCommands.registerCommand("LowerElevatorAlgae", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.026, 0.361, 0.3, 0.4, -2));
+    NamedCommands.registerCommand("RaiseElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, -81.1, .56, 0.6, 0.4, -5).withTimeout(3).andThen(new SetElevatorSpeed(m_elevator, () -> -0.6).withTimeout(0.1)));
+    NamedCommands.registerCommand("LowerElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, -22.5, 0.1, 0.6, 0.4, -4).withTimeout(2));
+    NamedCommands.registerCommand("LowerElevatorAlgae", new SetArmAndElevatorPositions(m_elevator, m_arm, -1, 0.361, 0.3, 0.4, -2));
     NamedCommands.registerCommand("AlgaeProcessor", new AlgaeSequence(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
-    NamedCommands.registerCommand("SetPreElevator", new SetArmAndElevatorPositions(m_elevator, m_arm, 0.18, 0.36, 0.6, 0.4, -4));
+    NamedCommands.registerCommand("SetPreElevator", new SetArmAndElevatorPositions(m_elevator, m_arm, -18, 0.36, 0.6, 0.4, -4).withTimeout(1.5));
     NamedCommands.registerCommand("ProportionalAlignLeft", new ProportionalAlign(m_robotDrive, -0.15, .475, 2));
     NamedCommands.registerCommand("ProportionalAlignRight", new ProportionalAlign(m_robotDrive, 0.15, .475, 2));
     NamedCommands.registerCommand("ProportionalAlignAlgae", new ProportionalAlign(m_robotDrive, 0, .475, 2));
@@ -174,7 +174,7 @@ public class RobotContainer {
 
      // Source
      new JoystickButton(m_gunner, XboxController.Button.kA.value)
-         .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, -18, 0.1, 0.4, 0.4, -2));
+         .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, -22.75, 0.1, 0.4, 0.4, -2));
 
      // Algae L3
     new POVButton(m_gunner, 270).whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, -48, 0.381));

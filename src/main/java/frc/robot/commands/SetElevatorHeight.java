@@ -15,6 +15,7 @@ public class SetElevatorHeight extends Command {
   private double m_height;
   private double minSpeed;
   private double maxSpeed;
+  private boolean useAccurate;
 
   /** Creates a new SetElevatorHeight. */
   // public SetElevatorHeight(Elevator elevator, double height) {
@@ -69,7 +70,9 @@ public class SetElevatorHeight extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //return (m_elevator.ElevatorAtBottom() && -2 * (m_height - m_elevator.getElevatorHeight()) - 0.1 > 0) || Math.abs(m_height - m_elevator.getElevatorHeight()) <0.034;//m_elevator.elevatorAtLimit();
-    return false;
-  }
+      if (m_elevator.getElevatorHeight() < m_height + 10 && m_elevator.getElevatorHeight() > m_height -10) {
+        return true;
+      }
+      return false;
+}
 }
