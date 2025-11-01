@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AlgaeGrab;
 import frc.robot.commands.AlgaeSequence;
+import frc.robot.commands.ControllerRumble;
 import frc.robot.commands.CoralGrab;
 import frc.robot.commands.IntakeAlgae;
 import frc.robot.commands.L4Sequence;
@@ -153,6 +154,8 @@ public class RobotContainer {
     new JoystickButton(m_gunner, XboxController.Button.kStart.value).whileTrue(
         new SetArmAndElevatorPositions(m_elevator, m_arm, 0, 0.168).andThen(new SetClimberSpeed(m_climber, 0.9)));
     new JoystickButton(m_gunner, XboxController.Button.kBack.value).whileTrue(new SetClimberSpeed(m_climber, -0.6));
+
+    new JoystickButton(m_driver, XboxController.Button.kBack.value).whileTrue(new ControllerRumble(m_driver));
 
     new JoystickButton(m_gunner, XboxController.Button.kLeftBumper.value)
         .whileTrue(new MoveCoral(m_CoralHolder, 0.5, true));
