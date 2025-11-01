@@ -63,7 +63,8 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void autonomousExit() {}
+  public void autonomousExit() {
+  }
 
   @Override
   public void teleopInit() {
@@ -71,6 +72,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     //m_robotContainer.zeroDrive();
+    //
   }
 
   @Override
