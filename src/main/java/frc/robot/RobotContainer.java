@@ -27,6 +27,7 @@ import frc.robot.GCPhotonVision;
 import frc.robot.commands.AlignWithAprilTag;
 import frc.robot.commands.SetAprilTagHorizontalOffset;
 import frc.robot.commands.SetAprilTagVerticalOffset;
+import frc.robot.commands.followTshirt;
 
 public class RobotContainer {
 
@@ -34,6 +35,8 @@ public class RobotContainer {
 
   XboxController m_driver = new XboxController(0);
   XboxController m_gunner = new XboxController(1);
+
+  
 
   GCPhotonVision m_PhotonCamera = new GCPhotonVision(new PhotonCamera("ArducamTwo"));
   GCLimelight m_Limelight = new GCLimelight("limelight-gca");
@@ -45,6 +48,8 @@ public class RobotContainer {
   
   //Temporarily adding this to
   DriveSubsystem m_robotDrive = new DriveSubsystem(m_PhotonCamera, m_vision);
+
+  //followTshirt m_tshirtFollower = new followTshirt(m_vision, m_robotDrive);
 
   public RobotContainer() {
 
