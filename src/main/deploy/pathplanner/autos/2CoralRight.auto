@@ -61,28 +61,15 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "BottomSourceToCoral"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "SetPreElevator"
-                }
-              }
-            ]
+            "pathName": "BottomSourceToCoral"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "RaiseElevatorL4"
+            "name": "RaiseElevatorL4Second"
           }
         },
         {

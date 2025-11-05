@@ -37,6 +37,7 @@ import frc.robot.commands.ControllerRumble;
 import frc.robot.commands.CoralGrab;
 import frc.robot.commands.IntakeAlgae;
 import frc.robot.commands.L4Sequence;
+import frc.robot.commands.L4Sequence2;
 import frc.robot.commands.MoveCoral;
 import frc.robot.commands.OutakeAlgae;
 import frc.robot.commands.ProportionalAlign;
@@ -93,9 +94,11 @@ public class RobotContainer {
 
   public RobotContainer() {
     NamedCommands.registerCommand("CoralPlace", new L4Sequence(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
+    NamedCommands.registerCommand("CoralPlace2", new L4Sequence2(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("CoralGrab", new CoralGrab(m_arm, m_CoralHolder, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("AlgaeGrab", new AlgaeGrab(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
     NamedCommands.registerCommand("RaiseElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, -81.1, .56, 0.6, 0.4, -5).withTimeout(3).andThen(new SetElevatorSpeed(m_elevator, () -> -0.6).withTimeout(0.1)));
+    NamedCommands.registerCommand("RaiseElevatorL4Second", new SetArmAndElevatorPositions(m_elevator, m_arm, -81.1, .56, 0.6, 0.4, -5).withTimeout(2).andThen(new SetElevatorSpeed(m_elevator, () -> -0.6).withTimeout(0.1)));
     NamedCommands.registerCommand("LowerElevatorL4", new SetArmAndElevatorPositions(m_elevator, m_arm, -22.5, 0.1, 0.6, 0.4, -4).withTimeout(2));
     NamedCommands.registerCommand("LowerElevatorAlgae", new SetArmAndElevatorPositions(m_elevator, m_arm, -1, 0.361, 0.3, 0.4, -2));
     NamedCommands.registerCommand("AlgaeProcessor", new AlgaeSequence(m_arm, m_AlgaeIntake, m_elevator, m_robotDrive));
@@ -165,7 +168,7 @@ public class RobotContainer {
 
      // Coral L3
      new JoystickButton(m_gunner, XboxController.Button.kX.value)
-         .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, -39, 0.53));
+         .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, -42, 0.53));
      // Coral L4
      new JoystickButton(m_gunner, XboxController.Button.kY.value)
          .whileTrue(new SetArmAndElevatorPositions(m_elevator, m_arm, -81.1, .56).andThen(new SetElevatorSpeed(m_elevator, () -> -0.3).withTimeout(0.1)));//.withTimeout(.1));

@@ -17,9 +17,9 @@ import frc.robot.subsystems.Elevator;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class L4Sequence extends SequentialCommandGroup {
+public class L4Sequence2 extends SequentialCommandGroup {
   /** Creates a new L4Sequence. */
-  public L4Sequence(Arm m_arm, CoralHolder m_CoralHolder, Elevator m_elevator, DriveSubsystem m_drive) {
+  public L4Sequence2(Arm m_arm, CoralHolder m_CoralHolder, Elevator m_elevator, DriveSubsystem m_drive) {
     addCommands(
       // Sets elevator and arm to L4 Coral position
       // new SetArmAndElevatorPositions(m_elevator, m_arm, 0.715, .561),
@@ -27,7 +27,7 @@ public class L4Sequence extends SequentialCommandGroup {
       //new InstantCommand(()->m_drive.drive(-1, 0, 0, false)).withTimeout(.5),
       // Outtakes coral (hopefully onto L4)
       // TODO: Add an isFinished into MoveCoral so that we don't have to use withTimeout
-      new MoveCoral(m_CoralHolder, -0.8, false).withTimeout(0.4),
+      new MoveCoral(m_CoralHolder, -0.8, false).withTimeout(0.1),
       new SetArmSpeed(m_arm, () -> .6).withTimeout(.4),
       new WaitCommand(0.25)
       // Runs backward to allow elevator room to go back down
