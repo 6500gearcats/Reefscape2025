@@ -34,8 +34,8 @@
         m_drive.drive(0,0,0,false);
         return;
       }
-      double yaw = m_vision.getChosenYaw(18);
-      double xDist = m_vision.getChosenRange(18);
+      double yaw = m_vision.getBestYaw();
+      double xDist = m_vision.getBestRange();
       double currY = Math.tan(Math.toRadians(yaw)) * xDist;
 
       SmartDashboard.putNumber("Curr X", currY);
