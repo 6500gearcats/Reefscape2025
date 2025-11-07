@@ -6,13 +6,13 @@ package frc.robot.subsystems;
 
 import java.util.Optional;
 
-import javax.net.ssl.TrustManagerFactory;
-
 import org.photonvision.EstimatedRobotPose;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.numbers.*;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.GCLimelight;
@@ -121,6 +121,14 @@ public class Vision extends SubsystemBase {
     return isLimelight;
   }
 
+  public boolean hasTarget() {
+    if (isLimelight) {
+        return limelight.hasTargets();
+    } else {
+        return photonCam.getLatestCameraResult().hasTargets();
+    }
+}
+
   //TODO: Only adding PhotonVision for now to work on pose estimation, but need to add Limelight (if needed)
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
       return photonCam.getEstimatedGlobalPose();
@@ -128,6 +136,30 @@ public class Vision extends SubsystemBase {
 
   public Matrix<N3, N1> getEstimationStdDevs (Pose2d currentPose) {
     return photonCam.getEstimationStdDevs(currentPose);
+  }
+
+  public Pose3d getBotPose2d_targetSpace() {
+    if(isLimelight) {
+      return limelight.getBotPose2d_targetSpace();
+    } else {
+      return new Pose3d(); // Placeholder, implement PhotonVision equivalent if needed
+    }
+  }
+
+  public double getTargetXDistance() {
+      return getBotPose2d_targetSpace().getTranslation().getX();
+  }
+
+  public double getTargetyDistance() {
+      return getBotPose2d_targetSpace().getTranslation().getY();
+  }
+
+  public double getTargetZDistance() {
+      return getBotPose2d_targetSpace().getTranslation().getZ();
+  }
+
+  public double getTargetZRotDistance() {
+      return getBotPose2d_targetSpace().getRotation().getZ();
   }
 
   @Override

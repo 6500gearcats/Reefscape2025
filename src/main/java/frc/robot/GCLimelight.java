@@ -1,12 +1,8 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.estimator.PoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.LimelightHelpers.LimelightResults;
-import frc.robot.subsystems.DriveSubsystem;
 
 
 public class GCLimelight {
@@ -16,6 +12,30 @@ public class GCLimelight {
     public GCLimelight(String theName)
     {
         name = theName;
+    }
+
+    public boolean hasTargets(){
+        return LimelightHelpers.getTV(name);
+    }
+
+    public Pose3d getBotPose2d_targetSpace() {
+        return LimelightHelpers.getBotPose3d_TargetSpace(name);
+    }
+
+    public double getTargetXDistance() {
+        return getBotPose2d_targetSpace().getTranslation().getX();
+    }
+
+    public double getTargetyDistance() {
+        return getBotPose2d_targetSpace().getTranslation().getY();
+    }
+
+    public double getTargetZDistance() {
+        return getBotPose2d_targetSpace().getTranslation().getZ();
+    }
+
+    public double getTargetZRotDistance() {
+        return getBotPose2d_targetSpace().getRotation().getZ();
     }
 
     public double getYawDegrees(){
