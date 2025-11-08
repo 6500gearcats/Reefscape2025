@@ -80,7 +80,7 @@ public class RobotContainer {
     new JoystickButton(m_driver, Button.kA.value).onTrue(new AlignWithAprilTag(17, m_vision, m_robotDrive));
     new JoystickButton(m_driver, Button.kB.value).onTrue(new SetAprilTagHorizontalOffset(17, m_vision, m_robotDrive, .5));
     new JoystickButton(m_driver, Button.kY.value).onTrue(new SetAprilTagVerticalOffset(17, m_vision, m_robotDrive, 0));
-
+    new JoystickButton(m_driver, Button.kRightBumper.value).whileTrue(new followTshirt(m_vision, m_robotDrive));
   }
 
   public Command getAutonomousCommand() {
